@@ -1,15 +1,14 @@
 #include <ctype.h>
-
 #include <PxPhysicsAPI.h>
 
+#include "Particula.h"
+
 #include <vector>
+#include <iostream>
 
 #include "core.hpp"
 #include "RenderUtils.hpp"
 #include "callbacks.hpp"
-
-#include <iostream>
-
 
 
 using namespace physx;
@@ -29,6 +28,7 @@ PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
 
+Particula* particula;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -53,6 +53,8 @@ void initPhysics(bool interactive)
 	sceneDesc.filterShader = contactReportFilterShader;
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
+
+	particula = new Particula({ 0, 0, 0 }, { 0, 2, 0 }, { 0, 2, 0 }, 0.5, 2);
 	}
 
 
@@ -64,6 +66,7 @@ void stepPhysics(bool interactive, double t)
 	PX_UNUSED(interactive);
 
 	gScene->simulate(t);
+	particula->integrate(t); 
 	gScene->fetchResults(true);
 }
 
@@ -94,8 +97,10 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	{
 	//case 'B': break;
 	//case ' ':	break;
-	case ' ':
+	case 'E':
+	case 'e':
 	{
+		particula = new Particula({ 0, 0, 0 }, { 0, 2, 0 }, { 0, 2, 0 }, 0.5, 2);
 		break;
 	}
 	default:

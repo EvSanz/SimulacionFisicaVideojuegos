@@ -2,6 +2,7 @@
 #include <PxPhysicsAPI.h>
 
 #include "Particula.h"
+#include "Plano.h"
 
 #include <vector>
 #include <iostream>
@@ -28,7 +29,9 @@ PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
 
-Particula* particula;
+std::vector <Particula*> particulas; 
+Plano* plano; 
+
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -54,8 +57,8 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-	particula = new Particula({ 0, 0, 0 }, { 0, 2, 0 }, { 0, 2, 0 }, 0.5, 2);
-	}
+	plano = new Plano({ 0, -2, 0 }, { 0.3, 0.3, 0.3, 1 }); 
+}
 
 
 // Function to configure what happens in each step of physics
@@ -66,8 +69,19 @@ void stepPhysics(bool interactive, double t)
 	PX_UNUSED(interactive);
 
 	gScene->simulate(t);
-	particula->integrate(t); 
 	gScene->fetchResults(true);
+
+	for (auto particula : particulas)
+	{
+		particula->integrate(t);
+
+		/*if (!particulas[i]->isAlive())
+		{
+			Particula* proyectil = particulas[i]; 
+			particulas.erase(particulas.begin() + i);
+			delete proyectil;
+		}*/
+	}
 }
 
 // Function to clean data
@@ -86,25 +100,89 @@ void cleanupPhysics(bool interactive)
 	transport->release();
 	
 	gFoundation->release();
-	}
+
+	for (auto particula : particulas)
+		delete particula;
+
+	delete plano;
+}
 
 // Function called when a key is pressed
 void keyPress(unsigned char key, const PxTransform& camera)
 {
 	PX_UNUSED(camera);
+	Vector3 front = camera.q.getBasisVector2().getNormalized();
+
+	bool create = true; 
+
+	Vector4 color; 
+	Vector3 vel, acc; 
+	float damp, mass;
+	int disp; 
 
 	switch(toupper(key))
 	{
-	//case 'B': break;
-	//case ' ':	break;
-	case 'E':
-	case 'e':
-	{
-		particula = new Particula({ 0, 0, 0 }, { 0, 2, 0 }, { 0, 2, 0 }, 0.5, 2);
-		break;
+		case 'C':
+		case 'c':
+		{
+			//Bala pistola
+			color = {0.3f, 0.3f, 0.5f, 1}; 
+			vel = { 0.0f, 0.0f, 35.0f }; 
+			acc = { 0.0f, -1.0f, 0.0f };
+			mass = 2.0f; 
+			damp = 0.99f; 
+			disp = 2; 
+			break;
+		}
+
+		case 'V':
+		case 'v':
+		{
+			//Artilleria
+			color = { 0.0f, 0.0f, 1.0f, 1 };
+			vel = { 0.0f, 30.0f, 40.0f };
+			acc = { 0.0f, -20.0f, 0.0f };
+			mass = 200.0f;
+			damp = 0.99f;
+			disp = 1;
+			break;
+		}
+
+		case 'B':
+		case 'b':
+		{
+			//Bola de fuego
+			color = { 1.0f, 0.0f, 0.0f, 1 };
+			vel = { 0.0f, 0.0f, 10.0f };
+			acc = { 0.0f, 0.6f, 0.0f };
+			mass = 1.0f;
+			damp = 0.9f;
+			disp = 1; 
+			break;
+		}
+
+		case 'N':
+		case 'n':
+		{
+			//Laser
+			color = { 1.0f, 0.5f, 0.0f, 1 };
+			vel = { 0.0f, 0.0f, 100.0f };
+			acc = { 0.0f, 0.0f, 0.0f };
+			mass = 0.1f;
+			damp = 0.99f;
+			disp = 3;
+			break;
+		}
+
+		default:
+			create = false; 
+			break;
 	}
-	default:
-		break;
+
+	if (create)
+	{
+		Particula* particula = new Particula(camera.p + Vector3(0, 0, 0), front * -40, acc, damp, mass, disp, color);
+		particulas.push_back(particula);
 	}
 }
 

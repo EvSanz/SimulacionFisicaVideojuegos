@@ -12,16 +12,21 @@
 class Particula
 {
 public: 
-	Particula(Vector3 posicion, Vector3 velocidad, Vector3 aceleracion, float damping, int disparo);
+	Particula(Vector3 posicion, Vector3 velocidad, Vector3 aceleracion, float damping, float mass, int disparo, Vector4 color);
 	~Particula();
 
 	void integrate(double t); 
 
+	void killParticle() { alive = false; }
+	bool isAlive() { return alive; }
+
 protected: 
 
-	float damp; 
+	float damp, masa, time; 
 
-	Vector3 vel, acc; 
+	bool alive = true; 
+
+	Vector3 vel, acc, position; 
 
 	physx::PxTransform pos; 
 

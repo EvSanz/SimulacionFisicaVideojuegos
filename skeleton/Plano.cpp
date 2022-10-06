@@ -8,6 +8,6 @@ Plano::Plano(Vector3 position, Vector4 color)
 
 Plano::~Plano()
 {
-	renderItem = nullptr;
 	DeregisterRenderItem(renderItem);
+	renderItem = nullptr;
 }

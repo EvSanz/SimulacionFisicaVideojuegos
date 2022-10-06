@@ -30,8 +30,8 @@ Particula::Particula(Vector3 posicion, Vector3 velocidad, Vector3 aceleracion, f
 
 Particula::~Particula()
 {
-	renderItem = nullptr; 
 	DeregisterRenderItem(renderItem); 
+	renderItem = nullptr;
 }
 
 void Particula::integrate(double t)

@@ -71,16 +71,19 @@ void stepPhysics(bool interactive, double t)
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 
-	for (auto particula : particulas)
+	for (auto i = particulas.begin(); i != particulas.end();)
 	{
-		particula->integrate(t);
+		(* i)->integrate(t);
 
-		/*if (!particulas[i]->isAlive())
+		if (!(* i)->isAlive())
 		{
-			Particula* proyectil = particulas[i]; 
-			particulas.erase(particulas.begin() + i);
-			delete proyectil;
-		}*/
+			delete (*i); 
+			i = particulas.erase(i);
+		}
+		else 
+		{
+			i++;
+		}
 	}
 }
 

@@ -27,8 +27,8 @@ UniformParticleGenerator::UniformParticleGenerator(Particula* model, double genP
 
 	gen_prob = genProb; 
 
-	uni_pos = auxPos / 2;
-	uni_vel = auxVel / 2;
+	uni_pos = auxPos / 3;
+	uni_vel = auxVel / 3;
 
 	nParticulas = particulas;
 
@@ -44,12 +44,12 @@ std::list<Particula*> UniformParticleGenerator::generateParticle()
 		return listParticles;
 
 		auto gen = std::uniform_int_distribution<int>(0, 100);
-		auto px = std::uniform_real_distribution<float>(pos.x - uni_pos.x, pos.x + uni_pos.x);
-		auto py = std::uniform_real_distribution<float>(pos.y - uni_pos.y, pos.y + uni_pos.y);
-		auto pz = std::uniform_real_distribution<float>(pos.z - uni_pos.z, pos.z + uni_pos.z);
-		auto vx = std::uniform_real_distribution<float>(vel.x - uni_vel.x, vel.x + uni_vel.x);
-		auto vy = std::uniform_real_distribution<float>(vel.y - uni_vel.y, vel.y + uni_vel.y);
-		auto vz = std::uniform_real_distribution<float>(vel.z - uni_vel.z, vel.z + uni_vel.z);
+		auto px = std::uniform_real_distribution<float>(pos.x - uni_pos.x / 2, pos.x + uni_pos.x / 2);
+		auto py = std::uniform_real_distribution<float>(pos.y - uni_pos.y / 2, pos.y + uni_pos.y / 2);
+		auto pz = std::uniform_real_distribution<float>(pos.z - uni_pos.z / 2, pos.z + uni_pos.z / 2);
+		auto vx = std::uniform_real_distribution<float>(vel.x - uni_vel.x / 2, vel.x + uni_vel.x / 2);
+		auto vy = std::uniform_real_distribution<float>(vel.y - uni_vel.y / 2, vel.y + uni_vel.y / 2);
+		auto vz = std::uniform_real_distribution<float>(vel.z - uni_vel.z / 2, vel.z + uni_vel.z / 2);
 
 		for (int i = 0; i < nParticulas; i++)
 		{
@@ -89,10 +89,10 @@ GaussianParticleGenerator::GaussianParticleGenerator(Particula* model, double ge
 
 	gen_prob = genProb;
 
-	pos_gauss = auxPos;
-	vel_gauss = auxVel;
+	pos_gauss = auxPos * 2;
+	vel_gauss = auxVel * 0.5;
 
-	nParticulas = particulas;
+	nParticulas = particulas * 2;
 
 	std::random_device r;
 	random_generator = std::mt19937(r());

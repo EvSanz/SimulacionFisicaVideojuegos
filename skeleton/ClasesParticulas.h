@@ -99,7 +99,7 @@ public:
 		color = { 1.0f, 1.0f, 1.0f, 1 };
 		vel = { 0.0, 0.0, 0.0 };
 		acc = { 0.0f, 0.0f, 0.0f };
-		size = { 0.8, 0.0, 0.0 };
+		size = { 0.4, 0.0, 0.0 };
 		time = 200.0;
 		mass = 1.0;
 		damp = 0.85;
@@ -113,10 +113,10 @@ public:
 	Agua()
 	{
 		pose = physx::PxTransform{ 0.0, 3.0, 0.0 };
-		color = { 0.0f, 0.0f, 1.0f, 1 };
+		color = { 0.0f, 0.0f, 0.95, 1 };
 		vel = { 2.0, 5.0, 2.0 };
 		acc = { 0.0f, -0.08f, 0.0f };
-		size = { 1.5, 0.0, 0.0 };
+		size = { 0.3, 0.0, 0.0 };
 		time = 100.0;
 		mass = 0.5;
 		damp = 0.95;

@@ -5,10 +5,10 @@ void ParticleSystem::update(double t)
 	for (auto g : generadores)
 	{
 		for (auto p : g->generateParticle()) 
-			particulas.push_back(p);
+			part.push_back(p);
 	}
 
-	for (auto it = particulas.begin(); it != particulas.end();) 
+	for (auto it = part.begin(); it != part.end();)
 	{
 		(*it)->integrate(t);
 
@@ -19,11 +19,11 @@ void ParticleSystem::update(double t)
 			if (f != nullptr) 
 			{
 				for (auto i : f->explode())
-					particulas.push_back(i);
+					part.push_back(i);
 			}
 
 			delete (*it);
-			it = particulas.erase(it);
+			it = part.erase(it);
 		}
 
 		else
@@ -44,11 +44,13 @@ void ParticleSystem::generateFireworkSystem()
 {
 	Particula* i = new Particula(FuegoArtificial(10));
 
-	std::shared_ptr<SphereParticleGenerator> p;
+	//std::shared_ptr<SphereParticleGenerator> p;
 
-	p.reset(new SphereParticleGenerator({ 0.01, 30, 0.01 }, i, 20, 20));
+	//p.reset(new SphereParticleGenerator({ 0.01, 30, 0.01 }, i, 20, 20));
 
-	particulas.push_back(i);
+	generadores.push_back(new SphereParticleGenerator({ 0.01, 30, 0.01 }, i, 20, 20));
+
+	//part.push_back(i);
 }
 
 void ParticleSystem::generateFogSystem()
@@ -60,12 +62,12 @@ void ParticleSystem::generateFogSystem()
 void ParticleSystem::generateWaterSystem()
 {
 	Particula* p = new Particula(Agua());
-	generadores.push_back(new UniformParticleGenerator(p, 0.7, { 0.01, 0, 0.01 }, {10, 0, 0.01 }, 100));
+	generadores.push_back(new UniformParticleGenerator(p, 0.7, { 0.01, 0, 0.01 }, {10, 0, 0.01 }, 400));
 }
 
 ParticleSystem::~ParticleSystem()
 {
-	for (auto p : particulas)
+	for (auto p : part)
 	{
 		delete p;
 		p = nullptr;
@@ -77,5 +79,5 @@ ParticleSystem::~ParticleSystem()
 	}
 
 	generadores.clear();
-	particulas.clear();
+	part.clear();
 }

@@ -75,7 +75,7 @@ void stepPhysics(bool interactive, double t)
 {
 	PX_UNUSED(interactive);
 
-	particulasSystem->update(0.5);
+	particulasSystem->update(1.0);
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 

@@ -20,8 +20,7 @@ class ParticleSystem
 {
 protected:
 
-	std::vector<Firework*> fuegos; 
-	std::vector<Particula*> particulas; 
+	std::vector<Particula*> part; 
 	std::list<ParticleGenerator*> generadores;
 
 	Vector3 position;

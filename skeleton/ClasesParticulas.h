@@ -28,7 +28,7 @@ public:
 		vel = dir * 30;
 		acc = { 0.0, -1.0, 0.0 };
 		size = { 1.0, 0.0, 0.0 };
-		time = 100.0;
+		time = 1.0;
 		mass = 2.0;
 		damp = 0.99;
 		disparo = 1;
@@ -64,7 +64,7 @@ public:
 		vel = dir * 100;
 		acc = { 0.0, 5.0, 0.0 };
 		size = { 2.0, 0.0, 0.0 };
-		time = 200.0;
+		time = 10.0;
 		mass = 1.0;
 		damp = 0.9;
 		disparo = 1;
@@ -82,7 +82,7 @@ public:
 		vel = dir * 300;
 		acc = { 0.0f, 0.0f, 0.0f };
 		size = { 0.75, 0.0, 0.0 };
-		time = 50.0;
+		time = 5.0;
 		mass = 0.01;
 		damp = 0.99;
 		disparo = 1;
@@ -112,14 +112,14 @@ class Agua : public ClasesParticulas
 public: 
 	Agua()
 	{
-		pose = physx::PxTransform{ 0.0, -10.0, 0.0 };
+		pose = physx::PxTransform{ 0.0, 3.0, 0.0 };
 		color = { 0.0f, 0.0f, 1.0f, 1 };
-		vel = { 0.5, 10, 0.5 };
-		acc = { 0.0f, -0.1f, 0.0f };
-		size = { 2.5, 0.0, 0.0 };
-		time = 91.0;
-		mass = 1.0;
-		damp = 0.99;
+		vel = { 0.5, 5.0, 0.5 };
+		acc = { 0.0f, -0.08f, 0.0f };
+		size = { 1.5, 0.0, 0.0 };
+		time = 100.0;
+		mass = 0.5;
+		damp = 0.95;
 		disparo = 1;
 	}
 };

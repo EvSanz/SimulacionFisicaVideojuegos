@@ -49,12 +49,23 @@ ParticleGenerator* ParticleSystem::getParticleGenerator(string t)
 
 void ParticleSystem::generateFireworkSystem()
 {
-	Particula* i = new Particula(Gas());
+	int n = rand() % 3;
+
+	Vector4 colores; 
+
+	if (n == 0)
+		colores = { 1.0, 0.0, 0.0, 1.0 }; 
+	else if (n == 1)
+		colores = { 0.0, 1.0, 0.0, 1.0 };
+	else
+		colores = { 0.0, 0.0, 1.0, 1.0 };
+	 
+	Particula* i = new Particula(FuegoArtificial(300, colores));
 
 	std::shared_ptr<SphereParticleGenerator> p;
-	p.reset(new SphereParticleGenerator({ 0,30,0 }, i, 20, 20));
+	p.reset(new SphereParticleGenerator({ 5, 5, 0 }, i, 40, 200));
 
-	Firework* f = new Firework(FuegoArtificial(5), {p});
+	Firework* f = new Firework(FuegoArtificial(400, colores), {p});
 	part.push_back(f);
 }
 
@@ -62,7 +73,7 @@ void ParticleSystem::generateFogSystem()
 {
 	Particula* p = new Particula(Gas()); 
 
-	gaussianGen = new GaussianParticleGenerator(p, 0.7, { 5, 5, 5 }, { 0.01, 0.01, 0.01 }, 200); 
+	gaussianGen = new GaussianParticleGenerator(p, 0.7, { 5, 5, 5 }, { 0.01, 0.01, 0.01 }, 1000); 
 
 	generadores.push_back(gaussianGen);
 }
@@ -71,7 +82,7 @@ void ParticleSystem::generateWaterSystem()
 {
 	Particula* p = new Particula(Agua());
 
-	uniformGen = new UniformParticleGenerator(p, 0.7, { 0.01, 0, 0.01 }, { 10, 0, 0.01 }, 400);
+	uniformGen = new UniformParticleGenerator(p, 0.9, { 5, 0, 5 }, { 5, 0, 0.01 }, 400);
 
 	generadores.push_back(uniformGen);
 }

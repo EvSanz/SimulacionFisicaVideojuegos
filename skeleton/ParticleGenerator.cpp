@@ -43,10 +43,6 @@ std::list<Particula*> UniformParticleGenerator::generateParticle()
 	if (modelo == nullptr)
 		return listParticles;
 
-	if (!activoUniform)
-	{
-		activoUniform = true; 
-
 		auto gen = std::uniform_int_distribution<int>(0, 100);
 		auto px = std::uniform_real_distribution<float>(pos.x - uni_pos.x, pos.x + uni_pos.x);
 		auto py = std::uniform_real_distribution<float>(pos.y - uni_pos.y, pos.y + uni_pos.y);
@@ -72,13 +68,6 @@ std::list<Particula*> UniformParticleGenerator::generateParticle()
 				listParticles.push_back(p);
 			}
 		}
-	}
-
-	else
-	{
-		activoUniform = false; 
-		modelo->setPosition({ 100, 100, 100 }); 
-	}
 
 	return listParticles;
 }
@@ -117,10 +106,6 @@ std::list<Particula*> GaussianParticleGenerator::generateParticle()
 	if (modelo == nullptr) 
 		return listParticles;
 
-	if (!activoGauss)
-	{
-		activoGauss = true;
-
 		auto gen = std::uniform_int_distribution<int>(0, 100);
 		auto px = std::normal_distribution<float>(pos.x, pos_gauss.x);
 		auto py = std::normal_distribution<float>(pos.y, pos_gauss.y);
@@ -146,13 +131,6 @@ std::list<Particula*> GaussianParticleGenerator::generateParticle()
 				listParticles.push_back(p);
 			}
 		}
-	}
-
-	else
-	{
-		activoGauss = false;
-		modelo->setPosition({ 100, 100, 100 });
-	}
 
 	return listParticles;
 }
@@ -184,10 +162,6 @@ std::list<Particula*> SphereParticleGenerator::generateParticle()
 
 	if (modelo == nullptr)
 		return listParticles;
-
-	
-	
-		activoFire = true; 
 
 		std::random_device r{};
 		std::mt19937 gen{ r() };

@@ -65,8 +65,6 @@ class Firework : public Particula
 {
 	protected:
 
-		int nFuegos, disparo;
-
 		std::list<std::shared_ptr<ParticleGenerator>> _gens;
 
 	public:

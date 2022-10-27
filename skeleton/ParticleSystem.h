@@ -27,9 +27,13 @@ protected:
 
 	bool gaussActivo = false;
 	bool uniformActivo = false; 
+	bool fireActivo = false;
+
+	float timer = 0; 
 
 	GaussianParticleGenerator* gaussianGen = nullptr; 
 	UniformParticleGenerator* uniformGen = nullptr;
+	SphereParticleGenerator* fireGen = nullptr;
 
 public:
 
@@ -43,12 +47,16 @@ public:
 	void generateFireworkSystem(); 
 	void generateWaterSystem();
 	void generateFogSystem();
+	void generateFireworksWithJumps(); 
 
 	void setFogActive() { gaussActivo = !gaussActivo;}
 	bool isFogActive() { return gaussActivo; }
 
 	void setWaterActive() { uniformActivo = !uniformActivo; }
 	bool isWaterActive() { return uniformActivo; }
+
+	void setFireActive() { fireActivo = !fireActivo; }
+	bool isFireActive() { return fireActivo; }
 };
 
 #endif

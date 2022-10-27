@@ -2,7 +2,6 @@
 
 void ParticleSystem::update(double t)
 {
-
 	if (gaussActivo)
 	{
 		for (auto p : gaussianGen->generateParticle())
@@ -13,6 +12,17 @@ void ParticleSystem::update(double t)
 	{
 		for (auto p : uniformGen->generateParticle())
 			part.push_back(p);
+	}
+
+	if (fireActivo)
+	{
+		if (t > timer)
+		{
+			for (auto p : fireGen->generateParticle())
+				part.push_back(p);
+
+			timer += rand() % 600; 
+		}
 	}
 
 	for (std::list<Particula*>::iterator it = part.begin(); it != part.end();)
@@ -65,7 +75,7 @@ void ParticleSystem::generateFireworkSystem()
 	std::shared_ptr<SphereParticleGenerator> p;
 	p.reset(new SphereParticleGenerator({ 5, 5, 0 }, i, 40, 200));
 
-	Firework* f = new Firework(FuegoArtificial(400, colores), {p});
+	Firework* f = new Firework(FuegoArtificial(400, {0.0, 0.0, 0.0, 1.0}), {p});
 	part.push_back(f);
 }
 
@@ -76,6 +86,17 @@ void ParticleSystem::generateFogSystem()
 	gaussianGen = new GaussianParticleGenerator(p, 0.7, { 5, 5, 5 }, { 0.01, 0.01, 0.01 }, 1000); 
 
 	generadores.push_back(gaussianGen);
+}
+
+void ParticleSystem::generateFireworksWithJumps()
+{
+	timer = rand() % 600; 
+
+	Particula* p = new Particula(FuegoArtificial(timer, {0.5, 0.3, 0.6, 1}));
+
+	fireGen = new SphereParticleGenerator({ 5, 5, 0 }, p, 40, 200);
+
+	generadores.push_back(fireGen);
 }
 
 void ParticleSystem::generateWaterSystem()

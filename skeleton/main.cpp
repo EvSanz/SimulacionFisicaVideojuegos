@@ -1,6 +1,8 @@
 #include <ctype.h>
 #include <PxPhysicsAPI.h>
 
+#include "ClasesParticulas.h"
+#include "ParticleSystem.h"
 #include "Particula.h"
 #include "Plano.h"
 
@@ -29,9 +31,10 @@ PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
 
-std::vector <Particula*> particulas; 
-Plano* plano; 
+ParticleSystem* particulasSystem = NULL;
+Plano* plano = nullptr;
 
+std::vector <Particula*> particulas; 
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -57,7 +60,9 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-	plano = new Plano({ 0, -2, 0 }, { 0.3, 0.3, 0.3, 1 }); 
+	particulasSystem = new ParticleSystem({ 0,0,0 });
+	particulasSystem->generateFireworkSystem(); 
+	//plano = new Plano({ 0, -2, 0 }, { 0.3, 0.3, 0.3, 1 });
 }
 
 
@@ -68,23 +73,9 @@ void stepPhysics(bool interactive, double t)
 {
 	PX_UNUSED(interactive);
 
+	particulasSystem->update(0.5);
 	gScene->simulate(t);
 	gScene->fetchResults(true);
-
-	for (auto i = particulas.begin(); i != particulas.end();)
-	{
-		(* i)->integrate(t);
-
-		if (!(* i)->isAlive())
-		{
-			delete (*i); 
-			i = particulas.erase(i);
-		}
-		else 
-		{
-			i++;
-		}
-	}
 }
 
 // Function to clean data
@@ -107,85 +98,80 @@ void cleanupPhysics(bool interactive)
 	for (auto particula : particulas)
 		delete particula;
 
+	particulas.clear(); 
+
 	delete plano;
+	delete particulasSystem; 
 }
 
 // Function called when a key is pressed
 void keyPress(unsigned char key, const PxTransform& camera)
 {
 	PX_UNUSED(camera);
-	Vector3 front = camera.q.getBasisVector2().getNormalized();
 
-	bool create = true; 
-
-	Vector4 color; 
-	Vector3 vel, acc; 
-	float damp, mass;
-	int disp; 
+	Vector3 pos = GetCamera()->getTransform().p;
+	Vector3 dir = GetCamera()->getDir(); 
 
 	switch(toupper(key))
 	{
+		//PISTOLA
 		case 'C':
 		case 'c':
 		{
-			//Bala pistola
-			color = {0.3f, 0.3f, 0.5f, 1}; 
-			vel = { 0.0f, 0.0f, 35.0f }; 
-			acc = { 0.0f, -1.0f, 0.0f };
-			mass = 2.0f; 
-			damp = 0.99f; 
-			disp = 2; 
+			particulas.push_back(new Particula(Gun(pos, dir)));
 			break;
 		}
 
+		//ARTILLERIA
 		case 'V':
 		case 'v':
 		{
-			//Artilleria
-			color = { 0.0f, 0.0f, 1.0f, 1 };
-			vel = { 0.0f, 30.0f, 40.0f };
-			acc = { 0.0f, -20.0f, 0.0f };
-			mass = 200.0f;
-			damp = 0.99f;
-			disp = 1;
+			particulas.push_back(new Particula(Canon(pos, dir)));
 			break;
 		}
 
+		//BOLA DE FUEGO
 		case 'B':
 		case 'b':
 		{
-			//Bola de fuego
-			color = { 1.0f, 0.0f, 0.0f, 1 };
-			vel = { 0.0f, 0.0f, 10.0f };
-			acc = { 0.0f, 0.6f, 0.0f };
-			mass = 1.0f;
-			damp = 0.9f;
-			disp = 1; 
+			particulas.push_back(new Particula(Fireball(pos, dir)));
 			break;
 		}
 
+		//LASER
 		case 'N':
 		case 'n':
 		{
-			//Laser
-			color = { 1.0f, 0.5f, 0.0f, 1 };
-			vel = { 0.0f, 0.0f, 100.0f };
-			acc = { 0.0f, 0.0f, 0.0f };
-			mass = 0.1f;
-			damp = 0.99f;
-			disp = 3;
+			particulas.push_back(new Particula(Laser(pos, dir)));
+			break;
+		}
+
+		//GAS
+		case 'G':
+		case 'g':
+		{
+			particulasSystem->getParticleGenerator("niebla");
+			break;
+		}
+
+		//AGUA
+		case 'K':
+		case 'k':
+		{
+			particulasSystem->getParticleGenerator("fuente");
+			break;
+		}
+
+		//FUEGO ARTIFICIAL 
+		case 'I':
+		case 'i':
+		{
+			particulasSystem->generateFireworkSystem();
 			break;
 		}
 
 		default:
-			create = false; 
 			break;
-	}
-
-	if (create)
-	{
-		Particula* particula = new Particula(camera.p + Vector3(0, 0, 0), front * -40, acc, damp, mass, disp, color);
-		particulas.push_back(particula);
 	}
 }
 

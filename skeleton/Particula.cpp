@@ -2,26 +2,28 @@
 
 using namespace physx; 
 
-Particula::Particula(Vector3 posicion, Vector3 velocidad, Vector3 aceleracion, float damping, float mass, int disparo, Vector4 color)
+Particula::Particula(ClasesParticulas p)
 { 
-	vel = velocidad; 
-	acc = aceleracion; 
-	damp = damping; 
-	masa = mass; 
-	time = 2.0f; 
+	pos = p.pose;
+	vel = p.vel; 
+	acc = p.acc; 
+	size = p.size; 
+	damp = p.damp; 
+	mass = p.mass; 
+	time = p.time;
 
-	pos = PxTransform(posicion.x, posicion.y, posicion.z); 
+	tipoClase = p; 
 
-	switch (disparo)
+	switch (p.disparo)
 	{
 	case 1:
-		renderItem = new RenderItem(CreateShape(PxSphereGeometry(2)), &pos, color);
+		renderItem = new RenderItem(CreateShape(PxSphereGeometry(size.x)), &pos, p.color);
 		break;
 	case 2:
-		renderItem = new RenderItem(CreateShape(PxCapsuleGeometry(2, 5)), &pos, color);
+		renderItem = new RenderItem(CreateShape(PxCapsuleGeometry(size.x, size.y)), &pos, p.color);
 		break;
 	case 3:
-		renderItem = new RenderItem(CreateShape(PxBoxGeometry(1, 1, 1)), &pos, color);
+		renderItem = new RenderItem(CreateShape(PxBoxGeometry(size.x, size.y, size.z)), &pos, p.color);
 		break;
 	default: 
 		break; 
@@ -45,3 +47,4 @@ void Particula::integrate(double t)
 	if (pos.p.y < 0 || time < 0)
 		killParticle(); 
 }
+

@@ -2,9 +2,22 @@
 
 void ParticleSystem::update(double t)
 {
-	for (auto g : generadores)
+
+	if (gaussActivo)
 	{
-		for (auto p : g->generateParticle()) 
+		for (auto p : gaussianGen->generateParticle())
+			part.push_back(p);
+	}
+
+	if (fireActivo)
+	{
+		for (auto p : fireGen->generateParticle())
+			part.push_back(p);
+	}
+
+	if (uniformActivo)
+	{
+		for (auto p : uniformGen->generateParticle())
 			part.push_back(p);
 	}
 
@@ -42,27 +55,29 @@ ParticleGenerator* ParticleSystem::getParticleGenerator(string t)
 
 void ParticleSystem::generateFireworkSystem()
 {
-	Particula* i = new Particula(FuegoArtificial(10));
+	Particula* i = new Particula(FuegoArtificial(1));
 
-	//std::shared_ptr<SphereParticleGenerator> p;
+	fireGen = new SphereParticleGenerator({ 0.01, 30, 0.01 }, i, 20, 20);
 
-	//p.reset(new SphereParticleGenerator({ 0.01, 30, 0.01 }, i, 20, 20));
-
-	generadores.push_back(new SphereParticleGenerator({ 0.01, 30, 0.01 }, i, 20, 20));
-
-	//part.push_back(i);
+	generadores.push_back(fireGen);
 }
 
 void ParticleSystem::generateFogSystem()
 {
 	Particula* p = new Particula(Gas()); 
-	generadores.push_back(new GaussianParticleGenerator(p, 0.7, { 5, 5, 5 }, { 0.01, 0.01, 0.01 }, 200));
+
+	gaussianGen = new GaussianParticleGenerator(p, 0.7, { 5, 5, 5 }, { 0.01, 0.01, 0.01 }, 200); 
+
+	generadores.push_back(gaussianGen);
 }
 
 void ParticleSystem::generateWaterSystem()
 {
 	Particula* p = new Particula(Agua());
-	generadores.push_back(new UniformParticleGenerator(p, 0.7, { 0.01, 0, 0.01 }, {10, 0, 0.01 }, 400));
+
+	uniformGen = new UniformParticleGenerator(p, 0.7, { 0.01, 0, 0.01 }, { 10, 0, 0.01 }, 400);
+
+	generadores.push_back(uniformGen);
 }
 
 ParticleSystem::~ParticleSystem()

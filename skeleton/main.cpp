@@ -166,8 +166,11 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'G':
 		case 'g':
 		{
-			particulasSystem->generateFogSystem(); 
-			//particulasSystem->getParticleGenerator("niebla");
+			particulasSystem->setFogActive(); 
+
+			if (particulasSystem->isFogActive())
+				particulasSystem->generateFogSystem();
+
 			break;
 		}
 
@@ -175,13 +178,11 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'K':
 		case 'k':
 		{
-			for (auto particula : particulas)
-				delete particula;
+			particulasSystem->setWaterActive();
 
-			particulas.clear();
+			if (particulasSystem->isWaterActive())
+				particulasSystem->generateWaterSystem();
 
-			particulasSystem->generateWaterSystem();
-			particulasSystem->getParticleGenerator("fuente");
 			break;
 		}
 
@@ -189,13 +190,11 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'I':
 		case 'i':
 		{
-			for (auto particula : particulas)
-				delete particula;
+			particulasSystem->setFireActive();
 
-			particulas.clear();
+			if (particulasSystem->isFireActive())
+				particulasSystem->generateFireworkSystem();
 
-			particulasSystem->generateFireworkSystem();
-			particulasSystem->getParticleGenerator("fire");
 			break;
 		}
 

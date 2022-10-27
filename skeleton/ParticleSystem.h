@@ -25,6 +25,14 @@ protected:
 
 	Vector3 position;
 
+	bool gaussActivo = false;
+	bool uniformActivo = false; 
+	bool fireActivo = false; 
+
+	GaussianParticleGenerator* gaussianGen = nullptr; 
+	UniformParticleGenerator* uniformGen = nullptr;
+	SphereParticleGenerator* fireGen = nullptr;
+
 public:
 
 	ParticleSystem(Vector3 pos) { position = pos; }
@@ -37,6 +45,15 @@ public:
 	void generateFireworkSystem(); 
 	void generateWaterSystem();
 	void generateFogSystem();
+
+	void setFogActive() { gaussActivo = !gaussActivo;}
+	bool isFogActive() { return gaussActivo; }
+
+	void setWaterActive() { uniformActivo = !uniformActivo; }
+	bool isWaterActive() { return uniformActivo; }
+
+	void setFireActive() { fireActivo = !fireActivo; }
+	bool isFireActive() { return fireActivo; }
 };
 
 #endif

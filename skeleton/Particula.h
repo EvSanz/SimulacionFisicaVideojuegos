@@ -12,16 +12,16 @@
 #include <list>
 #include <memory>
 
-#pragma once
-
 //PARTICULA
+
+using namespace physx;
 
 class Particula
 {
 public: 
 
 	Particula(ClasesParticulas particula);
-	~Particula();
+	virtual ~Particula();
 
 	void integrate(double t); 
 
@@ -32,14 +32,11 @@ public:
 
 	void setVelocity(Vector3 v) { vel = v; }
 	void setAcceleration(Vector3 a) { acc = a; }
-	void setPosition(Vector3 p) { pos = physx::PxTransform(p.x, p.y, p.z); }
+	void setPosition(Vector3 p) { pos = PxTransform(p.x, p.y, p.z); }
 
 	Vector3 getPos() { return { pos.p.x, pos.p.y, pos.p.z }; }
 	Vector3 getVel() { return vel; }
 	Vector3 getAcceleration() { return acc; }
-	Vector3 getSize() { return size; }
-
-	Vector4 getColor() { return renderItem->color; }
 
 	ClasesParticulas getClass() { return tipoClase; }
 
@@ -53,7 +50,7 @@ protected:
 
 	Vector4 color;
 
-	physx::PxTransform pos; 
+	PxTransform pos; 
 
 	RenderItem* renderItem; 
 
@@ -76,6 +73,7 @@ class Firework : public Particula
 
 		Firework(ClasesParticulas p,
 			std::list<std::shared_ptr<ParticleGenerator>> gens) : Particula(p), _gens(gens) {}
+		virtual ~Firework() {};
 
 		std::list<Particula*> explode()
 		{

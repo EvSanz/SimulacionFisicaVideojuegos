@@ -36,6 +36,8 @@ Plano* plano = nullptr;
 
 std::vector <Particula*> particulas; 
 
+bool activado; 
+
 // Initialize physics engine
 void initPhysics(bool interactive)
 {
@@ -49,7 +51,7 @@ void initPhysics(bool interactive)
 
 	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(),true,gPvd);
 
-	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+	gMaterial = gPhysics->createMaterial(0.0f, 0.0f, 0.0f);
 
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
 	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
@@ -61,8 +63,8 @@ void initPhysics(bool interactive)
 	gScene = gPhysics->createScene(sceneDesc);
 
 	particulasSystem = new ParticleSystem({ 0,0,0 });
-	particulasSystem->generateFireworkSystem(); 
 	//plano = new Plano({ 0, -2, 0 }, { 0.3, 0.3, 0.3, 1 });
+	activado = false; 
 }
 
 
@@ -76,6 +78,20 @@ void stepPhysics(bool interactive, double t)
 	particulasSystem->update(0.5);
 	gScene->simulate(t);
 	gScene->fetchResults(true);
+
+	for (auto it = particulas.begin(); it != particulas.end();)
+	{
+		(*it)->integrate(t);
+
+		if (!(*it)->isAlive())
+		{
+			delete (*it);
+			it = particulas.erase(it);
+		}
+
+		else
+			it++;
+	}
 }
 
 // Function to clean data
@@ -150,7 +166,8 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'G':
 		case 'g':
 		{
-			particulasSystem->getParticleGenerator("niebla");
+			particulasSystem->generateFogSystem(); 
+			//particulasSystem->getParticleGenerator("niebla");
 			break;
 		}
 
@@ -158,6 +175,12 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'K':
 		case 'k':
 		{
+			for (auto particula : particulas)
+				delete particula;
+
+			particulas.clear();
+
+			particulasSystem->generateWaterSystem();
 			particulasSystem->getParticleGenerator("fuente");
 			break;
 		}
@@ -166,7 +189,13 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'I':
 		case 'i':
 		{
+			for (auto particula : particulas)
+				delete particula;
+
+			particulas.clear();
+
 			particulasSystem->generateFireworkSystem();
+			particulasSystem->getParticleGenerator("fire");
 			break;
 		}
 

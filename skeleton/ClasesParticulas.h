@@ -95,12 +95,12 @@ public:
 
 	Gas()
 	{
-		pose = physx::PxTransform{ 0.0, -10.0, 0.0 };
+		pose = physx::PxTransform{ 0.0, 10.0, 0.0 };
 		color = { 1.0f, 1.0f, 1.0f, 1 };
 		vel = { 0.0, 0.0, 0.0 };
 		acc = { 0.0f, 0.0f, 0.0f };
-		size = { 0.1, 0.0, 0.0 };
-		time = 20.0;
+		size = { 0.8, 0.0, 0.0 };
+		time = 200.0;
 		mass = 1.0;
 		damp = 0.85;
 		disparo = 1;
@@ -114,12 +114,12 @@ public:
 	{
 		pose = physx::PxTransform{ 0.0, -10.0, 0.0 };
 		color = { 0.0f, 0.0f, 1.0f, 1 };
-		vel = { 0.5, 100, 0.5 };
-		acc = { 0.0f, -0.5f, 0.0f };
-		size = { 0.75, 0.0, 0.0 };
-		time = 50.0;
+		vel = { 0.5, 10, 0.5 };
+		acc = { 0.0f, -0.1f, 0.0f };
+		size = { 2.5, 0.0, 0.0 };
+		time = 91.0;
 		mass = 1.0;
-		damp = 0.9;
+		damp = 0.99;
 		disparo = 1;
 	}
 };

@@ -6,14 +6,13 @@
 #include "PxPhysicsAPI.h"
 
 #include "RenderUtils.hpp"
-#include "Particula.h"
 
 #include <vector>
 #include <string>
 #include <list>
 #include <random>
 #include <complex>
-
+class Particula;
 using namespace std; 
 
 class ParticleGenerator
@@ -28,6 +27,8 @@ protected:
 
 	bool alive = false; 
 
+	std::string name; 
+
 	Particula* modelo; 
 
 public: 
@@ -41,6 +42,9 @@ public:
 	void setAlive() { alive = !alive; };
 	bool isAlive() { return alive; };
 
+	std::string getName() const { return name; }
+	void setName(std::string nombre) { name = nombre; }
+
 	std::default_random_engine gen;
 	std::uniform_real_distribution<> distribution{ -1,1 };
 	std::normal_distribution<> dist{ 0.5, 0.5 };
@@ -52,13 +56,14 @@ class GaussianParticleGenerator : public ParticleGenerator
 {
 protected:
 
+	bool activoGauss; 
 	Vector3 pos_gauss, vel_gauss;
 	std::mt19937 random_generator;
 
 public:
 
-	GaussianParticleGenerator(Vector3 auxPos, Vector3 auxVel, int particulas);
-	virtual std::list<Particula*> generateParticle() override;
+	GaussianParticleGenerator(Particula* model, double genProb, Vector3 auxPos, Vector3 auxVel, int particulas);
+	std::list<Particula*> generateParticle() override;
 };
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -67,13 +72,14 @@ class UniformParticleGenerator : public ParticleGenerator
 {
 protected:
 
+	bool activoUniform; 
 	Vector3 uni_pos, uni_vel;
 	std::mt19937 random_generator;
 
 public:
 
-	UniformParticleGenerator(Vector3 auxPos, Vector3 auxVel, int particulas);
-	virtual std::list<Particula*> generateParticle() override;
+	UniformParticleGenerator(Particula* model, double genProb, Vector3 auxPos, Vector3 auxVel, int particulas);
+	std::list<Particula*> generateParticle() override;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -82,18 +88,18 @@ class SphereParticleGenerator : public ParticleGenerator
 {
 protected:
 
+	bool activoFire; 
+
 	float radio;
 
 	Vector3 fire_pos, fire_vel, fire_acc;
+
 	std::uniform_real_distribution<float> random;
 
 public:
 
 	SphereParticleGenerator(Vector3 pos, Particula* model, float radius, int numParticles);
-	virtual std::list<Particula*> generateParticle() override;
-
-	std::random_device rd{};
-	std::mt19937 gen{ rd() };
+	std::list<Particula*> generateParticle() override;
 };
 
 #endif

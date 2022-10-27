@@ -4,9 +4,8 @@ void ParticleSystem::update(double t)
 {
 	for (auto g : generadores)
 	{
-		for (auto p : g->generateParticle()) {
+		for (auto p : g->generateParticle()) 
 			particulas.push_back(p);
-		}
 	}
 
 	for (auto it = particulas.begin(); it != particulas.end();) 
@@ -15,13 +14,13 @@ void ParticleSystem::update(double t)
 
 		if (!(*it)->isAlive()) 
 		{
-			/*Firework* f = dynamic_cast<Firework*>(*it);
+			Firework* f = dynamic_cast<Firework*>(*it);
 
 			if (f != nullptr) 
 			{
 				for (auto i : f->explode())
 					particulas.push_back(i);
-			}*/
+			}
 
 			delete (*it);
 			it = particulas.erase(it);
@@ -34,12 +33,11 @@ void ParticleSystem::update(double t)
 
 ParticleGenerator* ParticleSystem::getParticleGenerator(string t)
 {
-	if (t == "fuente")
-		generateWaterSystem();
-	else if (t == "niebla")
-		generateFogSystem(); 
-	else if (t == "firework")
-		generateFireworkSystem(); 
+	for (auto g : generadores) 
+	{
+		if (g->getName() == t)
+			return g;
+	}
 }
 
 void ParticleSystem::generateFireworkSystem()
@@ -48,23 +46,21 @@ void ParticleSystem::generateFireworkSystem()
 
 	std::shared_ptr<SphereParticleGenerator> p;
 
-	p.reset(new SphereParticleGenerator({ 0, 30, 0 }, i, 20, 20));
+	p.reset(new SphereParticleGenerator({ 0.01, 30, 0.01 }, i, 20, 20));
 
-	particulas.push_back(new Firework(FuegoArtificial(10), {p}));
+	particulas.push_back(i);
 }
 
 void ParticleSystem::generateFogSystem()
 {
-	GaussianParticleGenerator* niebla = new GaussianParticleGenerator({ 10, 50, 10 }, { 0, 0, 0 }, 200);
-	niebla->setParticle(new Particula(Gas()));
-	generadores.push_back(niebla);
+	Particula* p = new Particula(Gas()); 
+	generadores.push_back(new GaussianParticleGenerator(p, 0.7, { 5, 5, 5 }, { 0.01, 0.01, 0.01 }, 200));
 }
 
 void ParticleSystem::generateWaterSystem()
 {
-	UniformParticleGenerator* water = new UniformParticleGenerator({ 0, 0, 0 }, { 0, 10, 0 }, 100);
-	water->setParticle(new Particula(Agua()));
-	generadores.push_back(water); 
+	Particula* p = new Particula(Agua());
+	generadores.push_back(new UniformParticleGenerator(p, 0.7, { 0.01, 0, 0.01 }, {10, 0, 0.01 }, 100));
 }
 
 ParticleSystem::~ParticleSystem()

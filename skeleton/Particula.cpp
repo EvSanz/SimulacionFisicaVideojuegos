@@ -1,6 +1,4 @@
-#include "Particula.h"
-
-using namespace physx; 
+#include "Particula.h" 
 
 Particula::Particula(ClasesParticulas p)
 { 
@@ -40,11 +38,12 @@ void Particula::integrate(double t)
 {
 	time -= t;
 
-	vel = Vector3(vel.x + acc.x * t, vel.y + acc.y * t, vel.z + acc.z * t);
-	vel *= pow(damp, t); 
+	
 	pos = PxTransform(pos.p.x + vel.x * t, pos.p.y + vel.y * t, pos.p.z + vel.z * t);
+	vel = Vector3(vel.x + acc.x * t, vel.y + acc.y * t, vel.z + acc.z * t);
+	vel *= pow(damp, t);
 
-	if (pos.p.y < 0 || time < 0)
+	if (/*pos.p.y < 0 ||*/ time < 0)
 		killParticle(); 
 }
 

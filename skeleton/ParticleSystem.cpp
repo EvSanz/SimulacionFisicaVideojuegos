@@ -9,33 +9,27 @@ void ParticleSystem::update(double t)
 			part.push_back(p);
 	}
 
-	if (fireActivo)
-	{
-		for (auto p : fireGen->generateParticle())
-			part.push_back(p);
-	}
-
 	if (uniformActivo)
 	{
 		for (auto p : uniformGen->generateParticle())
 			part.push_back(p);
 	}
 
-	for (auto it = part.begin(); it != part.end();)
+	for (std::list<Particula*>::iterator it = part.begin(); it != part.end();)
 	{
 		(*it)->integrate(t);
 
 		if (!(*it)->isAlive()) 
 		{
 			Firework* f = dynamic_cast<Firework*>(*it);
-
 			if (f != nullptr) 
 			{
 				for (auto i : f->explode())
 					part.push_back(i);
+
 			}
 
-			delete (*it);
+			if ((*it) != nullptr) delete (*it);
 			it = part.erase(it);
 		}
 
@@ -55,11 +49,13 @@ ParticleGenerator* ParticleSystem::getParticleGenerator(string t)
 
 void ParticleSystem::generateFireworkSystem()
 {
-	Particula* i = new Particula(FuegoArtificial(1));
+	Particula* i = new Particula(Gas());
 
-	fireGen = new SphereParticleGenerator({ 0.01, 30, 0.01 }, i, 20, 20);
+	std::shared_ptr<SphereParticleGenerator> p;
+	p.reset(new SphereParticleGenerator({ 0,30,0 }, i, 20, 20));
 
-	generadores.push_back(fireGen);
+	Firework* f = new Firework(FuegoArtificial(5), {p});
+	part.push_back(f);
 }
 
 void ParticleSystem::generateFogSystem()

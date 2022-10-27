@@ -190,11 +190,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'I':
 		case 'i':
 		{
-			particulasSystem->setFireActive();
-
-			if (particulasSystem->isFireActive())
-				particulasSystem->generateFireworkSystem();
-
+			particulasSystem->generateFireworkSystem();
 			break;
 		}
 

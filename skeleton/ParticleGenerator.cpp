@@ -185,8 +185,8 @@ std::list<Particula*> SphereParticleGenerator::generateParticle()
 	if (modelo == nullptr)
 		return listParticles;
 
-	if (!activoFire)
-	{
+	
+	
 		activoFire = true; 
 
 		std::random_device r{};
@@ -212,13 +212,7 @@ std::list<Particula*> SphereParticleGenerator::generateParticle()
 
 			listParticles.push_back(p);
 		}
-	}
-
-	else
-	{
-		activoFire = false;
-		modelo->setPosition({ 100, 100, 100 });
-	}
+	
 
 	return listParticles;
 }

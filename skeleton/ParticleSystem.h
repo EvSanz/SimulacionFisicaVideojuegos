@@ -20,18 +20,16 @@ class ParticleSystem
 {
 protected:
 
-	std::vector<Particula*> part; 
+	std::list<Particula*> part; 
 	std::list<ParticleGenerator*> generadores;
 
 	Vector3 position;
 
 	bool gaussActivo = false;
 	bool uniformActivo = false; 
-	bool fireActivo = false; 
 
 	GaussianParticleGenerator* gaussianGen = nullptr; 
 	UniformParticleGenerator* uniformGen = nullptr;
-	SphereParticleGenerator* fireGen = nullptr;
 
 public:
 
@@ -51,9 +49,6 @@ public:
 
 	void setWaterActive() { uniformActivo = !uniformActivo; }
 	bool isWaterActive() { return uniformActivo; }
-
-	void setFireActive() { fireActivo = !fireActivo; }
-	bool isFireActive() { return fireActivo; }
 };
 
 #endif

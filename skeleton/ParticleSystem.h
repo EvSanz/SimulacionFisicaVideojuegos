@@ -9,6 +9,7 @@
 #include "Particula.h"
 #include "PxPhysicsAPI.h"
 #include "ParticleGenerator.h"
+#include "ForceGenerator.h"
 #include "ClasesParticulas.h"
 
 #include <vector>
@@ -22,18 +23,25 @@ protected:
 
 	std::list<Particula*> part; 
 	std::list<ParticleGenerator*> generadores;
+	std::list<ForceGenerator*> generadoresFuerza; 
 
 	Vector3 position;
+	Vector3 gravity; 
 
 	bool gaussActivo = false;
 	bool uniformActivo = false; 
 	bool fireActivo = false;
+	bool gravityActive = false; 
 
 	float timer = 0; 
 
 	GaussianParticleGenerator* gaussianGen = nullptr; 
 	UniformParticleGenerator* uniformGen = nullptr;
 	SphereParticleGenerator* fireGen = nullptr;
+
+	GravityForceGenerator* gravityGen = nullptr;
+
+	ParticleForceRegistry* force = nullptr;
 
 public:
 
@@ -43,11 +51,16 @@ public:
 	void update(double t); 
 
 	ParticleGenerator* getParticleGenerator(string name); 
+	ForceGenerator* getForceGenerator(string name); 
 
 	void generateFireworkSystem(); 
 	void generateWaterSystem();
 	void generateFogSystem();
-	void generateFireworksWithJumps(); 
+
+	void generateGravity(); 
+
+	void setGravityActive() { gravityActive = !gravityActive; }
+	bool isGravityActive() { return gravityActive; }
 
 	void setFogActive() { gaussActivo = !gaussActivo;}
 	bool isFogActive() { return gaussActivo; }

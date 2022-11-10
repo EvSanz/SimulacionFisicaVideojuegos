@@ -36,8 +36,6 @@ Plano* plano = nullptr;
 
 std::vector <Particula*> particulas; 
 
-bool activado; 
-
 // Initialize physics engine
 void initPhysics(bool interactive)
 {
@@ -62,9 +60,8 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-	particulasSystem = new ParticleSystem({ 0,0,0 });
+	particulasSystem = new ParticleSystem({ 0, 0, 0 });
 	//plano = new Plano({ 0, -2, 0 }, { 0.3, 0.3, 0.3, 1 });
-	activado = false; 
 }
 
 
@@ -159,6 +156,18 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'n':
 		{
 			particulas.push_back(new Particula(Laser(pos, dir)));
+			break;
+		}
+
+		//GRAVEDAD
+		case 'P':
+		case 'p':
+		{
+			particulasSystem->setGravityActive();
+
+			if (particulasSystem->isGravityActive())
+				particulasSystem->generateGravity();
+
 			break;
 		}
 

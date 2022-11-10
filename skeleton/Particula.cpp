@@ -36,13 +36,21 @@ Particula::~Particula()
 
 void Particula::integrate(double t)
 {
+	if (inverse_mass <= 0.0)
+		return; 
+
 	time -= t;
 
 	pos = PxTransform(pos.p.x + vel.x * t, pos.p.y + vel.y * t, pos.p.z + vel.z * t);
-	vel = Vector3(vel.x + acc.x * t, vel.y + acc.y * t, vel.z + acc.z * t);
-	vel *= pow(damp, t);
 
-	if (/*pos.p.y < 0 ||*/ time < 0)
+	Vector3 totalacc = Vector3(acc.x + force.x * inverse_mass, acc.y + force.y * inverse_mass, acc.z + force.z * inverse_mass);
+
+	vel = Vector3(vel.x + totalacc.x * t, vel.y + totalacc.y * t, vel.z + totalacc.z * t); 
+	vel *= powf(damp, t);
+
+	clearForce(); 
+
+	if (time < 0)
 		killParticle(); 
 }
 

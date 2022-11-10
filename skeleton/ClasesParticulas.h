@@ -15,6 +15,11 @@ public:
 	physx::PxTransform pose;
 
 	int disparo; 
+
+	int aleatorio(int a) 
+	{ 
+		return rand() % (a + 1); 
+	}
 };
 
 class Gun : public ClasesParticulas
@@ -130,12 +135,16 @@ public:
 
 	FuegoArtificial(int tiempo, Vector4 colores) 
 	{
-		pose = physx::PxTransform{ 0.0, 10.0, 0.0 };
+		int x = aleatorio(40); 
+		int y = aleatorio(40); 
+		int z = aleatorio(40); 
+
+		pose = physx::PxTransform{ (float)x, (float)y, float(z)};
 		color = colores; 
 		vel = { 0.0, 0.0, 0.0 };
 		acc = { 0.0f, 0.0f, 0.0f };
 		size = { 0.8, 0.0, 0.0 };
-		time = 200.0;
+		time = tiempo;
 		mass = 1.0;
 		damp = 0.85;
 		disparo = 1;

@@ -33,20 +33,26 @@ public:
 	void setVelocity(Vector3 v) { vel = v; }
 	void setAcceleration(Vector3 a) { acc = a; }
 	void setPosition(Vector3 p) { pos = PxTransform(p.x, p.y, p.z); }
+	void setMass(Vector3 m) { mass = m; inverse_mass = (1.0 / mass) }
+
+	void clearForce() { force *= 0; }
+	void addForce(const Vector3& f) { force += f; }
 
 	Vector3 getPos() { return { pos.p.x, pos.p.y, pos.p.z }; }
 	Vector3 getVel() { return vel; }
 	Vector3 getAcceleration() { return acc; }
+	Vector3 getMass() { return mass; }
+	Vector3 getInverseMass() { return inverse_mass; }
 
 	ClasesParticulas getClass() { return tipoClase; }
 
 protected: 
 
-	double damp, mass, time; 
+	double damp, mass, inverse_mass, time; 
 
 	bool alive = true; 
 
-	Vector3 vel, acc, position, size; 
+	Vector3 vel, acc, position, size, force; 
 
 	Vector4 color;
 

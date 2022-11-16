@@ -203,18 +203,6 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			break;
 		}
 
-		//FUEGO ARTIFICIAL CON SALTO
-		/*case 'M':
-		case 'm':
-		{
-			particulasSystem->setFireActive();
-
-			if (particulasSystem->isFireActive())
-				particulasSystem->generateFireworksWithJumps();
-
-			break;
-		}*/
-
 		default:
 			break;
 	}

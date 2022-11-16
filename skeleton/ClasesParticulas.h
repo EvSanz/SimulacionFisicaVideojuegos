@@ -22,6 +22,24 @@ public:
 	}
 };
 
+class Prueba : public ClasesParticulas
+{
+public:
+
+	Prueba(Vector3 pos, double m)
+	{
+		pose = physx::PxTransform{ pos.x, pos.y, pos.z };
+		color = { 0.3, 0.3, 0.5, 1 };
+		vel = {0.0, 0.0, 0.0};
+		acc = { 0.0, 0.0, 0.0 };
+		size = { 1.0, 0.0, 0.0 };
+		time = 10.0;
+		mass = m;
+		damp = 0.99;
+		disparo = 1;
+	}
+};
+
 class Gun : public ClasesParticulas
 {
 public:	

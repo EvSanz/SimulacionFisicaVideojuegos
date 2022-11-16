@@ -2,56 +2,55 @@
 
 void ParticleSystem::update(double t)
 {
-	if (gravityActive)
-		force->updateForce(t);
-
-	if (gaussActivo)
+	if (!sysFuerzas)
 	{
-		for (auto p : gaussianGen->generateParticle())
-			part.push_back(p);
-	}
-
-	if (uniformActivo)
-	{
-		for (auto p : uniformGen->generateParticle())
-			part.push_back(p);
-	}
-
-	for (std::list<Particula*>::iterator it = part.begin(); it != part.end();)
-	{
-		(*it)->integrate(t);
-
-		if (!(*it)->isAlive()) 
+		if (gaussActivo)
 		{
-			Firework* f = dynamic_cast<Firework*>(*it);
-			if (f != nullptr) 
-			{
-				for (auto i : f->explode())
-					part.push_back(i);
-
-			}
-
-			if ((*it) != nullptr) delete (*it);
-			it = part.erase(it);
+			for (auto p : gaussianGen->generateParticle())
+				part.push_back(p);
 		}
 
-		else
-			it++;
+		if (uniformActivo)
+		{
+			for (auto p : uniformGen->generateParticle())
+				part.push_back(p);
+		}
+
+		for (std::list<Particula*>::iterator it = part.begin(); it != part.end();)
+		{
+			(*it)->integrate(t);
+
+			if (!(*it)->isAlive())
+			{
+				Firework* f = dynamic_cast<Firework*>(*it);
+				if (f != nullptr)
+				{
+					for (auto i : f->explode())
+						part.push_back(i);
+
+				}
+
+				if ((*it) != nullptr) delete (*it);
+				part.erase(it);
+			}
+
+			else
+				it++;
+		}
+	}
+
+	else
+	{
+		force.updateForces(0);
+
+		for (auto i : part)
+			i->integrate(t);
 	}
 }
 
 ParticleGenerator* ParticleSystem::getParticleGenerator(string t)
 {
 	for (auto g : generadores) 
-	{
-		if (g->getName() == t)
-			return g;
-	}
-}
-
-ForceGenerator* ParticleSystem::getForceGenerator(string t)
-{
-	for (auto g : generadoresFuerza)
 	{
 		if (g->getName() == t)
 			return g;
@@ -84,26 +83,24 @@ void ParticleSystem::generateFireworkSystem()
 	part.push_back(f);
 }
 
-void ParticleSystem::generateGravity(Vector3 gravedad)
+void ParticleSystem::generateGravity()
 {
-	gravity = gravedad;
+	gravityGen = new GravityForceGenerator(Vector3(0.0f, -9.8f, 0.0f));
 
-	force = new ParticleForceRegistry();
+	Particula* p1 = new Particula(Prueba({ 20.0, 20.0, 20.0 }, 20.0));
+	force.addRegistry(gravityGen, p1);
+	part.push_back(p1);
 
-	gravityGen  = new GravityForceGenerator(gravity); 
-
-	generadoresFuerza.push_back(gravityForceGen);
+	Particula* p2 = new Particula(Prueba({ 20.0, 20.0, 40.0 }, 5.0));
+	force.addRegistry(gravityGen, p2);
+	part.push_back(p2);
 }
 
 void ParticleSystem::generateFogSystem()
 {
 	Particula* p = new Particula(Gas()); 
 
-	force->addRegistry(gravityGen, p);
-
 	gaussianGen = new GaussianParticleGenerator(p, 0.7, { 5, 5, 5 }, { 0.01, 0.01, 0.01 }, 1000); 
-
-	gaussianGen->addParticleForceRegistry(force);
 
 	generadores.push_back(gaussianGen);
 }
@@ -132,4 +129,5 @@ ParticleSystem::~ParticleSystem()
 
 	generadores.clear();
 	part.clear();
+	force.clear(); 
 }

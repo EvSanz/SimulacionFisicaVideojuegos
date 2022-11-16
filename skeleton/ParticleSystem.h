@@ -11,6 +11,7 @@
 #include "ParticleGenerator.h"
 #include "ForceGenerator.h"
 #include "ClasesParticulas.h"
+#include "ParticleForceRegistry.h"
 
 #include <vector>
 #include <string>
@@ -23,15 +24,18 @@ protected:
 
 	std::list<Particula*> part; 
 	std::list<ParticleGenerator*> generadores;
-	std::list<ForceGenerator*> generadoresFuerza; 
 
 	Vector3 position;
-	Vector3 gravity; 
+	
+	bool sysFuerzas = true; 
 
 	bool gaussActivo = false;
 	bool uniformActivo = false; 
 	bool fireActivo = false;
 	bool gravityActive = false; 
+	bool windActive = false; 
+	bool tornadeActive = false; 
+	bool explosionActive = false; 
 
 	float timer = 0; 
 
@@ -40,8 +44,11 @@ protected:
 	SphereParticleGenerator* fireGen = nullptr;
 
 	GravityForceGenerator* gravityGen = nullptr;
+	WindForceGenerator* windGen = nullptr; 
+	TornadeForceGenerator* tornadeGen = nullptr; 
+	ExplosionForceGenerator* explodeGen = nullptr; 
 
-	ParticleForceRegistry* force = nullptr;
+	ParticleForceRegistry force;
 
 public:
 
@@ -56,8 +63,7 @@ public:
 	void generateFireworkSystem(); 
 	void generateWaterSystem();
 	void generateFogSystem();
-
-	void generateGravity(); 
+	void generateGravity();  
 
 	void setGravityActive() { gravityActive = !gravityActive; }
 	bool isGravityActive() { return gravityActive; }

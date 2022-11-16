@@ -2,6 +2,7 @@
 
 #include <random>
 #include <list>
+#include <map>
 
 #include "Particula.h"
 
@@ -15,7 +16,7 @@ protected:
 
 	string name;
 
-	double t = -1e10;
+	double time = -1e10;
 
 public: 
 
@@ -23,23 +24,6 @@ public:
 
 	std::string getName() const { return name; }
 	void setName(std::string nombre) { name = nombre; }
-};
-
-typedef std::pair<ForceGenerator*, Particula*> FRPair;
-
-class ParticleForceRegistry : public std::multimap<ForceGenerator*, Particula*>
-{
-public:
-
-	void updateForces(double duration)
-	{
-		for (auto i = begin(); i != end(); i++)
-			i->first->updateForce(i->second, duration);
-	}
-
-	void addRegistry(ForceGenerator* fg, Particula* p);
-
-	void deleteParticleRegistry(Particula* p);
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -52,14 +36,69 @@ protected:
 
 public: 
 
-	GravityForceGenerator(const Vector3& g); 
+	GravityForceGenerator(Vector3& gravedad);
+	~GravityForceGenerator() {}
 
-	virtual void updateForce(Particula* p, double t);
+	void updateForce(Particula* p, double time) override;
 
 	inline void setGravity(Vector3 g) { gravity = g; }
 };
 
 //////////////////////////////////////////////////////////////////////
+
+class WindForceGenerator : public ForceGenerator
+{
+protected: 
+
+	Vector3 velViento, posViento; 
+	double rViento; 
+
+public: 
+
+	WindForceGenerator(const Vector3& vel, const Vector3& pos, double r);
+	virtual ~WindForceGenerator() {}
+
+	void updateForce(Particula* p, double t);
+
+	Vector3 getVel() { return velViento; }
+	Vector3 getPos() { return posViento; }
+};
+
+//////////////////////////////////////////////////////////////////////
+
+class TornadeForceGenerator : public ForceGenerator
+{
+protected:
+
+	WindForceGenerator* rafaga = nullptr; 
+
+	double k; 
+
+public:
+
+	TornadeForceGenerator(const Vector3& vel, double r, double k);
+
+	Vector3 getVel(Vector3 p); 
+};
+
+//////////////////////////////////////////////////////////////////////
+
+class ExplosionForceGenerator : public ForceGenerator
+{
+protected:
+
+	Vector3 expPos; 
+	double rExplosion, tiempo;
+
+public:
+
+	ExplosionForceGenerator(const Vector3& pos, double r, double t);
+	virtual ~ExplosionForceGenerator() {}
+
+	void updateForce(Particula* p, double t);
+};
+
+///////////////////////////////////////////////////////////////////
 
 class ParticleDragGenerator : public ForceGenerator
 {

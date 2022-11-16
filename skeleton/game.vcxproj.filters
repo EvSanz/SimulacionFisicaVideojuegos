@@ -14,6 +14,8 @@
     <ClCompile Include="Plano.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="ParticleGenerator.cpp" />
+    <ClCompile Include="ForceGenerator.cpp" />
+    <ClCompile Include="ParticleForceRegistry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -30,6 +32,8 @@
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="ParticleGenerator.h" />
     <ClInclude Include="ClasesParticulas.h" />
+    <ClInclude Include="ForceGenerator.h" />
+    <ClInclude Include="ParticleForceRegistry.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

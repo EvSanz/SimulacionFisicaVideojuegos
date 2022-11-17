@@ -26,17 +26,17 @@ class Prueba : public ClasesParticulas
 {
 public:
 
-	Prueba(Vector3 pos, double m)
+	Prueba(Vector3 pos, double m, double d)
 	{
 		pose = physx::PxTransform{ pos.x, pos.y, pos.z };
 		color = { 1, 1, 1, 1 };
 		vel = {0.0, 0.0, 0.0};
 		acc = { 0.0, 0.0, 0.0 };
 		force = {0.0, 0.0, 0.0};
-		size = { 2.0, 2.0, 2.0 };
-		time = 100.0;
+		size = { 0.5, 0.5, 0.5 };
+		time = 10.0;
 		mass = m;
-		damp = 0.99;
+		damp = d;
 		disparo = 1;
 	}
 };

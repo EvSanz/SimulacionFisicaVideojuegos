@@ -167,6 +167,22 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			break;
 		}
 
+		//TORNADO
+		case 'l':
+		case 'L':
+		{
+			particulasSystem->generateStorm(300, 200);
+			break;
+		}
+
+		//EXPLOSION
+		case 'j':
+		case 'J':
+		{
+			particulasSystem->generateExplosive(100, 20);
+			break;
+		}
+
 		//GAS
 		case 'G':
 		case 'g':

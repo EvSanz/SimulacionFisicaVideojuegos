@@ -98,17 +98,49 @@ void ParticleSystem::generateGravity()
 {
 	gravityGen = new GravityForceGenerator(Vector3(0.0f, -9.8f, 0.0f));
 
-	Particula* p1 = new Particula(Prueba({ 0.0, 50.0, 0.0 }, 0.01));
+	Particula* p1 = new Particula(Prueba({ 0.0, 50.0, 20.0 }, 1000, 0.99));
 	force.addRegistry(gravityGen, p1);
 	part.push_back(p1);
 
-	Particula* p3 = new Particula(Prueba({ 0.0, 50.0, 20.0 }, 1000.0));
+	Particula* p3 = new Particula(Prueba({ 0.0, 50.0, 0.0 }, 1000.0, 0.7));
 	force.addRegistry(gravityGen, p3);
 	part.push_back(p3);
 
-	Particula* p2 = new Particula(Prueba({ 0.0, 50.0, -20.0 }, 0.001));
+	Particula* p2 = new Particula(Prueba({ 0.0, 50.0, -20.0 }, 1000, 0.5));
 	force.addRegistry(gravityGen, p2);
 	part.push_back(p2);
+}
+
+void ParticleSystem::generateStorm(int n, int r)
+{
+	tornadeGen = new TornadeForceGenerator(Vector3(0.0, 0.0, 0.0), r, 5.0);
+
+	for (int i = 0; i < n; i++)
+	{
+		double x = rand() % (r + 1);
+		double y = rand() % (r + 1); 
+		double z = rand() % (r + 1);
+
+		Particula* p = new Particula(Prueba({ (float)x, (float)y, (float)z}, r, 0.99));
+		force.addRegistry(tornadeGen, p);
+		part.push_back(p);
+	}
+}
+
+void ParticleSystem::generateExplosive(int n, int r)
+{
+	explodeGen = new ExplosionForceGenerator(Vector3(0.0, 30.0, 0.0), r, 10);
+
+	for (int i = 0; i < n; i++)
+	{
+		double x = rand() % (r + 1);
+		double y = (rand() % (r + 1)) + 30;
+		double z = rand() % (r + 1);
+
+		Particula* p = new Particula(Prueba({ (float)x, (float)y, (float)z }, r, 0.99));
+		force.addRegistry(explodeGen, p);
+		part.push_back(p);
+	}
 }
 
 void ParticleSystem::generateFogSystem()

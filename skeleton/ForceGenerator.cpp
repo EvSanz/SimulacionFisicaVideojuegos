@@ -10,7 +10,7 @@ GravityForceGenerator::GravityForceGenerator(Vector3& gravedad)
 
 void GravityForceGenerator::updateForce(Particula* p, double t)
 {
-	if (p->getInverseMass() <= 0.0f)
+	if (p->getInverseMass() < 1e-10)
 		return; 
 
 	p->addForce(gravity * p->getMass()); 
@@ -41,9 +41,16 @@ TornadeForceGenerator::TornadeForceGenerator(const Vector3& pos, double r, doubl
 	k = aux; 
 }
 
-Vector3 TornadeForceGenerator::getVel(Vector3 p)
+void TornadeForceGenerator::updateForce(Particula* p, double t)
 {
-	return k * Vector3(-(p.z - rafaga->getPos().z), 50 - (p.y - rafaga->getPos().y), p.x - rafaga->getPos().x);
+	if (fabs(p->getInverseMass()) < 1e-10)
+		return;
+
+	p->setVelocity(k * Vector3(-(p->getPos().z - rafaga->getPos().z), 
+							50 - (p->getPos().y - rafaga->getPos().y), 
+							p->getPos().x - rafaga->getPos().x));
+
+	rafaga->updateForce(p, t);
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -63,7 +70,7 @@ void ExplosionForceGenerator::updateForce(Particula* p, double t)
 
 	tiempo += t; 
 
-	p->addForce((8000 / pow(rExplosion, 2)) * (p->getPos() - expPos) * pow(2.71828, -((t / 1000.0))));
+	p->addForce((8000 / pow(rExplosion, 2)) * (p->getPos() - expPos) * pow(2.7, -((t / 1000.0))));
 }
 
 ///////////////////////////////////////////////////////////////////

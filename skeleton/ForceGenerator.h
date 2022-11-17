@@ -78,7 +78,7 @@ public:
 
 	TornadeForceGenerator(const Vector3& vel, double r, double k);
 
-	Vector3 getVel(Vector3 p); 
+	void updateForce(Particula* p, double t); 
 };
 
 //////////////////////////////////////////////////////////////////////

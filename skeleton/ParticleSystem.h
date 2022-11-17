@@ -63,7 +63,9 @@ public:
 	void generateFireworkSystem(); 
 	void generateWaterSystem();
 	void generateFogSystem();
-	void generateGravity();  
+	void generateGravity();
+	void generateExplosive(int n, int r); 
+	void generateStorm(int n, int r); 
 
 	void setGravityActive() { gravityActive = !gravityActive; }
 	bool isGravityActive() { return gravityActive; }

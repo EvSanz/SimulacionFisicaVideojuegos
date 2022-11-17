@@ -6,11 +6,11 @@ void ParticleForceRegistry::deleteParticleRegistry(Particula* p)
 	{
 		if (i->second == p)
 		{
-			auto aux = i; 
-			erase(aux);
+			i = erase(i);
 		}
 
-		i++; 
+		else
+			i++; 
 	}
 }
 

@@ -72,7 +72,7 @@ void stepPhysics(bool interactive, double t)
 {
 	PX_UNUSED(interactive);
 
-	particulasSystem->update(1.0);
+	particulasSystem->update(t);
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 
@@ -163,11 +163,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'P':
 		case 'p':
 		{
-			particulasSystem->setGravityActive();
-
-			if (particulasSystem->isGravityActive())
-				particulasSystem->generateGravity();
-
+			particulasSystem->generateGravity();
 			break;
 		}
 

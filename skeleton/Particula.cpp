@@ -8,6 +8,7 @@ Particula::Particula(ClasesParticulas p)
 	size = p.size; 
 	damp = p.damp;  
 	time = p.time;
+	force = p.force; 
 
 	if (p.mass > 0.0f)
 		inverse_mass = 1.0f / p.mass;
@@ -17,20 +18,7 @@ Particula::Particula(ClasesParticulas p)
 	mass = p.mass;
 	tipoClase = p; 
 
-	switch (p.disparo)
-	{
-	case 1:
-		renderItem = new RenderItem(CreateShape(PxSphereGeometry(size.x)), &pos, p.color);
-		break;
-	case 2:
-		renderItem = new RenderItem(CreateShape(PxCapsuleGeometry(size.x, size.y)), &pos, p.color);
-		break;
-	case 3:
-		renderItem = new RenderItem(CreateShape(PxBoxGeometry(size.x, size.y, size.z)), &pos, p.color);
-		break;
-	default: 
-		break; 
-	}
+	renderItem = new RenderItem(CreateShape(PxSphereGeometry(size.x)), &pos, p.color);
 }
 
 Particula::~Particula()
@@ -44,13 +32,10 @@ void Particula::integrate(double t)
 	if (inverse_mass <= 0.0f)
 		return; 
 
-	auto totalacc = acc + force * inverse_mass;
-	
-	vel += totalacc * t;
-	vel *= pow(damp, t);
+	pos.p += vel * t; 
 
-	pos = PxTransform(pos.p.x + vel.x * t, pos.p.y + vel.y * t, pos.p.z + vel.z * t);
-
+	auto totalacc = force * inverse_mass;
+	vel = vel * pow(damp, t) + totalacc * t;
 
 	time -= t;
 

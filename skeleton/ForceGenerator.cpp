@@ -10,7 +10,7 @@ GravityForceGenerator::GravityForceGenerator(Vector3& gravedad)
 
 void GravityForceGenerator::updateForce(Particula* p, double t)
 {
-	if (fabs(p->getInverseMass()) < 1e-10)
+	if (p->getInverseMass() <= 0.0f)
 		return; 
 
 	p->addForce(gravity * p->getMass()); 

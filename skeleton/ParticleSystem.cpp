@@ -41,10 +41,21 @@ void ParticleSystem::update(double t)
 
 	else
 	{
-		force.updateForces(0);
+		force.updateForces(t);
 
-		for (auto i : part)
-			i->integrate(t);
+		for (auto it = part.begin(); it != part.end();) 
+		{
+			(*it)->integrate(t);
+
+			if (!(*it)->isAlive()) 
+			{
+				force.deleteParticleRegistry(*it);
+				delete (*it);
+				it = part.erase(it);
+			}
+			else 
+				it++;
+		}
 	}
 }
 
@@ -74,12 +85,12 @@ void ParticleSystem::generateFireworkSystem()
 	int y = rand() % 50; 
 	int z = rand() % 50;
 	 
-	Particula* i = new Particula(FuegoArtificial(2000, colores));
+	Particula* i = new Particula(FuegoArtificial(2, colores));
 
 	std::shared_ptr<SphereParticleGenerator> p;
 	p.reset(new SphereParticleGenerator({ (float)x, (float)y, (float)z }, i, 40, 200));
 
-	Firework* f = new Firework(FuegoArtificial(2000, {0.0, 0.0, 0.0, 1.0}), {p});
+	Firework* f = new Firework(FuegoArtificial(4, {0.0, 0.0, 0.0, 1.0}), {p});
 	part.push_back(f);
 }
 
@@ -87,11 +98,15 @@ void ParticleSystem::generateGravity()
 {
 	gravityGen = new GravityForceGenerator(Vector3(0.0f, -9.8f, 0.0f));
 
-	Particula* p1 = new Particula(Prueba({ 20.0, 20.0, 20.0 }, 20.0));
+	Particula* p1 = new Particula(Prueba({ 0.0, 50.0, 0.0 }, 0.01));
 	force.addRegistry(gravityGen, p1);
 	part.push_back(p1);
 
-	Particula* p2 = new Particula(Prueba({ 20.0, 20.0, 40.0 }, 5.0));
+	Particula* p3 = new Particula(Prueba({ 0.0, 50.0, 20.0 }, 1000.0));
+	force.addRegistry(gravityGen, p3);
+	part.push_back(p3);
+
+	Particula* p2 = new Particula(Prueba({ 0.0, 50.0, -20.0 }, 0.001));
 	force.addRegistry(gravityGen, p2);
 	part.push_back(p2);
 }

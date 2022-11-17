@@ -8,7 +8,7 @@ public:
 
 	Vector4 color;
 
-	Vector3 vel, acc, size;
+	Vector3 vel, acc, size, force;
 
 	double damp, mass, time;
 
@@ -29,11 +29,12 @@ public:
 	Prueba(Vector3 pos, double m)
 	{
 		pose = physx::PxTransform{ pos.x, pos.y, pos.z };
-		color = { 0.3, 0.3, 0.5, 1 };
+		color = { 1, 1, 1, 1 };
 		vel = {0.0, 0.0, 0.0};
 		acc = { 0.0, 0.0, 0.0 };
-		size = { 1.0, 0.0, 0.0 };
-		time = 10.0;
+		force = {0.0, 0.0, 0.0};
+		size = { 2.0, 2.0, 2.0 };
+		time = 100.0;
 		mass = m;
 		damp = 0.99;
 		disparo = 1;

@@ -143,18 +143,14 @@ void ParticleSystem::generateExplosive(int n, int r)
 		double y = (rand() % (r + 1)) + 30;
 		double z = rand() % (r + 1);
 
-		Particula* p = new Particula(PruebaExp({ (float)x, (float)y, (float)z }, { 1, 0.5, 0, 1 }));;
+		Particula* p;
 
-		/*if (x <= r / 3)
-		{
-			p = new Particula(PruebaExp({ (float)x, (float)y, (float)z }, { 0.5, 0.3, 0, 1 }));
-			std::cout << x << "\n";
-		}
-			
-		if (x > r / 3 && x < (r * 2) / 3)
+		if (x <= r / 3)
+			p = new Particula(PruebaExp({ (float)x, (float)y, (float)z }, { 1, 1, 0, 1 }));	
+		else if (x > r / 3 && x < (r * 2) / 3)
 			p = new Particula(PruebaExp({ (float)x, (float)y, (float)z }, { 1, 0.5, 0, 1 }));
 		else
-			p = new Particula(PruebaExp({ (float)x, (float)y, (float)z }, { 1, 0, 0, 1 }));*/
+			p = new Particula(PruebaExp({ (float)x, (float)y, (float)z }, { 1, 0, 0, 1 }));
 
 		force.addRegistry(explodeGen, p);
 		part.push_back(p);

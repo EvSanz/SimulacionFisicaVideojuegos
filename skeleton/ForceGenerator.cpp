@@ -30,6 +30,10 @@ void WindForceGenerator::updateForce(Particula* p, double t)
 	if ((fabs(p->getInverseMass()) < 1e-10) || (p->getPos() - posViento).magnitudeSquared() > pow(rViento, 2))
 		return;
 
+	/*Vector3 v = p->getVel() - velViento;
+	float coef = 0.003 * v.normalize() + 0.002 * pow(v.normalize(), 2); 
+	p->addForce(-v * coef); */
+
 	p->addForce(0.003 * velViento + 0.002 * velViento.magnitude() * velViento);
 }
 
@@ -46,9 +50,9 @@ void TornadeForceGenerator::updateForce(Particula* p, double t)
 	if (fabs(p->getInverseMass()) < 1e-10)
 		return;
 
-	p->setVelocity(k * Vector3(-(p->getPos().z - rafaga->getPos().z) - 0.2, 
+	p->setVelocity(k * Vector3(-(p->getPos().z - rafaga->getPos().z), 
 							(20 - p->getPos().y - rafaga->getPos().y), 
-							(p->getPos().x - rafaga->getPos().x) - 0.2));
+							p->getPos().x - rafaga->getPos().x));
 
 	rafaga->updateForce(p, t);
 }

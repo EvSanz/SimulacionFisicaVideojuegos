@@ -61,7 +61,7 @@ void initPhysics(bool interactive)
 	gScene = gPhysics->createScene(sceneDesc);
 
 	particulasSystem = new ParticleSystem({ 0, 0, 0 });
-	//plano = new Plano({ 0, -2, 0 }, { 0.3, 0.3, 0.3, 1 });
+	plano = new Plano({ 0, -2, 0 }, { 0.0, 0.8, 0.2, 1 });
 }
 
 
@@ -179,7 +179,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'l':
 		case 'L':
 		{
-			particulasSystem->generateStorm(1000, 200);
+			particulasSystem->generateStorm(500, 50);
 			break;
 		}
 

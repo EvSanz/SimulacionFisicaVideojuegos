@@ -46,9 +46,9 @@ void TornadeForceGenerator::updateForce(Particula* p, double t)
 	if (fabs(p->getInverseMass()) < 1e-10)
 		return;
 
-	p->setVelocity(k * Vector3(-(p->getPos().z - rafaga->getPos().z), 
-							50 - (p->getPos().y - rafaga->getPos().y), 
-							p->getPos().x - rafaga->getPos().x));
+	p->setVelocity(k * Vector3(-(p->getPos().z - rafaga->getPos().z) - 0.2, 
+							(20 - p->getPos().y - rafaga->getPos().y), 
+							(p->getPos().x - rafaga->getPos().x) - 0.2));
 
 	rafaga->updateForce(p, t);
 }

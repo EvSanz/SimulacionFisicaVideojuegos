@@ -17,6 +17,7 @@
 #include <string>
 #include <list>
 #include <memory>
+#include <iostream>
 
 class ParticleSystem
 {

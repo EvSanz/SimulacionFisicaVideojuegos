@@ -116,6 +116,9 @@ void ParticleSystem::generateStorm(int n, int r)
 {
 	tornadeGen = new TornadeForceGenerator(Vector3(0.0, 0.0, 0.0), r, 5.0);
 
+	Particula* guiaGen = new Particula(PruebaLineas({ (float)r/2, (float)r /2, (float)r /2}, (float)r));
+	part.push_back(guiaGen);
+
 	for (int i = 0; i < n; i++)
 	{
 		double x = rand() % (r + 1);
@@ -132,20 +135,26 @@ void ParticleSystem::generateExplosive(int n, int r)
 {
 	explodeGen = new ExplosionForceGenerator(Vector3(0.0, 30.0, 0.0), r * 2, 10);
 
+	Particula* guiaGen = new Particula(PruebaLineas({ (float)r / 2, (float)(r / 2 + 30), (float)r / 2}, (float)r));
+
 	for (int i = 0; i < n; i++)
 	{
 		double x = rand() % (r + 1);
 		double y = (rand() % (r + 1)) + 30;
 		double z = rand() % (r + 1);
 
-		Particula* p; 
+		Particula* p = new Particula(PruebaExp({ (float)x, (float)y, (float)z }, { 1, 0.5, 0, 1 }));;
 
-		if (x <= r / 3)
-			p = new Particula(Prueba({ (float)x, (float)y, (float)z }, r, 0.99));
+		/*if (x <= r / 3)
+		{
+			p = new Particula(PruebaExp({ (float)x, (float)y, (float)z }, { 0.5, 0.3, 0, 1 }));
+			std::cout << x << "\n";
+		}
+			
 		if (x > r / 3 && x < (r * 2) / 3)
 			p = new Particula(PruebaExp({ (float)x, (float)y, (float)z }, { 1, 0.5, 0, 1 }));
 		else
-			p = new Particula(PruebaExp({ (float)x, (float)y, (float)z }, { 1, 0, 0, 1 }));
+			p = new Particula(PruebaExp({ (float)x, (float)y, (float)z }, { 1, 0, 0, 1 }));*/
 
 		force.addRegistry(explodeGen, p);
 		part.push_back(p);

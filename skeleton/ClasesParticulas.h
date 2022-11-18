@@ -33,7 +33,7 @@ public:
 		vel = {0.0, 0.0, 0.0};
 		acc = { 0.0, 0.0, 0.0 };
 		force = {0.0, 0.0, 0.0};
-		size = { 0.5, 0.5, 0.5 };
+		size = { 1.0, 1.0, 1.0 };
 		time = 10.0;
 		mass = m;
 		damp = d;
@@ -53,7 +53,25 @@ public:
 		acc = { 0.0, 0.0, 0.0 };
 		force = { 0.0, 0.0, 0.0 };
 		size = { 0.3, 0.3, 0.3 };
-		time = 6.0;
+		time = 10.0;
+		mass = 2.0;
+		damp = 0.99;
+		disparo = 1;
+	}
+};
+
+class PruebaLineas: public ClasesParticulas
+{
+public:
+	PruebaLineas(Vector3 pos, float r)
+	{
+		pose = physx::PxTransform{ pos.x, pos.y, pos.z };
+		color = { 0, 0, 0, 0.9 };
+		vel = { 0.0, 0.0, 0.0 };
+		acc = { 0.0, 0.0, 0.0 };
+		force = { 0.0, 0.0, 0.0 };
+		size = { r, r, r };
+		time = 20.0;
 		mass = 2.0;
 		damp = 0.99;
 		disparo = 1;

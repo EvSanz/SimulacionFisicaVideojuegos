@@ -159,6 +159,14 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			break;
 		}
 
+		//FUERZAS
+		case 'm':
+		case 'M':
+		{
+			particulasSystem->setForceActive(); 
+			break; 
+		}
+
 		//GRAVEDAD
 		case 'P':
 		case 'p':
@@ -171,7 +179,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'l':
 		case 'L':
 		{
-			particulasSystem->generateStorm(300, 200);
+			particulasSystem->generateStorm(1000, 200);
 			break;
 		}
 
@@ -179,7 +187,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'j':
 		case 'J':
 		{
-			particulasSystem->generateExplosive(100, 20);
+			particulasSystem->generateExplosive(1000, 20);
 			break;
 		}
 

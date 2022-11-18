@@ -30,6 +30,7 @@ public:
 
 	bool update(double t); 
 
+	void setColor(Vector4 colores) { color = colores; }
 	void setVelocity(Vector3 v) { vel = v; }
 	void setAcceleration(Vector3 a) { acc = a; }
 	void setPosition(Vector3 p) { pos = PxTransform(p.x, p.y, p.z); }

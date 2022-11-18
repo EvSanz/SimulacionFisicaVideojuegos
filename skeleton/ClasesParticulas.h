@@ -41,6 +41,25 @@ public:
 	}
 };
 
+class PruebaExp : public ClasesParticulas
+{
+public:
+
+	PruebaExp(Vector3 pos, Vector4 colores)
+	{
+		pose = physx::PxTransform{ pos.x, pos.y, pos.z };
+		color = colores;
+		vel = { 0.0, 0.0, 0.0 };
+		acc = { 0.0, 0.0, 0.0 };
+		force = { 0.0, 0.0, 0.0 };
+		size = { 0.3, 0.3, 0.3 };
+		time = 6.0;
+		mass = 2.0;
+		damp = 0.99;
+		disparo = 1;
+	}
+};
+
 class Gun : public ClasesParticulas
 {
 public:	

@@ -28,14 +28,11 @@ protected:
 	Vector3 position;
 	
 	bool sysFuerzas = true; 
+	bool fuerzasActivadas = true; 
 
 	bool gaussActivo = false;
 	bool uniformActivo = false; 
 	bool fireActivo = false;
-	bool gravityActive = false; 
-	bool windActive = false; 
-	bool tornadeActive = false; 
-	bool explosionActive = false; 
 
 	float timer = 0; 
 
@@ -67,8 +64,7 @@ public:
 	void generateExplosive(int n, int r); 
 	void generateStorm(int n, int r); 
 
-	void setGravityActive() { gravityActive = !gravityActive; }
-	bool isGravityActive() { return gravityActive; }
+	void setForceActive() { fuerzasActivadas = !fuerzasActivadas; }
 
 	void setFogActive() { gaussActivo = !gaussActivo;}
 	bool isFogActive() { return gaussActivo; }

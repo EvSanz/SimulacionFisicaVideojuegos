@@ -41,7 +41,8 @@ void ParticleSystem::update(double t)
 
 	else
 	{
-		force.updateForces(t);
+		if (fuerzasActivadas)
+			force.updateForces(t);
 
 		for (auto it = part.begin(); it != part.end();) 
 		{
@@ -129,7 +130,7 @@ void ParticleSystem::generateStorm(int n, int r)
 
 void ParticleSystem::generateExplosive(int n, int r)
 {
-	explodeGen = new ExplosionForceGenerator(Vector3(0.0, 30.0, 0.0), r, 10);
+	explodeGen = new ExplosionForceGenerator(Vector3(0.0, 30.0, 0.0), r * 2, 10);
 
 	for (int i = 0; i < n; i++)
 	{
@@ -137,7 +138,15 @@ void ParticleSystem::generateExplosive(int n, int r)
 		double y = (rand() % (r + 1)) + 30;
 		double z = rand() % (r + 1);
 
-		Particula* p = new Particula(Prueba({ (float)x, (float)y, (float)z }, r, 0.99));
+		Particula* p; 
+
+		if (x <= r / 3)
+			p = new Particula(Prueba({ (float)x, (float)y, (float)z }, r, 0.99));
+		if (x > r / 3 && x < (r * 2) / 3)
+			p = new Particula(PruebaExp({ (float)x, (float)y, (float)z }, { 1, 0.5, 0, 1 }));
+		else
+			p = new Particula(PruebaExp({ (float)x, (float)y, (float)z }, { 1, 0, 0, 1 }));
+
 		force.addRegistry(explodeGen, p);
 		part.push_back(p);
 	}

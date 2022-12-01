@@ -45,6 +45,7 @@ protected:
 	WindForceGenerator* windGen = nullptr; 
 	TornadeForceGenerator* tornadeGen = nullptr; 
 	ExplosionForceGenerator* explodeGen = nullptr; 
+	BungeeForceGenerator* bungee = nullptr; 
 
 	ParticleForceRegistry force;
 
@@ -62,6 +63,10 @@ public:
 	void generateWaterSystem();
 	void generateFogSystem();
 	void generateGravity();
+	void generateMuelle();
+	void generateMuelleAnclado(); 
+	void generateBungee(); 
+	void generateBounyancy(); 
 	void generateExplosive(int n, int r); 
 	void generateStorm(int n, int r); 
 

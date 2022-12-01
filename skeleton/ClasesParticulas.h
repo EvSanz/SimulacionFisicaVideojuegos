@@ -34,9 +34,28 @@ public:
 		acc = { 0.0, 0.0, 0.0 };
 		force = {0.0, 0.0, 0.0};
 		size = { 1.0, 1.0, 1.0 };
-		time = 10.0;
+		time = 50.0;
 		mass = m;
 		damp = d;
+		disparo = 1;
+	}
+};
+
+class PruebaMuelle : public ClasesParticulas
+{
+public:
+
+	PruebaMuelle(Vector4 colores, Vector3 pos, double m)
+	{
+		pose = physx::PxTransform{ pos.x, pos.y, pos.z };
+		color = colores;
+		vel = { 0.0, 0.0, 0.0 };
+		acc = { 0.0, 0.0, 0.0 };
+		force = { 0.0, 0.0, 0.0 };
+		size = {2.0, 2.0, 2.0};
+		time = 100.0;
+		mass = m;
+		damp = 0.9;
 		disparo = 1;
 	}
 };
@@ -88,6 +107,7 @@ public:
 		color = { 0.3, 0.3, 0.5, 1 };
 		vel = dir * 30;
 		acc = { 0.0, -1.0, 0.0 };
+		force = { 0.0, 0.0, 0.0 };
 		size = { 1.0, 0.0, 0.0 };
 		time = 1.0;
 		mass = 2.0;
@@ -106,6 +126,7 @@ public:
 		color = { 0.0f, 0.0f, 1.0f, 1 };
 		vel = dir * 100;
 		acc = { 0.0, -200.0, 0.0 };
+		force = { 0.0, 0.0, 0.0 };
 		size = { 3.0, 0.0, 0.0 };
 		time = 100.0;
 		mass = 200.0;
@@ -124,6 +145,7 @@ public:
 		color = { 1.0f, 0.0f, 0.0f, 1 };
 		vel = dir * 100;
 		acc = { 0.0, 5.0, 0.0 };
+		force = { 0.0, 0.0, 0.0 };
 		size = { 2.0, 0.0, 0.0 };
 		time = 10.0;
 		mass = 1.0;
@@ -142,6 +164,7 @@ public:
 		color = { 1.0f, 0.5f, 0.0f, 1 };
 		vel = dir * 300;
 		acc = { 0.0f, 0.0f, 0.0f };
+		force = { 0.0, 0.0, 0.0 };
 		size = { 0.75, 0.0, 0.0 };
 		time = 5.0;
 		mass = 0.01;
@@ -160,10 +183,11 @@ public:
 		color = { 1.0f, 1.0f, 1.0f, 1 };
 		vel = { 0.0, 0.0, 0.0 };
 		acc = { 0.0f, 0.0f, 0.0f };
+		force = { 0.0, 0.0, 0.0 };
 		size = { 0.4, 0.0, 0.0 };
 		time = 200.0;
 		mass = 1.0;
-		damp = 0.85;
+		damp = 0.8;
 		disparo = 1;
 	}
 };
@@ -177,6 +201,7 @@ public:
 		color = { 0.0f, 0.0f, 0.95, 1 };
 		vel = { 2.0, 5.0, 2.0 };
 		acc = { 0.0f, -0.08f, 0.0f };
+		force = { 0.0, 0.0, 0.0 };
 		size = { 0.3, 0.0, 0.0 };
 		time = 100.0;
 		mass = 0.5;
@@ -199,6 +224,7 @@ public:
 		color = colores; 
 		vel = { 0.0, 0.0, 0.0 };
 		acc = { 0.0f, 0.0f, 0.0f };
+		force = { 0.0, 0.0, 0.0 };
 		size = { 0.8, 0.0, 0.0 };
 		time = tiempo;
 		mass = 1.0;

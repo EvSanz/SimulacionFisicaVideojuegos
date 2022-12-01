@@ -66,17 +66,18 @@ public:
 
 //////////////////////////////////////////////////////////////////////
 
-class TornadeForceGenerator : public ForceGenerator
+
+class TornadeForceGenerator : public WindForceGenerator
 {
 protected:
 
-	WindForceGenerator* rafaga = nullptr; 
-
 	double k; 
+
+	Vector3 centro; 
 
 public:
 
-	TornadeForceGenerator(const Vector3& vel, double r, double k);
+	TornadeForceGenerator(const Vector3& pos, double r, double k);
 
 	void updateForce(Particula* p, double t); 
 };
@@ -100,6 +101,51 @@ public:
 
 ///////////////////////////////////////////////////////////////////
 
+class SpringForceGenerator : public ForceGenerator
+{
+protected:
+
+	Particula* auxiliar; 
+	double k, restLenght;
+
+public:
+
+	SpringForceGenerator(Particula* auxiliar, double k, double restLenght);
+
+	void updateForce(Particula* p, double t);
+
+	inline void setK(double aux) { k = aux; }
+};
+
+//////////////////////////////////////////////////////////////////////
+
+class AnchoredSpringFG : public SpringForceGenerator
+{
+public: 
+
+	AnchoredSpringFG(double k, double resting, const Vector3& anchor_pos); 
+	~AnchoredSpringFG() { delete auxiliar; }
+};
+
+//////////////////////////////////////////////////////////////////////
+
+class BungeeForceGenerator : public ForceGenerator
+{
+protected: 
+
+	float altura, volumen, densidadLiquido, gravedad = 9.8; 
+
+	Particula* particulaLiquido; 
+
+public: 
+
+	BungeeForceGenerator(float h, float V, float d); 
+	virtual void updateForce(Particula* p, double t); 
+	~BungeeForceGenerator(); 
+};
+
+//////////////////////////////////////////////////////////////////////
+
 class ParticleDragGenerator : public ForceGenerator
 {
 protected:
@@ -117,3 +163,6 @@ public:
 	inline float getK1() { return (_k1); }
 	inline float getK2() { return (_k2); }
 };
+
+//////////////////////////////////////////////////////////////////////
+

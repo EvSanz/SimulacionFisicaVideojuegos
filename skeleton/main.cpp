@@ -179,7 +179,8 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'l':
 		case 'L':
 		{
-			particulasSystem->generateStorm(500, 50);
+			//particulasSystem->generateStorm(500, 50);
+			particulasSystem->generateMuelleAnclado(); 
 			break;
 		}
 
@@ -187,7 +188,16 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'j':
 		case 'J':
 		{
-			particulasSystem->generateExplosive(1000, 20);
+			//particulasSystem->generateExplosive(1000, 20);
+			particulasSystem->generateBungee(); 
+			break;
+		}
+
+		//MUELLE
+		case 'R':
+		case 'r':
+		{
+			particulasSystem->generateMuelle(); 
 			break;
 		}
 
@@ -195,10 +205,12 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'G':
 		case 'g':
 		{
-			particulasSystem->setFogActive(); 
+			particulasSystem->generateBounyancy(); 
+
+			/*particulasSystem->setFogActive(); 
 
 			if (particulasSystem->isFogActive())
-				particulasSystem->generateFogSystem();
+				particulasSystem->generateFogSystem();*/
 
 			break;
 		}

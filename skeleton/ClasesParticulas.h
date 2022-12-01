@@ -60,6 +60,25 @@ public:
 	}
 };
 
+class CajaMuelle : public ClasesParticulas
+{
+public:
+
+	CajaMuelle(Vector4 colores, Vector3 pos, double m)
+	{
+		pose = physx::PxTransform{ pos.x, pos.y, pos.z };
+		color = colores;
+		vel = { 0.0, 0.0, 0.0 };
+		acc = { 0.0, 0.0, 0.0 };
+		force = { 0.0, 0.0, 0.0 };
+		size = { 2.0, 0.5, 2.0 };
+		time = 100.0;
+		mass = m;
+		damp = 0.9;
+		disparo = 2;
+	}
+};
+
 class PruebaExp : public ClasesParticulas
 {
 public:

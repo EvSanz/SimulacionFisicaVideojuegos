@@ -114,7 +114,7 @@ public:
 
 	void updateForce(Particula* p, double t);
 
-	inline void setK(double aux) { k = aux; }
+	void setK(double aux) { k += aux; }
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -125,6 +125,18 @@ public:
 
 	AnchoredSpringFG(double k, double resting, const Vector3& anchor_pos); 
 	~AnchoredSpringFG() { delete auxiliar; }
+};
+
+//////////////////////////////////////////////////////////////////////
+
+class ElasticForce : public SpringForceGenerator
+{
+public:
+
+	ElasticForce(double k, double resting, Particula*p);
+	~ElasticForce() { delete auxiliar; }
+
+	void updateForce(Particula* p, double t); 
 };
 
 //////////////////////////////////////////////////////////////////////

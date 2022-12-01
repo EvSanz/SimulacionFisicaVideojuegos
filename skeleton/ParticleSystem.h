@@ -46,6 +46,7 @@ protected:
 	TornadeForceGenerator* tornadeGen = nullptr; 
 	ExplosionForceGenerator* explodeGen = nullptr; 
 	BungeeForceGenerator* bungee = nullptr; 
+	AnchoredSpringFG* muelleAnclado = nullptr; 
 
 	ParticleForceRegistry force;
 
@@ -67,8 +68,12 @@ public:
 	void generateMuelleAnclado(); 
 	void generateBungee(); 
 	void generateBounyancy(); 
+	void generateElasticBand(); 
 	void generateExplosive(int n, int r); 
 	void generateStorm(int n, int r); 
+
+	void moreK() { muelleAnclado->setK(5.0); }
+	void lessK() { muelleAnclado->setK(-5.0); }
 
 	void setForceActive() { fuerzasActivadas = !fuerzasActivadas; }
 

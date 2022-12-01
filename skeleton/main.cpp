@@ -152,10 +152,12 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		}
 
 		//LASER
+		//BANDA ELASTICA
 		case 'N':
 		case 'n':
 		{
-			particulas.push_back(new Particula(Laser(pos, dir)));
+			particulasSystem->generateElasticBand(); 
+			//particulas.push_back(new Particula(Laser(pos, dir)));
 			break;
 		}
 
@@ -168,14 +170,27 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		}
 
 		//GRAVEDAD
+		//AUMENTAR K EN MUELLES
 		case 'P':
 		case 'p':
 		{
-			particulasSystem->generateGravity();
+			particulasSystem->moreK(); 
+			//particulasSystem->generateGravity();
+			break;
+		}
+
+		//FUEGO ARTIFICIAL 
+		//DISMINUIR K EN MUELLES
+		case 'I':
+		case 'i':
+		{
+			particulasSystem->lessK();
+			//particulasSystem->generateFireworkSystem();
 			break;
 		}
 
 		//TORNADO
+		//MUELLE ANCLADO
 		case 'l':
 		case 'L':
 		{
@@ -185,6 +200,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		}
 
 		//EXPLOSION
+		//SLINKY
 		case 'j':
 		case 'J':
 		{
@@ -202,6 +218,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		}
 
 		//GAS
+		//FLOTACION
 		case 'G':
 		case 'g':
 		{
@@ -224,14 +241,6 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			if (particulasSystem->isWaterActive())
 				particulasSystem->generateWaterSystem();
 
-			break;
-		}
-
-		//FUEGO ARTIFICIAL 
-		case 'I':
-		case 'i':
-		{
-			particulasSystem->generateFireworkSystem();
 			break;
 		}
 

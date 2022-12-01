@@ -86,9 +86,23 @@ void ParticleSystem::generateMuelle()
 void ParticleSystem::generateBounyancy()
 {
 	Particula* p1 = new Particula(PruebaMuelle({ 1.0, 0.0, 0.0, 1.0 }, { 0.0, 0.0, 0.0 }, 30));
-	bungee = new BungeeForceGenerator(40.0, 20, 0.8); 
+	bungee = new BungeeForceGenerator(40.0, 0.05, 1000); 
 	force.addRegistry(bungee, p1); 
 	part.push_back(p1); 
+}
+
+void ParticleSystem::generateElasticBand()
+{
+	Particula* p1 = new Particula(PruebaMuelle({ 1.0, 0.0, 0.0, 1.0 }, { -20.0, 40.0, 0.0 }, 10));
+	Particula* p2 = new Particula(PruebaMuelle({ 1.0, 0.5, 0.0, 1.0 }, { 20.0, 40.0, 0.0 }, 30));
+
+	ElasticForce* muelleGen = new ElasticForce(10, 10, p2);
+	force.addRegistry(muelleGen, p1);
+	ElasticForce* muelleGen2 = new ElasticForce(10, 10, p1);
+	force.addRegistry(muelleGen2, p2);
+
+	part.push_back(p1);
+	part.push_back(p2);
 }
 
 void ParticleSystem::generateBungee()
@@ -129,22 +143,13 @@ void ParticleSystem::generateBungee()
 
 void ParticleSystem::generateMuelleAnclado()
 {
-	Particula* p1 = new Particula(Prueba({ 0.0, 50.0, -20.0 }, 100, 0.99));
-	Particula* p2 = new Particula(Prueba({ 0.0, 50.0, 20.0 }, 200, 0.99));
-
-	SpringForceGenerator* muelleGen = new SpringForceGenerator(p2, 1, 10);
-	SpringForceGenerator* muelleGen2 = new SpringForceGenerator(p1, 1, 10);
-
-	force.addRegistry(muelleGen, p1);
-	force.addRegistry(muelleGen2, p2);
-
-	part.push_back(p1);
-	part.push_back(p2);
-
-	Particula* p3 = new Particula(Prueba({ 0.0, 70.0, -20.0 }, 100, 0.99));
-	AnchoredSpringFG* muelleAnclado = new AnchoredSpringFG(1, 10, { 0.0, 70.0, 20.0 }); 
+	gravityGen = new GravityForceGenerator(Vector3(0.0f, -3.0f, 0.0f));
+	
+	Particula* p3 = new Particula(Prueba({ 0.0, 60.0, 0.0 }, 100, 0.9));
+	muelleAnclado = new AnchoredSpringFG(20, 20, { 0.0, 60.0, 0.0 }); 
 
 	force.addRegistry(muelleAnclado, p3);
+	force.addRegistry(gravityGen, p3);
 	part.push_back(p3);
 }
 

@@ -100,9 +100,30 @@ void SpringForceGenerator::updateForce(Particula* p, double t)
 ///////////////////////////////////////////////////////////////////
 
 AnchoredSpringFG::AnchoredSpringFG(double k, double resting, const Vector3& anchor_pos) : 
-	SpringForceGenerator(new Particula(Prueba({ 0.0, 50.0, -20.0 }, 100, 0.99)), k, resting)
+	SpringForceGenerator(nullptr, k, resting)
 {
-	SpringForceGenerator(nullptr, k, resting); 
+	auxiliar = new Particula(CajaMuelle({1.0, 0.0, 0.0, 1.0}, anchor_pos, 100));
+}
+
+///////////////////////////////////////////////////////////////////
+
+ElasticForce::ElasticForce(double k, double resting, Particula* p) : SpringForceGenerator(p, k, resting) {}
+
+void ElasticForce::updateForce(Particula* p, double t) 
+{
+	Vector3 force = p->getPos();
+	force -= auxiliar->getPos();
+
+	float lenght = force.normalize();
+
+	lenght -=  restLenght;
+
+	if (lenght <= 0.0f) 
+		return;
+
+	force *= -(lenght * k);
+
+	p->addForce(force);
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -113,7 +134,7 @@ BungeeForceGenerator::BungeeForceGenerator(float h, float V, float d)
 	volumen = V; 
 	densidadLiquido = d; 
 
-	particulaLiquido = new Particula(PruebaMuelle({ 0.0, 0.0, 0.0, 1.0 }, { 0.0, h, 0.0 }, 30));
+	particulaLiquido = new Particula(CajaMuelle({ 0.0, 0.0, 0.0, 1.0 }, { 0.0, h, 0.0 }, 30));
 }
 
 void BungeeForceGenerator::updateForce(Particula* p, double t)

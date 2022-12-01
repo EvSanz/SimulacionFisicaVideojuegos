@@ -18,7 +18,10 @@ Particula::Particula(ClasesParticulas p)
 	mass = p.mass;
 	tipoClase = p; 
 
-	renderItem = new RenderItem(CreateShape(PxSphereGeometry(size.x)), &pos, p.color);
+	if (p.disparo == 1)
+		renderItem = new RenderItem(CreateShape(PxSphereGeometry(size.x)), &pos, p.color);
+	else if (p.disparo == 2)
+		renderItem = new RenderItem(CreateShape(PxBoxGeometry(size.x, size.y, size.z)), &pos, p.color);
 }
 
 Particula::~Particula()

@@ -107,30 +107,30 @@ void ParticleSystem::generateElasticBand()
 
 void ParticleSystem::generateBungee()
 {
-	Particula* p1 = new Particula(PruebaMuelle({1.0, 0.0, 0.0, 1.0}, { 0.0, 80.0, 0.0 }, 30));
-	Particula* p2 = new Particula(PruebaMuelle({1.0, 0.5, 0.0, 1.0}, { 0.0, 70.0, 0.0 }, 30));
-	Particula* p3 = new Particula(PruebaMuelle({ 1.0, 1.0, 0.0, 1.0 }, { 0.0, 60.0, 0.0 }, 30));
-	Particula* p4 = new Particula(PruebaMuelle({ 0.0, 1.0, 0.0, 1.0 }, { 0.0, 50.0, 0.0 }, 30));
-	Particula* p5 = new Particula(PruebaMuelle({ 0.0, 0.0, 1.0, 1.0 }, { 0.0, 40.0, 0.0 }, 30));
-	Particula* p6 = new Particula(PruebaMuelle({ 0.5, 0.0, 1.0, 1.0 }, { 0.0, 30.0, 0.0 }, 30));
+	Particula* p1 = new Particula(PruebaMuelle({1.0, 0.0, 0.0, 1.0}, { 0.0, 80.0, 0.0 }, 10));
+	Particula* p2 = new Particula(PruebaMuelle({1.0, 0.5, 0.0, 1.0}, { 0.0, 70.0, 0.0 }, 10));
+	Particula* p3 = new Particula(PruebaMuelle({ 1.0, 1.0, 0.0, 1.0 }, { 0.0, 60.0, 0.0 }, 10));
+	Particula* p4 = new Particula(PruebaMuelle({ 0.0, 1.0, 0.0, 1.0 }, { 0.0, 50.0, 0.0 }, 10));
+	Particula* p5 = new Particula(PruebaMuelle({ 0.0, 0.0, 1.0, 1.0 }, { 0.0, 40.0, 0.0 }, 10));
+	Particula* p6 = new Particula(PruebaMuelle({ 0.5, 0.0, 1.0, 1.0 }, { 0.0, 30.0, 0.0 }, 10));
 
-	SpringForceGenerator* muelleGen = new SpringForceGenerator(p1, 10, 50); //1 con 2
+	SpringForceGenerator* muelleGen = new SpringForceGenerator(p1, 20, 15); //1 con 2
 	force.addRegistry(muelleGen, p2);
-	SpringForceGenerator* muelleGen2 = new SpringForceGenerator(p2, 10, 40); //2 con 3
+	SpringForceGenerator* muelleGen2 = new SpringForceGenerator(p2, 20, 15); //2 con 3
 	force.addRegistry(muelleGen2, p3);
-	SpringForceGenerator* muelleGen3 = new SpringForceGenerator(p3, 10, 35); //3 con 2
+	SpringForceGenerator* muelleGen3 = new SpringForceGenerator(p3, 20, 15); //3 con 2
 	force.addRegistry(muelleGen3, p2);
-	SpringForceGenerator* muelleGen4 = new SpringForceGenerator(p3, 10, 30); //3 con 4
+	SpringForceGenerator* muelleGen4 = new SpringForceGenerator(p3, 20, 15); //3 con 4
 	force.addRegistry(muelleGen4, p4);
-	SpringForceGenerator* muelleGen5 = new SpringForceGenerator(p4, 10, 25); //4 con 3
+	SpringForceGenerator* muelleGen5 = new SpringForceGenerator(p4, 20, 15); //4 con 3
 	force.addRegistry(muelleGen5, p3);
-	SpringForceGenerator* muelleGen6 = new SpringForceGenerator(p4, 10, 20); //4 con 5
+	SpringForceGenerator* muelleGen6 = new SpringForceGenerator(p4, 20, 15); //4 con 5
 	force.addRegistry(muelleGen6, p5);
-	SpringForceGenerator* muelleGen7 = new SpringForceGenerator(p5, 10, 15); //5 con 4
+	SpringForceGenerator* muelleGen7 = new SpringForceGenerator(p5, 20, 15); //5 con 4
 	force.addRegistry(muelleGen7, p4);
-	SpringForceGenerator* muelleGen8 = new SpringForceGenerator(p5, 10, 10); //5 con 6
-	force.addRegistry(muelleGen8, p4);
-	SpringForceGenerator* muelleGen9 = new SpringForceGenerator(p6, 10, 5); //6 con 5
+	SpringForceGenerator* muelleGen8 = new SpringForceGenerator(p5, 20, 15); //5 con 6
+	force.addRegistry(muelleGen8, p6);
+	SpringForceGenerator* muelleGen9 = new SpringForceGenerator(p6, 20, 15); //6 con 5
 	force.addRegistry(muelleGen9, p5);
 
 	part.push_back(p1);

@@ -109,23 +109,6 @@ AnchoredSpringFG::AnchoredSpringFG(double k, double resting, const Vector3& anch
 
 ElasticForce::ElasticForce(double k, double resting, Particula* p) : SpringForceGenerator(p, k, resting) {}
 
-void ElasticForce::updateForce(Particula* p, double t) 
-{
-	Vector3 force = p->getPos();
-	force -= auxiliar->getPos();
-
-	float lenght = force.normalize();
-
-	lenght -=  restLenght;
-
-	if (lenght <= 0.0f) 
-		return;
-
-	force *= -(lenght * k);
-
-	p->addForce(force);
-}
-
 ///////////////////////////////////////////////////////////////////
 
 BungeeForceGenerator::BungeeForceGenerator(float h, float V, float d)

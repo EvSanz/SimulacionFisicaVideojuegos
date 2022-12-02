@@ -96,9 +96,9 @@ void ParticleSystem::generateElasticBand()
 	Particula* p1 = new Particula(PruebaMuelle({ 1.0, 0.0, 0.0, 1.0 }, { -20.0, 40.0, 0.0 }, 10));
 	Particula* p2 = new Particula(PruebaMuelle({ 1.0, 0.5, 0.0, 1.0 }, { 20.0, 40.0, 0.0 }, 30));
 
-	ElasticForce* muelleGen = new ElasticForce(10, 10, p2);
+	ElasticForce* muelleGen = new ElasticForce(3, 20, p2);
 	force.addRegistry(muelleGen, p1);
-	ElasticForce* muelleGen2 = new ElasticForce(10, 10, p1);
+	ElasticForce* muelleGen2 = new ElasticForce(3, 20, p1);
 	force.addRegistry(muelleGen2, p2);
 
 	part.push_back(p1);

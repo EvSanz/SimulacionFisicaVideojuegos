@@ -135,8 +135,6 @@ public:
 
 	ElasticForce(double k, double resting, Particula*p);
 	~ElasticForce() { delete auxiliar; }
-
-	void updateForce(Particula* p, double t); 
 };
 
 //////////////////////////////////////////////////////////////////////

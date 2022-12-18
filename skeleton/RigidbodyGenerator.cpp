@@ -4,7 +4,7 @@
 
 //UNIFORM 
 
-UniformBodyGenerator::UniformBodyGenerator(Rigidbody* m, double genProb, Vector3 auxPos, Vector3 auxVel, int particulas)
+UniformBodyGenerator::UniformBodyGenerator(DinamicRigidbody* m, double genProb, Vector3 auxPos, Vector3 auxVel, int particulas)
 {
 	model = m;
 
@@ -24,9 +24,9 @@ UniformBodyGenerator::UniformBodyGenerator(Rigidbody* m, double genProb, Vector3
 	random_generator = std::mt19937(r());
 }
 
-std::list<Rigidbody*> UniformBodyGenerator::generateBodies()
+std::list<DinamicRigidbody*> UniformBodyGenerator::generateBodies()
 {
-	std::list<Rigidbody*> listParticles;
+	std::list<DinamicRigidbody*> listParticles;
 
 	if (model == nullptr)
 		return listParticles;
@@ -48,7 +48,7 @@ std::list<Rigidbody*> UniformBodyGenerator::generateBodies()
 			Vector3 pos = { px(random_generator), py(random_generator), pz(random_generator) };
 			Vector3 vel = { vx(random_generator), vy(random_generator), vz(random_generator) };
 
-			Rigidbody* p = model->clone(); 
+			DinamicRigidbody* p = model->clone();
 
 			p->setVelocity(vel);
 			p->setPosition(pos);

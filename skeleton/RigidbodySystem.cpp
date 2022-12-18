@@ -2,54 +2,52 @@
 
 RigidbodySystem::~RigidbodySystem()
 {
-	forceRegistry->clear();
+	for (DinamicRigidbody* b : part) 
+		delete b;
 
-	for (Rigidbody* b : bodies) delete b;
-	bodies.clear();
+	for (RigidBodyGenerator* g : rigidbodyGenerators) 
+		delete g;
 
-	for (RigidBodyGenerator* g : rigidbodyGenerators) delete g;
+	part.clear();
 	rigidbodyGenerators.clear();
-
 	forceGenerators.clear();
 	forceRegistry->clear();
 }
 
 void RigidbodySystem::update(double t)
 {
-	std::list<Rigidbody*> lista;
+	std::list<DinamicRigidbody*> lista;
 
 	for (RigidBodyGenerator* g : rigidbodyGenerators)
 	{
 		lista = g->generateBodies();
 
-		for (Rigidbody* p : lista)
+		for (DinamicRigidbody* p : lista)
 		{
-			bodies.push_back(p);
+			part.push_back(p);
 
 			for (RigidBodyForceGenerator* fg : forceGenerators) 
 				forceRegistry->addForceRegistry(fg, p);
 		}
 	}
 
-	std::list<Rigidbody*>::iterator it = bodies.begin();
+	std::list<DinamicRigidbody*>::iterator it = part.begin();
 
-	while (it != bodies.end())
+	while (it != part.end())
 	{
 		(*it)->integrate(t);
 
 		if ((*it)->getTimeRigidbody() <= 0.0)
 		{
-			std::list<Rigidbody*> lista = (*it)->onDeath();
+			DinamicRigidbody* p = (*it);
+			it = part.erase(it);
 
-			Rigidbody* p = (*it);
-			it = bodies.erase(it);
-
-			for (Rigidbody* np : lista)
+			for (DinamicRigidbody* dp : lista)
 			{
-				bodies.push_back(np);
+				part.push_back(dp);
 
 				for (RigidBodyForceGenerator* fg : forceGenerators) 
-					forceRegistry->addForceRegistry(fg, np);
+					forceRegistry->addForceRegistry(fg, dp);
 			}
 
 			forceRegistry->deleteForceRegistry(p);

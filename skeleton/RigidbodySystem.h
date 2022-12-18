@@ -11,7 +11,7 @@ class RigidbodySystem
 {
 protected:
 
-	std::list<Rigidbody*> bodies;
+	std::list<DinamicRigidbody*> part;
 	std::list<RigidBodyGenerator*> rigidbodyGenerators;
 	std::list<RigidBodyForceGenerator*> forceGenerators;
 

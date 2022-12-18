@@ -7,7 +7,6 @@
 #include <list>
 #include <random>
 #include <complex>
-#include <chrono>
 
 class RigidBodyGenerator
 {
@@ -21,7 +20,7 @@ protected:
 
 	int nParticulas;
 
-	Rigidbody* model;
+	DinamicRigidbody* model;
 
 	std::default_random_engine randomGenerator;
 
@@ -30,9 +29,9 @@ public:
 	RigidBodyGenerator() {}
 	~RigidBodyGenerator() { delete model; }
 
-	void setModel(Rigidbody* m) { model = m; };
+	void setModel(DinamicRigidbody* m) { model = m; };
 
-	virtual std::list<Rigidbody*> generateBodies() = 0;
+	virtual std::list<DinamicRigidbody*> generateBodies() = 0;
 };
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -47,6 +46,6 @@ protected:
 
 public:
 
-	UniformBodyGenerator(Rigidbody* model, double genProb, Vector3 auxPos, Vector3 auxVel, int particulas);
-	std::list<Rigidbody*> generateBodies() override;
+	UniformBodyGenerator(DinamicRigidbody* model, double genProb, Vector3 auxPos, Vector3 auxVel, int particulas);
+	std::list<DinamicRigidbody*> generateBodies() override;
 };

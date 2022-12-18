@@ -39,8 +39,6 @@ public:
 
 	virtual void integrate(float t) {}
 
-	std::list<Rigidbody*> onDeath() { return std::list<Rigidbody*>(); };
-
 	PxShape* getShape() { return shape; };
 
 	float getTimeRigidbody() { return timeToLive; };

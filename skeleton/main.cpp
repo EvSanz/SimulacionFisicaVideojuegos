@@ -3,6 +3,7 @@
 
 #include "ClasesParticulas.h"
 #include "ParticleSystem.h"
+#include "RigidbodySystem.h"
 #include "Particula.h"
 #include "Plano.h"
 
@@ -32,7 +33,10 @@ PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
 
 ParticleSystem* particulasSystem = NULL;
+RigidbodySystem* rigidbodySystem = NULL;
+
 Plano* plano = nullptr;
+RenderItem* item = nullptr; 
 
 std::vector <Particula*> particulas; 
 
@@ -61,7 +65,19 @@ void initPhysics(bool interactive)
 	gScene = gPhysics->createScene(sceneDesc);
 
 	particulasSystem = new ParticleSystem({ 0, 0, 0 });
-	plano = new Plano({ 0, -2, 0 }, { 0.0, 0.8, 0.2, 1 });
+	//plano = new Plano({ 0, -2, 0 }, { 0.0, 0.8, 0.2, 1 });
+
+	PxRigidStatic* floor = gPhysics->createRigidStatic(PxTransform({ 0, -2, 0 }));
+	PxShape* shape = CreateShape(PxBoxGeometry(500, 0.1, 500)); 
+	floor->attachShape(*shape); 
+	item = new RenderItem(shape, floor, { 0.0, 0.8, 0.2, 1 }); 
+	gScene->addActor(*floor); 
+
+	//PxRigidDynamic* ball = gPhysics->createRigidDynamic(PxTransform({ 0, 50, 0 }));
+	//PxShape* forma = CreateShape(PxSphereGeometry(5.0));
+	//ball->attachShape(*forma);
+	//item = new RenderItem(forma, ball, { 1.0, 0.0, 0.2, 1 });
+	//gScene->addActor(*ball);
 }
 
 
@@ -127,19 +143,25 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 	switch(toupper(key))
 	{
+		//SOLIDOS CUADRADO
 		//PISTOLA
 		case 'C':
 		case 'c':
 		{
-			particulas.push_back(new Particula(Gun(pos, dir)));
+		
+			//particulas.push_back(new Particula(Gun(pos, dir)));
 			break;
 		}
 
+		//SOLIDOS ESFERA
 		//ARTILLERIA
 		case 'V':
 		case 'v':
 		{
-			particulas.push_back(new Particula(Canon(pos, dir)));
+			//particulas.push_back(new Particula(Canon(pos, dir)));
+			PxTransform tr = PxTransform({ 0, 20, 0 });
+			rigidbodySystem->addUniform(gPhysics, gScene, tr, gMaterial, new PxSphereGeometry(5.0));
+
 			break;
 		}
 
@@ -147,7 +169,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'B':
 		case 'b':
 		{
-			particulas.push_back(new Particula(Fireball(pos, dir)));
+			//particulas.push_back(new Particula(Fireball(pos, dir)));
 			break;
 		}
 

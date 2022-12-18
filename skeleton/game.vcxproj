@@ -264,6 +264,8 @@
     <ClCompile Include="RenderUtils.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Render.cpp" />
+    <ClCompile Include="RigidbodyGenerator.cpp" />
+    <ClCompile Include="RigidbodySystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="callbacks.hpp" />
@@ -278,6 +280,10 @@
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\Render.h" />
+    <ClInclude Include="Rigidbody.h" />
+    <ClInclude Include="RigidBodyForceGenerator.h" />
+    <ClInclude Include="RigidbodyGenerator.h" />
+    <ClInclude Include="RigidbodySystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

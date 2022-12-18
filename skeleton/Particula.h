@@ -34,6 +34,7 @@ public:
 	void setVelocity(Vector3 v) { vel = v; }
 	void setAcceleration(Vector3 a) { acc = a; }
 	void setPosition(Vector3 p) { pos = PxTransform(p.x, p.y, p.z); }
+
 	void setMass(double m) 
 	{ 
 		if (m <= 0.0) inverse_mass = 0.0; 
@@ -68,7 +69,7 @@ protected:
 
 	RenderItem* renderItem; 
 
-	ClasesParticulas tipoClase; 
+	ClasesParticulas tipoClase;
 };
 
 //////////////////////////////////////////////////////////////////////////

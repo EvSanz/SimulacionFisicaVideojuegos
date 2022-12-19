@@ -64,7 +64,9 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
+	rigidbodySystem = new RigidbodySystem(); 
 	particulasSystem = new ParticleSystem({ 0, 0, 0 });
+
 	//plano = new Plano({ 0, -2, 0 }, { 0.0, 0.8, 0.2, 1 });
 
 	PxRigidStatic* floor = gPhysics->createRigidStatic(PxTransform({ 0, -2, 0 }));
@@ -89,6 +91,8 @@ void stepPhysics(bool interactive, double t)
 	PX_UNUSED(interactive);
 
 	particulasSystem->update(t);
+	rigidbodySystem->update(t);
+
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 
@@ -159,8 +163,12 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'v':
 		{
 			//particulas.push_back(new Particula(Canon(pos, dir)));
+
 			PxTransform tr = PxTransform({ 0, 20, 0 });
-			rigidbodySystem->addUniform(gPhysics, gScene, tr, gMaterial, new PxSphereGeometry(5.0));
+			DinamicRigidbody* rb = new DinamicRigidbody(gPhysics, gScene, tr, gMaterial, 
+				new PxSphereGeometry(1.0), { 1.0, 0.0, 0.0, 1.0 }, 20);
+			GaussianBodyGenerator* gauss = new GaussianBodyGenerator(rb, 0.9, { 0.0, 50.0, 0.0 }, { 5, 0, 0.01 }, 40);
+			rigidbodySystem->addSystem(gauss); 
 
 			break;
 		}

@@ -28,7 +28,7 @@ protected:
 public:
 
 	Rigidbody(PxPhysics* physics, PxScene* scene, PxGeometry* g,
-		PxMaterial* m, PxTransform t, Vector4 c, double time); 
+		PxMaterial* m, PxTransform t, Vector4 c, double time) {}
 
 	virtual ~Rigidbody()
 	{
@@ -77,12 +77,12 @@ public:
 		PxMaterial* mat, PxGeometry* geo, Vector4 color, double time)
 		: Rigidbody(physics, scene, geo, mat, trans, color, time)
 	{
-		rigidbody = gPhysics->createRigidDynamic(transform);
+		rigidbody = physics->createRigidDynamic(trans);
 
-		shape = gPhysics->createShape(*geometry, *material);
+		shape = physics->createShape(*geo, *mat);
 		rigidbody->attachShape(*shape);
 
-		renderItem = new RenderItem(shape, rigidbody, colour);
+		renderItem = new RenderItem(shape, rigidbody, color);
 
 		scene->addActor(*rigidbody);
 	};

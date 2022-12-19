@@ -15,8 +15,6 @@ protected:
 	std::list<RigidBodyGenerator*> rigidbodyGenerators;
 	std::list<RigidBodyForceGenerator*> forceGenerators;
 
-	UniformBodyGenerator* uniformRB = nullptr;
-
 	RigidbodyForceRegistry* forceRegistry;
 
 public:
@@ -26,5 +24,5 @@ public:
 
 	virtual void update(double t);
 
-	void addUniform(PxPhysics* physics, PxScene* scene, PxTransform trans, PxMaterial* mat, PxGeometry* geo);
+	void addSystem(RigidBodyGenerator* rb) { rigidbodyGenerators.push_back(rb); }
 };

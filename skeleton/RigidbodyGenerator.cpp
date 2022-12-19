@@ -60,3 +60,63 @@ std::list<DinamicRigidbody*> UniformBodyGenerator::generateBodies()
 	return listParticles;
 }
 
+/////////////////////////////////////////////////////////////////////////
+
+//GAUSSIAN
+
+GaussianBodyGenerator::GaussianBodyGenerator(DinamicRigidbody* m, double genProb, Vector3 auxPos, Vector3 auxVel, int particulas)
+{
+	model = m;
+
+	activoGauss = false;
+
+	pos = model->getPosition();
+	vel = model->getVelocity();
+
+	gen_prob = genProb;
+
+	pos_gauss = auxPos * 2;
+	vel_gauss = auxVel * 0.5;
+
+	nParticulas = particulas * 2;
+
+	std::random_device r;
+	random_generator = std::mt19937(r());
+}
+
+std::list<DinamicRigidbody*> GaussianBodyGenerator::generateBodies()
+{
+	std::list<DinamicRigidbody*> listParticles;
+
+	if (model == nullptr)
+		return listParticles;
+
+	auto gen = std::uniform_int_distribution<int>(0, 100);
+	auto px = std::normal_distribution<float>(pos.x, pos_gauss.x);
+	auto py = std::normal_distribution<float>(pos.y, pos_gauss.y);
+	auto pz = std::normal_distribution<float>(pos.z, pos_gauss.z);
+	auto vx = std::normal_distribution<float>(vel.x, vel_gauss.x);
+	auto vy = std::normal_distribution<float>(vel.y, vel_gauss.y);
+	auto vz = std::normal_distribution<float>(vel.z, vel_gauss.z);
+
+	for (int i = 0; i < nParticulas; i++)
+	{
+		int cr = gen(random_generator);
+
+		if (cr <= gen_prob)
+		{
+			Vector3 pos = { px(random_generator), py(random_generator), pz(random_generator) };
+			Vector3 vel = { vx(random_generator), vy(random_generator), vz(random_generator) };
+
+			DinamicRigidbody* p = model->clone();
+
+			p->setPosition(pos);
+			p->setVelocity(vel);
+
+			listParticles.push_back(p);
+		}
+	}
+
+	return listParticles;
+}
+

@@ -22,11 +22,12 @@ protected:
 
 	DinamicRigidbody* model;
 
-	std::default_random_engine randomGenerator;
+	std::default_random_engine gen;
+	std::uniform_real_distribution<> distribution{ -1,1 };
+	std::normal_distribution<> dist{ 0.5, 0.5 };
 
 public:
 
-	RigidBodyGenerator() {}
 	~RigidBodyGenerator() { delete model; }
 
 	void setModel(DinamicRigidbody* m) { model = m; };
@@ -47,5 +48,21 @@ protected:
 public:
 
 	UniformBodyGenerator(DinamicRigidbody* model, double genProb, Vector3 auxPos, Vector3 auxVel, int particulas);
+	std::list<DinamicRigidbody*> generateBodies() override;
+};
+
+/////////////////////////////////////////////////////////////////////////////////
+
+class GaussianBodyGenerator : public RigidBodyGenerator
+{
+protected:
+
+	bool activoGauss;
+	Vector3 pos_gauss, vel_gauss;
+	std::mt19937 random_generator;
+
+public:
+
+	GaussianBodyGenerator(DinamicRigidbody* model, double genProb, Vector3 auxPos, Vector3 auxVel, int particulas);
 	std::list<DinamicRigidbody*> generateBodies() override;
 };

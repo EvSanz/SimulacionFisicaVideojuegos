@@ -39,6 +39,7 @@ Plano* plano = nullptr;
 RenderItem* item = nullptr; 
 
 std::vector <Particula*> particulas; 
+std::vector <DinamicRigidbody*> solidos;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -109,6 +110,20 @@ void stepPhysics(bool interactive, double t)
 		else
 			it++;
 	}
+
+	for (auto it = solidos.begin(); it != solidos.end();)
+	{
+		(*it)->integrate(t);
+
+		if (!(*it)->isAlive())
+		{
+			delete (*it);
+			it = solidos.erase(it);
+		}
+
+		else
+			it++;
+	}
 }
 
 // Function to clean data
@@ -130,11 +145,15 @@ void cleanupPhysics(bool interactive)
 
 	for (auto particula : particulas)
 		delete particula;
-
 	particulas.clear(); 
+
+	for (auto sol : solidos)
+		delete sol;
+	solidos.clear();
 
 	delete plano;
 	delete particulasSystem; 
+	delete rigidbodySystem;
 }
 
 // Function called when a key is pressed
@@ -157,27 +176,30 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			break;
 		}
 
-		//SOLIDOS ESFERA
+		//SOLIDOS ESFERA GAUSS
 		//ARTILLERIA
 		case 'V':
 		case 'v':
 		{
 			//particulas.push_back(new Particula(Canon(pos, dir)));
+			rigidbodySystem->changeGaussBodyState();
 
-			PxTransform tr = PxTransform({ 0, 20, 0 });
-			DinamicRigidbody* rb = new DinamicRigidbody(gPhysics, gScene, tr, gMaterial, 
-				new PxSphereGeometry(1.0), { 1.0, 0.0, 0.0, 1.0 }, 20);
-			GaussianBodyGenerator* gauss = new GaussianBodyGenerator(rb, 0.9, { 0.0, 50.0, 0.0 }, { 5, 0, 0.01 }, 40);
-			rigidbodySystem->addSystem(gauss); 
-
+			if (rigidbodySystem->isGaussBodyActive())
+				rigidbodySystem->addGauss(gPhysics, gScene, gMaterial);
 			break;
 		}
 
+		//SOLIDOS ESFERA UNIFORM
 		//BOLA DE FUEGO
 		case 'B':
 		case 'b':
 		{
 			//particulas.push_back(new Particula(Fireball(pos, dir)));
+
+			rigidbodySystem->changeUniformBodyState();
+
+			if (rigidbodySystem->isUniformBodyActive())
+				rigidbodySystem->addUniform(gPhysics, gScene, gMaterial);
 			break;
 		}
 

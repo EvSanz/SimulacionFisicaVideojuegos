@@ -1,12 +1,16 @@
 #pragma once
 
 #include "Rigidbody.h"
+#include "PxPhysicsAPI.h"
+
+#include "RenderUtils.hpp"
 
 #include <vector>
 #include <string>
 #include <list>
 #include <random>
 #include <complex>
+#include <chrono>
 
 class RigidBodyGenerator
 {
@@ -24,7 +28,7 @@ protected:
 
 	std::default_random_engine gen;
 	std::uniform_real_distribution<> distribution{ -1,1 };
-	std::normal_distribution<> dist{ 0.5, 0.5 };
+	std::normal_distribution<> dist{ 0.0, 1.0 };
 
 public:
 

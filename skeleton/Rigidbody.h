@@ -13,113 +13,120 @@ class Rigidbody
 {
 protected:
 
-	PxScene* scene;
-	PxPhysics* gPhysics;
-	PxShape* shape;
-	PxTransform transform;
-	PxMaterial* material;
-	PxGeometry* geometry;
-
-	RenderItem* renderItem;
+	Vector3 pos, vel, size;
 	Vector4 colour;
 
-	double timeToLive;
+	double mass, inverseMass;
+	float timeToLive;
+
+	bool alive = true;
+
+	RenderItem* renderItem;
+
+	PxScene* gScene;
+	PxPhysics* gPhysics;
+	PxMaterial* mat;
+
+	PxRigidDynamic* part = nullptr;
 
 public:
 
-	Rigidbody(PxPhysics* physics, PxScene* scene, PxGeometry* g,
-		PxMaterial* m, PxTransform t, Vector4 c, double time) {}
+	Rigidbody(PxPhysics* physics, PxScene* scene, PxMaterial* material, PxRigidDynamic* rb, Vector3 posicion, Vector3 velocity, Vector3 scale,
+		float live, double masa) 
+	{
+		gPhysics = physics; 
+		gScene = scene; 
+		mat = material; 
+		part = rb; 
+
+		pos = posicion; 
+		vel = velocity; 
+		size = scale; 
+
+		timeToLive = live; 
+
+		mass = masa; 
+		inverseMass = 1.0 / masa; 
+	}
 
 	virtual ~Rigidbody()
 	{
-		shape->release();
 		DeregisterRenderItem(renderItem);
 		delete renderItem;
 	}
 
 	virtual void integrate(float t) {}
 
-	PxShape* getShape() { return shape; };
+	bool isAlive() { return alive; }
 
 	float getTimeRigidbody() { return timeToLive; };
 
 	virtual Vector3 getVelocity() { return { 0.0, 0.0, 0.0 }; }
 	virtual void setVelocity(Vector3 v) {}
 
-	virtual Vector3 getPosition() { return transform.p; }
+	virtual Vector3 getPosition() { return pos; }
 	virtual void setPosition(Vector3 p) = 0; 
-
-	PxGeometry* extraerForma(PxGeometryHolder forma)
-	{
-		switch (forma.getType())
-		{
-		case PxGeometryType::eSPHERE:
-			return new PxSphereGeometry(forma.sphere());
-			break;
-		default:
-			return new PxBoxGeometry(forma.box());
-			break;
-		}
-	}
 
 	virtual Rigidbody* clone() { return this; }
 };
 
 class DinamicRigidbody : public Rigidbody
 {
-protected:
-
-	PxRigidDynamic* rigidbody;
 
 public:
 
-	DinamicRigidbody(PxPhysics* physics, PxScene* scene, PxTransform trans, 
-		PxMaterial* mat, PxGeometry* geo, Vector4 color, double time)
-		: Rigidbody(physics, scene, geo, mat, trans, color, time)
+	DinamicRigidbody(PxPhysics* physics, PxScene* scene, PxMaterial* material, PxRigidDynamic* rigidbody, Vector4 color,
+		Vector3 position, Vector3 velocity, Vector3 scale, float live, double masa)
+		: Rigidbody(physics, scene, material, rigidbody, position, velocity, scale, live, masa)
 	{
-		rigidbody = physics->createRigidDynamic(trans);
+		colour = color; 
 
-		shape = physics->createShape(*geo, *mat);
-		rigidbody->attachShape(*shape);
+		part = gPhysics->createRigidDynamic(PxTransform(pos));
 
-		renderItem = new RenderItem(shape, rigidbody, color);
+		PxShape* shape = gPhysics->createShape(PxSphereGeometry(size.x), *mat);
+		part->attachShape(*shape);
 
-		scene->addActor(*rigidbody);
+		renderItem = new RenderItem(shape, part, colour);
+
+		gScene->addActor(*part);
 	};
 
-	~DinamicRigidbody() { scene->removeActor(*rigidbody);}
+	~DinamicRigidbody() {} 
 
 	virtual DinamicRigidbody* clone()
 	{
-		return new DinamicRigidbody(gPhysics, scene, transform, 
-			material, extraerForma(shape->getGeometry()), colour, timeToLive);
+		return new DinamicRigidbody(gPhysics, gScene, mat, part, colour, pos, vel, size, timeToLive, mass);
 	};
 
 	void integrate(float t) 
 	{ 
 		timeToLive -= t;
-		rigidbody->clearForce();  
+
+		if (timeToLive < 0)
+			alive = false; 
+
+		//part->clearForce();  
 	};
 
-	void addForce(Vector3 f) { rigidbody->addForce(f); };
+	void addForce(Vector3 f) { part->addForce(f); };
 
-	Vector3 getVelocity() { return rigidbody->getLinearVelocity(); }
-	void setVelocity(Vector3 v) { rigidbody->setLinearVelocity(v); }
+	Vector3 getVelocity() { return part->getLinearVelocity(); }
+	void setVelocity(Vector3 v) { part->setLinearVelocity(v); }
 
-	float getInvMass() { return 1.0 / rigidbody->getMass(); }
+	float getInvMass() { return 1.0 / part->getMass(); }
 	float getMass() 
 	{ 
-		float mass = rigidbody->getMass();
+		float mass = part->getMass();
 
 		if (mass <= 0.0) return 0.0;
 		else return 1.0 / mass;
 	}
 
-	Vector3 getPosition() { return rigidbody->getGlobalPose().p; }
+	Vector3 getPosition() { return part->getGlobalPose().p; }
 	void setPosition(Vector3 p) 
 	{ 
-		transform.p = p; 
-		rigidbody->setGlobalPose(transform); 
+		pos = p; 
+		part->setGlobalPose(PxTransform(pos)); 
 	}
 };
 

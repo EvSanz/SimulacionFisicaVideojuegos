@@ -22,16 +22,16 @@ public:
 
 /////////////////////////////////////////////////////////////////////////
 
-typedef std::pair<RigidBodyForceGenerator*, Rigidbody*> RBFRPair;
+typedef std::pair<RigidBodyForceGenerator*, DinamicRigidbody*> RBFRPair;
 
-class RigidbodyForceRegistry : public std::multimap<RigidBodyForceGenerator*, Rigidbody*>
+class RigidbodyForceRegistry : public std::multimap<RigidBodyForceGenerator*, DinamicRigidbody*>
 {
 public:
 
 	void updateRigidbodyForces(double duration); 
 
-	void addForceRegistry(RigidBodyForceGenerator* fg, Rigidbody* p) { insert(RBFRPair(fg, p)); };
+	void addForceRegistry(RigidBodyForceGenerator* fg, DinamicRigidbody* p) { insert(RBFRPair(fg, p)); };
 
-	void deleteForceRegistry(Rigidbody* p);
+	void deleteForceRegistry(DinamicRigidbody* p);
 };
 

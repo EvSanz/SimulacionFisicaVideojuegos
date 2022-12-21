@@ -8,10 +8,18 @@ UniformBodyGenerator::UniformBodyGenerator(DinamicRigidbody* m, double genProb, 
 {
 	model = m;
 
-	activoUniform = false;
-
 	pos = model->getPosition();
 	vel = model->getVelocity();
+	color = model->getColor();
+	tam = model->getScale();
+	masa = model->getMass();
+
+	vida = model->getMaxLive();
+
+	fisicas = model->getPhysics();
+	scene = model->getScene();
+	mat = model->getMaterial();
+	rd = model->getRigidDynamic();
 
 	gen_prob = genProb;
 
@@ -33,7 +41,7 @@ std::list<DinamicRigidbody*> UniformBodyGenerator::generateBodies()
 			Vector3 posicion = Vector3(uni_pos.x * dist(gen) + pos.x, uni_pos.y * dist(gen) + pos.y, uni_pos.z * dist(gen) + pos.z);
 			Vector3 velocidad = Vector3(uni_vel.x * dist(gen) + vel.x, uni_vel.y * dist(gen) + vel.y, uni_vel.z * dist(gen) + vel.z);
 
-			DinamicRigidbody* p = model->clone();
+			DinamicRigidbody* p = new DinamicRigidbody(fisicas, scene, mat, rd, color, posicion, velocidad, tam, vida, masa);
 
 			p->setVelocity(vel);
 			p->setPosition(pos);
@@ -52,10 +60,18 @@ GaussianBodyGenerator::GaussianBodyGenerator(DinamicRigidbody* m, double genProb
 {
 	model = m;
 
-	activoGauss = false;
-
 	pos = model->getPosition();
 	vel = model->getVelocity();
+	color = model->getColor();
+	tam = model->getScale();
+	masa = model->getMass(); 
+
+	vida = model->getMaxLive(); 
+
+	fisicas = model->getPhysics(); 
+	scene = model->getScene();
+	mat = model->getMaterial();
+	rd = model->getRigidDynamic();
 
 	gen_prob = genProb;
 
@@ -77,7 +93,7 @@ std::list<DinamicRigidbody*> GaussianBodyGenerator::generateBodies()
 			Vector3 posicion = Vector3 (pos_gauss.x * dist(gen) + pos.x, pos_gauss.y * dist(gen) + pos.y, pos_gauss.z * dist(gen) + pos.z);
 			Vector3 velocidad = Vector3 (vel_gauss.x * dist(gen) + vel.x, vel_gauss.y * dist(gen) + vel.y, vel_gauss.z * dist(gen) + vel.z);
 
-			DinamicRigidbody* p = model->clone();
+			DinamicRigidbody* p = new DinamicRigidbody(fisicas, scene, mat, rd, color, posicion, velocidad, tam, vida, masa);
 
 			p->setPosition(posicion);
 			p->setVelocity(velocidad);

@@ -5,6 +5,7 @@
 #include <map>
 
 #include "Particula.h"
+#include "Rigidbody.h"
 
 #include "core.hpp"
 
@@ -150,7 +151,9 @@ protected:
 public: 
 
 	BungeeForceGenerator(float h, float V, float d); 
+
 	virtual void updateForce(Particula* p, double t); 
+
 	~BungeeForceGenerator(); 
 };
 
@@ -167,7 +170,7 @@ public:
 	ParticleDragGenerator(); 
 	~ParticleDragGenerator();
 
-	virtual void updateForce(Particula* p, double t); 
+	virtual void updateForce(Particula* p, double t);
 
 	inline void setDrag(float k1, float k2) { _k1 = k1; _k2 = k2; }
 	inline float getK1() { return (_k1); }

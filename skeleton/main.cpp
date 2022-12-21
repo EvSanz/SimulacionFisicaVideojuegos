@@ -65,7 +65,7 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-	rigidbodySystem = new RigidbodySystem(); 
+	rigidbodySystem = new RigidbodySystem({ 0, 0, 0 });
 	particulasSystem = new ParticleSystem({ 0, 0, 0 });
 
 	//plano = new Plano({ 0, -2, 0 }, { 0.0, 0.8, 0.2, 1 });
@@ -166,13 +166,13 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 	switch(toupper(key))
 	{
-		//SOLIDOS CUADRADO
+		//GRAVEDAD SOLIDOS
 		//PISTOLA
 		case 'C':
 		case 'c':
 		{
-		
 			//particulas.push_back(new Particula(Gun(pos, dir)));
+			rigidbodySystem->createGravity(gPhysics, gScene, gMaterial);
 			break;
 		}
 
@@ -205,10 +205,12 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 		//LASER
 		//BANDA ELASTICA
+		//VIENTO SOLIDOS
 		case 'N':
 		case 'n':
 		{
-			particulasSystem->generateElasticBand(); 
+			rigidbodySystem->createWind(gPhysics, gScene, gMaterial, 50, 10); 
+			//particulasSystem->generateElasticBand(); 
 			//particulas.push_back(new Particula(Laser(pos, dir)));
 			break;
 		}
@@ -217,7 +219,8 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'm':
 		case 'M':
 		{
-			particulasSystem->setForceActive(); 
+			//particulasSystem->setForceActive(); 
+			rigidbodySystem->setForceActive();
 			break; 
 		}
 

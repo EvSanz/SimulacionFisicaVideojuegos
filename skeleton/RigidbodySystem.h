@@ -15,16 +15,21 @@ protected:
 	std::list<RigidBodyGenerator*> rigidbodyGenerators;
 	std::list<RigidBodyForceGenerator*> forceGenerators;
 
-	RigidbodyForceRegistry* forceRegistry;
+	RigidbodyForceRegistry forceRegistry;
 
 	UniformBodyGenerator* uniform = nullptr; 
 	GaussianBodyGenerator* gauss = nullptr;
 
-	bool uniformBodyActive = false, gaussBodyActive = false; 
+	GravityForceRigidbodyGenerator* gravityGen;
+	WindForceRigidbodyGenerator* windGen;
+
+	Vector3 position = {0.0, 0.0, 0.0};
+
+	bool uniformBodyActive = false, gaussBodyActive = false, sysFuerzas = true; 
 
 public:
 
-	RigidbodySystem() { forceRegistry = new RigidbodyForceRegistry(); }
+	RigidbodySystem(Vector3 pos) { position = pos; }
 	~RigidbodySystem(); 
 
 	virtual void update(double t);
@@ -34,9 +39,14 @@ public:
 	void addUniform(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
 	void addGauss(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
 
+	void createGravity(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
+	void createWind(PxPhysics* physics, PxScene* scene, PxMaterial* mat, double r, int n);
+
 	bool isUniformBodyActive() { return uniformBodyActive; }
 	void changeUniformBodyState() { uniformBodyActive = !uniformBodyActive; }
 
 	bool isGaussBodyActive() { return gaussBodyActive; }
 	void changeGaussBodyState() { gaussBodyActive = !gaussBodyActive; }
+
+	void setForceActive() { sysFuerzas = !sysFuerzas; }
 };

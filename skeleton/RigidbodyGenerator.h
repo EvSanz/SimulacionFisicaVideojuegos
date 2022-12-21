@@ -17,14 +17,19 @@ class RigidBodyGenerator
 protected:
 
 	std::string name;
+	//DinamicRigidbody(gPhysics, gScene, mat, part);
 
-	Vector3 auxPos, auxVel, pos, vel;
-
-	double gen_prob;
-
+	Vector4 color; 
+	Vector3 auxPos, auxVel, pos, vel, tam;
+	double gen_prob, masa, vida;
 	int nParticulas;
 
 	DinamicRigidbody* model;
+
+	PxScene* scene; 
+	PxMaterial* mat; 
+	PxPhysics* fisicas; 
+	PxRigidDynamic* rd; 
 
 	std::default_random_engine gen;
 	std::uniform_real_distribution<> distribution{ -1,1 };
@@ -32,7 +37,7 @@ protected:
 
 public:
 
-	~RigidBodyGenerator() { delete model; }
+	~RigidBodyGenerator() {};
 
 	void setModel(DinamicRigidbody* m) { model = m; };
 

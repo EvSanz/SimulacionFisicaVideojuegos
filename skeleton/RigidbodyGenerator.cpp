@@ -4,24 +4,24 @@
 
 //UNIFORM 
 
-UniformBodyGenerator::UniformBodyGenerator(DinamicRigidbody* m, double genProb, Vector3 auxPos, Vector3 auxVel, int particulas)
+UniformBodyGenerator::UniformBodyGenerator(PxScene* gScene, PxPhysics* gPhysics, Rigidbody* m, Vector3 auxPos, Vector3 auxVel, int particulas)
 {
 	model = m;
 
 	pos = model->getPosition();
-	vel = model->getVelocity();
+	vel = model->getLinearVelocity();
+
 	color = model->getColor();
+
 	tam = model->getScale();
 	masa = model->getMass();
 
-	vida = model->getMaxLive();
+	vida = model->getTime();
 
-	fisicas = model->getPhysics();
-	scene = model->getScene();
-	mat = model->getMaterial();
-	rd = model->getRigidDynamic();
+	forma = model->getForma(); 
 
-	gen_prob = genProb;
+	fisicas = gPhysics;
+	scene = gScene; 
 
 	uni_pos = auxPos / 3;
 	uni_vel = auxVel / 3;
@@ -29,9 +29,9 @@ UniformBodyGenerator::UniformBodyGenerator(DinamicRigidbody* m, double genProb, 
 	nParticulas = particulas;
 }
 
-std::list<DinamicRigidbody*> UniformBodyGenerator::generateBodies()
+std::list<Rigidbody*> UniformBodyGenerator::generateBodies()
 {
-	std::list<DinamicRigidbody*> listParticles;
+	std::list<Rigidbody*> listParticles;
 
 	if (model == nullptr)
 		return listParticles;
@@ -41,9 +41,10 @@ std::list<DinamicRigidbody*> UniformBodyGenerator::generateBodies()
 			Vector3 posicion = Vector3(uni_pos.x * dist(gen) + pos.x, uni_pos.y * dist(gen) + pos.y, uni_pos.z * dist(gen) + pos.z);
 			Vector3 velocidad = Vector3(uni_vel.x * dist(gen) + vel.x, uni_vel.y * dist(gen) + vel.y, uni_vel.z * dist(gen) + vel.z);
 
-			DinamicRigidbody* p = new DinamicRigidbody(fisicas, scene, mat, rd, color, posicion, velocidad, tam, vida, masa);
+			Rigidbody* p = new Rigidbody(scene, fisicas, /*pos*/pos, /*vel*/vel, /*size*/tam,
+				/*mass*/masa, /*time*/vida, /*color*/color, /*dinamic?*/true, /*shape*/1);
 
-			p->setVelocity(vel);
+			p->setLinearVelocity(vel);
 			p->setPosition(pos);
 
 			listParticles.push_back(p);
@@ -56,24 +57,24 @@ std::list<DinamicRigidbody*> UniformBodyGenerator::generateBodies()
 
 //GAUSSIAN
 
-GaussianBodyGenerator::GaussianBodyGenerator(DinamicRigidbody* m, double genProb, Vector3 auxPos, Vector3 auxVel, int particulas)
+GaussianBodyGenerator::GaussianBodyGenerator(PxScene* gScene, PxPhysics* gPhysics, Rigidbody* m, Vector3 auxPos, Vector3 auxVel, int particulas)
 {
 	model = m;
 
 	pos = model->getPosition();
-	vel = model->getVelocity();
+	vel = model->getLinearVelocity();
+
 	color = model->getColor();
+
 	tam = model->getScale();
-	masa = model->getMass(); 
+	masa = model->getMass();
 
-	vida = model->getMaxLive(); 
+	vida = model->getTime();
 
-	fisicas = model->getPhysics(); 
-	scene = model->getScene();
-	mat = model->getMaterial();
-	rd = model->getRigidDynamic();
+	forma = model->getForma();
 
-	gen_prob = genProb;
+	fisicas = gPhysics;
+	scene = gScene;
 
 	pos_gauss = auxPos * 2;
 	vel_gauss = auxVel * 0.5;
@@ -81,22 +82,23 @@ GaussianBodyGenerator::GaussianBodyGenerator(DinamicRigidbody* m, double genProb
 	nParticulas = particulas * 2;
 }
 
-std::list<DinamicRigidbody*> GaussianBodyGenerator::generateBodies()
+std::list<Rigidbody*> GaussianBodyGenerator::generateBodies()
 {
-	std::list<DinamicRigidbody*> listParticles;
+	std::list<Rigidbody*> listParticles;
 
 	if (model == nullptr)
 		return listParticles;
 
 	for (int i = 0; i < nParticulas; i++)
 	{
-			Vector3 posicion = Vector3 (pos_gauss.x * dist(gen) + pos.x, pos_gauss.y * dist(gen) + pos.y, pos_gauss.z * dist(gen) + pos.z);
-			Vector3 velocidad = Vector3 (vel_gauss.x * dist(gen) + vel.x, vel_gauss.y * dist(gen) + vel.y, vel_gauss.z * dist(gen) + vel.z);
+			Vector3 posicion = Vector3 (pos_gauss.x + dist(gen) + pos.x, pos_gauss.y + dist(gen) + pos.y, pos_gauss.z + dist(gen) + pos.z);
+			Vector3 velocidad = Vector3 (vel_gauss.x + dist(gen) + vel.x, vel_gauss.y + dist(gen) + vel.y, vel_gauss.z + dist(gen) + vel.z);
 
-			DinamicRigidbody* p = new DinamicRigidbody(fisicas, scene, mat, rd, color, posicion, velocidad, tam, vida, masa);
+			Rigidbody* p = new Rigidbody(scene, fisicas, /*pos*/pos, /*vel*/vel, /*size*/tam,
+				/*mass*/masa, /*time*/vida, /*color*/color, /*dinamic?*/true, /*shape*/1);
 
-			p->setPosition(posicion);
-			p->setVelocity(velocidad);
+			p->setLinearVelocity(vel);
+			p->setPosition(pos);
 
 			listParticles.push_back(p);
 	}

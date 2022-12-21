@@ -11,7 +11,7 @@ class RigidbodySystem
 {
 protected:
 
-	std::list<DinamicRigidbody*> part;
+	std::list<Rigidbody*> part;
 	std::list<RigidBodyGenerator*> rigidbodyGenerators;
 	std::list<RigidBodyForceGenerator*> forceGenerators;
 
@@ -22,6 +22,7 @@ protected:
 
 	GravityForceRigidbodyGenerator* gravityGen;
 	WindForceRigidbodyGenerator* windGen;
+	ExplosionForceRigidbodyGenerator* expGen; 
 
 	Vector3 position = {0.0, 0.0, 0.0};
 
@@ -41,6 +42,7 @@ public:
 
 	void createGravity(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
 	void createWind(PxPhysics* physics, PxScene* scene, PxMaterial* mat, double r, int n);
+	void createExplosive(PxPhysics* physics, PxScene* scene, PxMaterial* mat, int n, int r); 
 
 	bool isUniformBodyActive() { return uniformBodyActive; }
 	void changeUniformBodyState() { uniformBodyActive = !uniformBodyActive; }

@@ -13,107 +13,100 @@ class Rigidbody
 {
 protected:
 
-	Vector3 pos, vel, size;
-	Vector4 colour;
+	double timeToLive, timeLive;
 
-	double mass, inverseMass;
-	double damping = 0.9; 
-	float timeToLive, life;
+	int form; 
 
-	bool alive = true;
+	bool alive; 
+
+	Vector3 size; 
+	Vector4 colores; 
+
+	PxRigidDynamic* rigidbodyDinamico;
+	PxRigidStatic* rigidbodyEstatico;
 
 	RenderItem* renderItem;
 
-	PxScene* gScene;
-	PxPhysics* gPhysics;
-	PxMaterial* mat;
-
-	PxRigidDynamic* rigidbodyDinamico = nullptr;
-
 public:
 
-	Rigidbody(PxPhysics* physics, PxScene* scene, PxMaterial* material, PxRigidDynamic* rb, Vector3 posicion, Vector3 velocity, Vector3 scale,
-		float live, double masa) 
+	Rigidbody(PxScene* scene, PxPhysics* physics, Vector3 pos, Vector3 vel, Vector3 scale,
+		double mass, double time, Vector4 color, bool dinamico, int forma)
 	{
-		gPhysics = physics; 
-		gScene = scene; 
-		mat = material; 
-		rigidbodyDinamico = rb;
+		if (dinamico) 
+		{
+			rigidbodyDinamico = physics->createRigidDynamic(PxTransform(pos));
 
-		pos = posicion; 
-		vel = velocity; 
-		size = scale; 
+			rigidbodyDinamico->setLinearVelocity(vel);
+			rigidbodyDinamico->setAngularVelocity({ 0, 0, 0 });
+			rigidbodyDinamico->setGlobalPose(PxTransform(pos));
+			rigidbodyDinamico->setMass(mass);
 
-		timeToLive = live; 
-		life = live;
+			timeToLive = time;
+			timeLive = time;
 
-		mass = masa; 
-		inverseMass = 1.0 / masa; 
-	}
+			colores = color;
+			size = scale; 
 
-	virtual ~Rigidbody()
+			alive = true; 
+
+			PxShape* shape; 
+			form = forma; 
+			
+			switch (forma)
+			{
+			case 1:
+				shape = CreateShape(PxSphereGeometry(scale.x));
+				break; 
+			case 0:
+				shape = CreateShape(PxBoxGeometry(scale.x, scale.y, scale.z));
+				break;
+			} 
+
+			rigidbodyDinamico->attachShape(*shape);
+
+			PxRigidBodyExt::updateMassAndInertia(*rigidbodyDinamico, 1);
+
+			scene->addActor(*rigidbodyDinamico);
+
+			renderItem = new RenderItem(shape, rigidbodyDinamico, color);
+		}
+
+		else
+		{
+			rigidbodyEstatico = physics->createRigidStatic(PxTransform(pos));
+
+			colores = color;
+			size = scale;
+			
+			PxShape* shape;
+			form = forma;
+
+			switch (forma)
+			{
+			case 0:
+				shape = CreateShape(PxSphereGeometry(scale.x));
+				break;
+			case 1:
+				shape = CreateShape(PxBoxGeometry(scale.x, scale.y, scale.z));
+				break;
+			}
+
+			rigidbodyEstatico->attachShape(*shape);
+			scene->addActor(*rigidbodyEstatico);
+
+			renderItem = new RenderItem(shape, rigidbodyEstatico, color);
+		}
+	};
+
+	~Rigidbody()
 	{
+		//rigidbodyDinamico->release();
 		DeregisterRenderItem(renderItem);
-		delete renderItem;
-	}
-
-	virtual void integrate(float t) {}
-
-	bool isAlive() { return alive; }
-
-	float getTimeRigidbody() { return timeToLive; };
-
-	virtual Vector3 getVelocity() { return { 0.0, 0.0, 0.0 }; }
-	virtual void setVelocity(Vector3 v) {}
-
-	virtual Vector3 getPosition() { return pos; }
-	virtual void setPosition(Vector3 p) = 0; 
-
-	Vector3 getScale() { return size; }
-
-	double getMaxLive() { return life; }
-
-	PxRigidDynamic* getRigidDynamic() { return rigidbodyDinamico; }
-	PxPhysics* getPhysics() { return gPhysics; }
-	PxScene* getScene() { return gScene; }
-	PxMaterial* getMaterial() { return mat; }
-
-	virtual Rigidbody* clone() { return this; }
-};
-
-class DinamicRigidbody : public Rigidbody
-{
-public:
-
-	DinamicRigidbody(PxPhysics* physics, PxScene* scene, PxMaterial* material, PxRigidDynamic* rigidbody, Vector4 color,
-		Vector3 position, Vector3 velocity, Vector3 scale, float live, double masa)
-		: Rigidbody(physics, scene, material, rigidbody, position, velocity, scale, live, masa)
-	{
-		colour = color; 
-
-		rigidbodyDinamico = gPhysics->createRigidDynamic(PxTransform(pos));
-
-		rigidbodyDinamico->setLinearVelocity(vel);
-		rigidbodyDinamico->setGlobalPose(PxTransform(pos)); 
-
-		PxShape* shape = gPhysics->createShape(PxSphereGeometry(size.x), *mat);
-		rigidbodyDinamico->attachShape(*shape);
-
-		renderItem = new RenderItem(shape, rigidbodyDinamico, colour);
-
-		gScene->addActor(*rigidbodyDinamico);
-	};
-
-	~DinamicRigidbody() {} 
-
-	virtual DinamicRigidbody* clone()
-	{
-		return new DinamicRigidbody(gPhysics, gScene, mat, rigidbodyDinamico, colour, pos, vel, size, life, mass);
-	};
+	} 
 
 	void integrate(float t) 
 	{ 
-		if (inverseMass <= 0.0f)
+		if (getInvMass() <= 0.0f)
 			return;
 
 		timeToLive -= t;
@@ -124,26 +117,25 @@ public:
 		rigidbodyDinamico->clearForce();
 	};
 
+	bool isAlive() { return alive; }
+
 	void addForce(Vector3 f) { rigidbodyDinamico->addForce(f); }
+	void addTorque(Vector3 f) { rigidbodyDinamico->addTorque(f); }
 
-	Vector4 getColor() { return colour; }
-	void setColor(Vector4 c) { colour = c; }
+	Vector3 getPosition() { return rigidbodyDinamico->getGlobalPose().p; }
+	void setPosition(Vector3 pos) { rigidbodyDinamico->setGlobalPose(PxTransform(pos)); }
 
-	Vector3 getVelocity() { return vel; }
-	void setVelocity(Vector3 v) 
-	{ 
-		vel = v; 
-		rigidbodyDinamico->setLinearVelocity(vel);
-	}
+	Vector3 getLinearVelocity() { return rigidbodyDinamico->getLinearVelocity(); }
+	void setLinearVelocity(Vector3 vel) { rigidbodyDinamico->setLinearVelocity(vel); }
+	
+	Vector3 getScale() { return size; }
+	Vector4 getColor() { return colores; }
 
-	float getInvMass() { return inverseMass; }
-	float getMass() { return mass; }
+	double getTime() { return timeLive; }
 
-	Vector3 getPosition() { return pos; }
-	void setPosition(Vector3 p) 
-	{ 
-		pos = p; 
-		rigidbodyDinamico->setGlobalPose(PxTransform(pos));
-	}
+	int getForma() { return form; }
+
+	float getMass() { return rigidbodyDinamico->getMass(); }
+	float getInvMass() { return rigidbodyDinamico->getInvMass(); }
 };
 

@@ -25,7 +25,7 @@ void RigidbodyForceRegistry::updateRigidbodyForces(double duration)
 		i->first->updateForceRB(i->second, duration);
 }
 
-void RigidbodyForceRegistry::deleteForceRegistry(DinamicRigidbody* p)
+void RigidbodyForceRegistry::deleteForceRegistry(Rigidbody* p)
 {
 	for (auto i = begin(); i != end();)
 	{

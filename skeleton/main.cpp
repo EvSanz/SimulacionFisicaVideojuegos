@@ -39,7 +39,7 @@ Plano* plano = nullptr;
 RenderItem* item = nullptr; 
 
 std::vector <Particula*> particulas; 
-std::vector <DinamicRigidbody*> solidos;
+std::vector <Rigidbody*> solidos;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -209,7 +209,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'N':
 		case 'n':
 		{
-			rigidbodySystem->createWind(gPhysics, gScene, gMaterial, 50, 10); 
+			rigidbodySystem->createWind(gPhysics, gScene, gMaterial, 5, 20); 
 			//particulasSystem->generateElasticBand(); 
 			//particulas.push_back(new Particula(Laser(pos, dir)));
 			break;

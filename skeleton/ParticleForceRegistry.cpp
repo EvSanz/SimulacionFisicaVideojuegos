@@ -22,7 +22,7 @@ void ParticleForceRegistry::updateForces(double duration)
 void RigidbodyForceRegistry::updateRigidbodyForces(double duration)
 {
 	for (auto i = begin(); i != end(); i++)
-		i->first->updateForce(i->second, duration);
+		i->first->updateForceRB(i->second, duration);
 }
 
 void RigidbodyForceRegistry::deleteForceRegistry(DinamicRigidbody* p)

@@ -23,7 +23,7 @@ class ParticleSystem
 {
 protected:
 
-	std::list<Particula*> part; 
+	std::list<Particula*> rigidbodyDinamico; 
 	std::list<ParticleGenerator*> generadores;
 
 	Vector3 position;

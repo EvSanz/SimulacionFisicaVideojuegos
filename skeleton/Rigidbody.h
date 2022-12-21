@@ -14,8 +14,6 @@ class Rigidbody
 protected:
 
 	Vector3 pos, vel, size;
-	Vector3 force = {0.0, 0.0, 0.0};
-	Vector3 acc = { 0.0, 0.0, 0.0 };
 	Vector4 colour;
 
 	double mass, inverseMass;
@@ -30,7 +28,7 @@ protected:
 	PxPhysics* gPhysics;
 	PxMaterial* mat;
 
-	PxRigidDynamic* part = nullptr;
+	PxRigidDynamic* rigidbodyDinamico = nullptr;
 
 public:
 
@@ -40,7 +38,7 @@ public:
 		gPhysics = physics; 
 		gScene = scene; 
 		mat = material; 
-		part = rb; 
+		rigidbodyDinamico = rb;
 
 		pos = posicion; 
 		vel = velocity; 
@@ -75,7 +73,7 @@ public:
 
 	double getMaxLive() { return life; }
 
-	PxRigidDynamic* getRigidDynamic() { return part; }
+	PxRigidDynamic* getRigidDynamic() { return rigidbodyDinamico; }
 	PxPhysics* getPhysics() { return gPhysics; }
 	PxScene* getScene() { return gScene; }
 	PxMaterial* getMaterial() { return mat; }
@@ -85,7 +83,6 @@ public:
 
 class DinamicRigidbody : public Rigidbody
 {
-
 public:
 
 	DinamicRigidbody(PxPhysics* physics, PxScene* scene, PxMaterial* material, PxRigidDynamic* rigidbody, Vector4 color,
@@ -94,21 +91,24 @@ public:
 	{
 		colour = color; 
 
-		part = gPhysics->createRigidDynamic(PxTransform(pos));
+		rigidbodyDinamico = gPhysics->createRigidDynamic(PxTransform(pos));
+
+		rigidbodyDinamico->setLinearVelocity(vel);
+		rigidbodyDinamico->setGlobalPose(PxTransform(pos)); 
 
 		PxShape* shape = gPhysics->createShape(PxSphereGeometry(size.x), *mat);
-		part->attachShape(*shape);
+		rigidbodyDinamico->attachShape(*shape);
 
-		renderItem = new RenderItem(shape, part, colour);
+		renderItem = new RenderItem(shape, rigidbodyDinamico, colour);
 
-		gScene->addActor(*part);
+		gScene->addActor(*rigidbodyDinamico);
 	};
 
 	~DinamicRigidbody() {} 
 
 	virtual DinamicRigidbody* clone()
 	{
-		return new DinamicRigidbody(gPhysics, gScene, mat, part, colour, pos, vel, size, life, mass);
+		return new DinamicRigidbody(gPhysics, gScene, mat, rigidbodyDinamico, colour, pos, vel, size, life, mass);
 	};
 
 	void integrate(float t) 
@@ -116,21 +116,15 @@ public:
 		if (inverseMass <= 0.0f)
 			return;
 
-		auto totalAcc = acc; 
-		totalAcc += force * inverseMass;
-
-		vel = vel * pow(damping, t) + totalAcc * t;
-		pos = Vector3(pos.x + vel.x * t, pos.y + vel.y * t, pos.z + vel.z * t);
-
 		timeToLive -= t;
 
 		if (timeToLive < 0)
 			alive = false; 
 
-		part->clearForce();
+		rigidbodyDinamico->clearForce();
 	};
 
-	void addForce(Vector3 f) { part->addForce(f); }
+	void addForce(Vector3 f) { rigidbodyDinamico->addForce(f); }
 
 	Vector4 getColor() { return colour; }
 	void setColor(Vector4 c) { colour = c; }
@@ -139,7 +133,7 @@ public:
 	void setVelocity(Vector3 v) 
 	{ 
 		vel = v; 
-		part->setLinearVelocity(vel); 
+		rigidbodyDinamico->setLinearVelocity(vel);
 	}
 
 	float getInvMass() { return inverseMass; }
@@ -149,7 +143,7 @@ public:
 	void setPosition(Vector3 p) 
 	{ 
 		pos = p; 
-		part->setGlobalPose(PxTransform(pos)); 
+		rigidbodyDinamico->setGlobalPose(PxTransform(pos));
 	}
 };
 

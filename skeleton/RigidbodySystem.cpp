@@ -101,11 +101,11 @@ void RigidbodySystem::createGravity(PxPhysics* physics, PxScene* scene, PxMateri
 void RigidbodySystem::createWind(PxPhysics* physics, PxScene* scene, PxMaterial* mat, double r, int n)
 {
 	PxRigidDynamic* aux = nullptr;
-	TornadeForceRigidbodyGenerator* tornadeGen = new TornadeForceRigidbodyGenerator(Vector3((float)(n/2), 0.0, 0.0), r, 5.0);
+	TornadeForceRigidbodyGenerator* tornadeGen = new TornadeForceRigidbodyGenerator(Vector3((float)(n/2), 5.0, 0.0), r, 5.0);
 
 	for (int i = 0; i < n; i++)
 	{
-		DinamicRigidbody* p1 = new DinamicRigidbody(physics, scene, mat, aux, { 1.0, 0.0, 0.0, 1.0 }, { (float)(i * 2), 50.0, 0.0 },
+		DinamicRigidbody* p1 = new DinamicRigidbody(physics, scene, mat, aux, { 1.0, 0.0, 0.0, 1.0 }, { (float)(i * 2), 5.0, 0.0 },
 			{ 0.0, 0.0, 0.0 }, { 0.8, 0.8, 0.8 }, 10, 2);
 		forceRegistry.addForceRegistry(tornadeGen, p1);
 		part.push_back(p1);

@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 #include "Rigidbody.h"
 
@@ -9,11 +10,11 @@ class RigidBodyForceGenerator
 {
 protected:
 
-	double time = -1;
+	double time = -1e10;
 
 public:
 
-	virtual void updateForce(DinamicRigidbody* p, double duration) = 0;
+	virtual void updateForceRB(DinamicRigidbody* p, double duration) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////
@@ -31,7 +32,7 @@ public:
 
 	inline void setGravity(Vector3 g) { gravity = g; }
 
-	void updateForce(DinamicRigidbody* p, double t)
+	void updateForceRB(DinamicRigidbody* p, double t)
 	{
 		if (p->getInvMass() < 1e-10)
 			return;
@@ -61,13 +62,16 @@ public:
 	Vector3 getVel() { return velViento; }
 	Vector3 getPos() { return posViento; }
 
-	void updateForce(DinamicRigidbody* p, double t)
+	void updateForceRB(DinamicRigidbody* p, double t)
 	{
 		if ((fabs(p->getInvMass()) < 1e-10) || (p->getPosition() - posViento).magnitudeSquared() > pow(rViento, 2))
 			return;
 
+		PxRigidDynamic* aux = p->getRigidDynamic(); 
+
 		Vector3 v = velViento - p->getVelocity();
-		p->addForce(0.2 * v + 0.001 * v.magnitude() * v);
+		
+		aux->addForce(0.2 * v + 0.001 * v.magnitude() * v);
 	}
 };
 
@@ -89,13 +93,13 @@ public:
 		centro = pos;
 	}
 
-	void updateForce(DinamicRigidbody* p, double t)
+	void updateForceRB(DinamicRigidbody* p, double t)
 	{
 		Vector3 d = p->getPosition() - centro;
 
 		velViento = k * Vector3(-(d.z), (20 - d.y), d.x);
 
-		WindForceRigidbodyGenerator::updateForce(p, t);
+		WindForceRigidbodyGenerator::updateForceRB(p, t);
 	}
 };
 
@@ -117,7 +121,7 @@ public:
 		tiempo = duracion;
 	}
 
-	void updateForce(DinamicRigidbody* p, double t)
+	void updateForceRB(DinamicRigidbody* p, double t)
 	{
 		if (t >= tiempo || (fabs(p->getInvMass()) < 1e-10)
 			|| (p->getPosition() - expPos).magnitudeSquared() > pow(rExplosion, 2))
@@ -147,7 +151,7 @@ public:
 		k = auxK;
 	}
 
-	void updateForce(DinamicRigidbody* p, double t)
+	void updateForceRB(DinamicRigidbody* p, double t)
 	{
 		Vector3 force = auxiliar->getPosition() - p->getPosition();
 
@@ -181,7 +185,7 @@ public:
 		particulaLiquido = new Particula(CajaMuelle({ 0.0, 0.0, 0.0, 1.0 }, { 0.0, h, 0.0 }, 30));
 	}
 
-	void updateForce(DinamicRigidbody* p, double t)
+	void updateForceRB(DinamicRigidbody* p, double t)
 	{
 		float immersed = 0.0;
 		float h = p->getPosition().y;

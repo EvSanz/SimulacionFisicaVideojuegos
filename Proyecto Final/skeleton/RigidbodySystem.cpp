@@ -115,13 +115,14 @@ void RigidbodySystem::createWind(PxPhysics* physics, PxScene* scene, PxMaterial*
 
 void RigidbodySystem::createExplosive(PxPhysics* physics, PxScene* scene, PxMaterial* mat, int n, int r)
 {
-	expGen = new ExplosionForceRigidbodyGenerator(Vector3((float) n / 2, 0.0, (float) n / 2), r * 2, 10);
+	expGen = new ExplosionForceRigidbodyGenerator(Vector3(30.0, 20.0, 0.0), r * 2, 100);
+	//expGen = new ExplosionForceRigidbodyGenerator(Vector3((float) n / 2, 0.0, (float) n / 2), r * 2, 10);
 
-	Particula* guiaGen = new Particula(PruebaLineas({ (float)n / 2, 0.0, (float)n / 2}, (float)r));
+	Particula* guiaGen = new Particula(PruebaLineas({ 30.0, 20.0, 0.0 }, (float)r));
 
 	for (int i = 0; i < n; i++)
 	{
-		Rigidbody* p = new Rigidbody(scene, physics, /*pos*/{ (float)(i * 2), 100.0, 0.0 }, /*vel*/{ 0.0, 0.0, 0.0 }, /*size*/{ 0.8, 0.8, 0.8 },
+		Rigidbody* p = new Rigidbody(scene, physics, /*pos*/{ (float)(15.0 + i * 2), 100.0, 0.0 }, /*vel*/{ 0.0, 0.0, 0.0 }, /*size*/{ 0.8, 0.8, 0.8 },
 			/*mass*/2, /*time*/10, /*color*/{ 1.0, 1.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1);
 
 		forceRegistry.addForceRegistry(expGen, p);

@@ -209,7 +209,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'N':
 		case 'n':
 		{
-			rigidbodySystem->createWind(gPhysics, gScene, gMaterial, 10, 50); 
+			rigidbodySystem->createWind(gPhysics, gScene, gMaterial, 10, 10); 
 			//particulasSystem->generateElasticBand(); 
 			//particulas.push_back(new Particula(Laser(pos, dir)));
 			break;

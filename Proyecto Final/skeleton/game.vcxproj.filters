@@ -17,6 +17,7 @@
     <ClCompile Include="ParticleForceRegistry.cpp" />
     <ClCompile Include="RigidbodySystem.cpp" />
     <ClCompile Include="RigidbodyGenerator.cpp" />
+    <ClCompile Include="GameSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -39,6 +40,7 @@
     <ClInclude Include="RigidBodyForceGenerator.h" />
     <ClInclude Include="RigidbodyGenerator.h" />
     <ClInclude Include="Avion.h" />
+    <ClInclude Include="GameSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

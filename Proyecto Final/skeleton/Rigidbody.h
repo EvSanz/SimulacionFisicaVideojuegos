@@ -15,7 +15,7 @@ protected:
 
 	double timeToLive, timeLive;
 
-	bool alive, dinamic; 
+	bool alive, dinamic, cantDie = false; 
 
 	int form; 
 
@@ -121,11 +121,15 @@ public:
 
 		timeToLive -= t;
 
-		if (timeToLive < 0)
-			alive = false; 
+		if (timeToLive < 0 && !cantDie)
+			killRigidbody();
 	};
 
 	bool isAlive() { return alive; }
+	void killRigidbody() { alive = false; }
+	
+	bool canDie() { return cantDie; }
+	void notAllowedToDie() { cantDie != cantDie; }
 
 	void addForce(Vector3 f) { rigidbodyDinamico->addForce(f); }
 	void addTorque(Vector3 f) { rigidbodyDinamico->addTorque(f); }

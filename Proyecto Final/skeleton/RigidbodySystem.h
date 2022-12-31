@@ -26,7 +26,7 @@ protected:
 
 	Vector3 position = {0.0, 0.0, 0.0};
 
-	bool uniformBodyActive = false, gaussBodyActive = false, sysFuerzas = false; 
+	bool uniformBodyActive = false, gaussBodyActive = false, sysFuerzas = true; 
 
 public:
 

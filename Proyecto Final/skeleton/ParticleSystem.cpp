@@ -2,17 +2,12 @@
 
 void ParticleSystem::update(double t)
 {
-	if (!sysFuerzas)
-	{
+	if (fuerzasActivadas)
+		force.updateForces(t);
+
 		if (gaussianGen != nullptr)
 		{
 			for (auto p : gaussianGen->generateParticle())
-				rigidbodyDinamico.push_back(p);
-		}
-
-		if (uniformActivo)
-		{
-			for (auto p : uniformGen->generateParticle())
 				rigidbodyDinamico.push_back(p);
 		}
 
@@ -30,6 +25,8 @@ void ParticleSystem::update(double t)
 
 				}
 
+				if(fuerzasActivadas)
+					force.deleteParticleRegistry(*it);
 				if ((*it) != nullptr) delete (*it);
 				rigidbodyDinamico.erase(it);
 			}
@@ -37,27 +34,6 @@ void ParticleSystem::update(double t)
 			else
 				it++;
 		}
-	}
-
-	else
-	{
-		if (fuerzasActivadas)
-			force.updateForces(t);
-
-		for (auto it = rigidbodyDinamico.begin(); it != rigidbodyDinamico.end();) 
-		{
-			(*it)->integrate(t);
-
-			if (!(*it)->isAlive()) 
-			{
-				force.deleteParticleRegistry(*it);
-				delete (*it);
-				it = rigidbodyDinamico.erase(it);
-			}
-			else 
-				it++;
-		}
-	}
 }
 
 ParticleGenerator* ParticleSystem::getParticleGenerator(string t)
@@ -141,15 +117,12 @@ void ParticleSystem::generateBungee()
 	rigidbodyDinamico.push_back(p6);
 }
 
-void ParticleSystem::generateMuelleAnclado()
+void ParticleSystem::generateMuelleAnclado(Vector3 pos)
 {
-	gravityGen = new GravityForceGenerator(Vector3(0.0f, -3.0f, 0.0f));
-	
-	Particula* p3 = new Particula(Prueba({ 0.0, 60.0, 0.0 }, 100, 0.9));
-	muelleAnclado = new AnchoredSpringFG(20, 20, { 0.0, 60.0, 0.0 }); 
+	Particula* p3 = new Particula(Globo(pos));
+	muelleAnclado = new AnchoredSpringFG(20, 20, { pos.x, 90.0, 0.0 }); 
 
 	force.addRegistry(muelleAnclado, p3);
-	force.addRegistry(gravityGen, p3);
 	rigidbodyDinamico.push_back(p3);
 }
 
@@ -246,7 +219,7 @@ void ParticleSystem::generateFogSystem(Vector3 pos)
 {
 	Particula* p = new Particula(Gas(pos)); 
 
-	gaussianGen = new GaussianParticleGenerator(p, 0.9, pos, { 0.01, 0.01, 0.01 }, 100); 
+	gaussianGen = new GaussianParticleGenerator(p, 0.9, pos, { 0.01, 0.01, 0.01 }, 5); 
 
 	generadores.push_back(gaussianGen);
 }

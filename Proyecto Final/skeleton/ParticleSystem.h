@@ -65,7 +65,7 @@ public:
 	void generateFogSystem(Vector3 pos);
 	void generateGravity();
 	void generateMuelle();
-	void generateMuelleAnclado(); 
+	void generateMuelleAnclado(Vector3 pos); 
 	void generateBungee(); 
 	void generateBounyancy(); 
 	void generateElasticBand(); 

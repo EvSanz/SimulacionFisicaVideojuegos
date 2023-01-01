@@ -43,6 +43,7 @@ public:
 	void createGravity(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
 	void createWind(PxPhysics* physics, PxScene* scene, PxMaterial* mat, double r, int n);
 	void createExplosive(PxPhysics* physics, PxScene* scene, PxMaterial* mat, int n, int r); 
+	void createMuelleAnclado(PxPhysics* physics, PxScene* scene, Vector3 pos); 
 
 	bool isUniformBodyActive() { return uniformBodyActive; }
 	void changeUniformBodyState() { uniformBodyActive = !uniformBodyActive; }

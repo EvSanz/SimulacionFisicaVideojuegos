@@ -36,7 +36,7 @@ void RigidbodySystem::update(double t)
 			{
 				(*it)->integrate(t);
 
-				if (!(*it)->isAlive())
+				if (!(*it)->isAlive() || (*it)->getDinamico()->getName() == "Destruir")
 				{
 					if (sysFuerzas)
 						forceRegistry.deleteForceRegistry(*it);
@@ -128,4 +128,14 @@ void RigidbodySystem::createExplosive(PxPhysics* physics, PxScene* scene, PxMate
 		forceRegistry.addForceRegistry(expGen, p);
 		part.push_back(p);
 	}
+}
+
+void RigidbodySystem::createMuelleAnclado(PxPhysics* physics, PxScene* scene, Vector3 pos)
+{
+	Rigidbody* p = new Rigidbody(scene, physics, /*pos*/pos, /*vel*/{ 0.0, 0.0, 0.0 }, /*size*/{ 3.0, 0.8, 0.8 },
+		/*mass*/2, /*time*/10, /*color*/{ 1.0, 0.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1, "globo");
+	AnchoredSpringRigidbodyGenerator* muelle = new AnchoredSpringRigidbodyGenerator(scene, physics, 50, 10, { pos.x, 90.0, 0.0 });
+
+	forceRegistry.addForceRegistry(muelle, p);
+	part.push_back(p);
 }

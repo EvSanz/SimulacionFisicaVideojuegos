@@ -1,8 +1,6 @@
 #include <ctype.h>
 #include <PxPhysicsAPI.h>
 
-#include "ParticleSystem.h"
-#include "RigidbodySystem.h"
 #include "GameSystem.h"
 #include "Avion.h"
 
@@ -32,8 +30,6 @@ PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
 
 GameSystem* gameSystem = nullptr; 
-ParticleSystem* particleSystem = nullptr;
-RigidbodySystem* rigidbodySystem = nullptr;
 
 RenderItem* item = nullptr; 
 
@@ -69,11 +65,9 @@ void initPhysics(bool interactive)
 	gScene = gPhysics->createScene(sceneDesc);
 
 	gameSystem = new GameSystem(gScene, gPhysics); 
-	rigidbodySystem = new RigidbodySystem({ 0.0, 0.0, 0.0 }); 
-	particleSystem = new ParticleSystem({ 0.0, 0.0, 0.0 });
 
 	gameSystem->createPlane(Vector3(10.0, 40.0, 0.0)); 
-	gameSystem->createFloor(Vector3(0.0, 0.0, 0.0)); 
+	gameSystem->createFloor(Vector4(0.0, 1.0, 0.0, 1.0), Vector3(0.0, 0.0, 0.0)); 
 
 	timeMax = 2.0; 
 	tiempo = timeMax; 
@@ -94,8 +88,6 @@ void stepPhysics(bool interactive, double t)
 	GetCamera()->update(); 
 
 	gameSystem->update(t); 
-	particleSystem->update(t);
-	rigidbodySystem->update(t); 
 	
 	gScene->simulate(t);
 	gScene->fetchResults(true);
@@ -107,7 +99,7 @@ void stepPhysics(bool interactive, double t)
 		int obs = rand() % 10; 
 
 		gameSystem->addObstacles(obs);
-		gameSystem->createFloor(Vector3(posX, 0.0, 0.0)); 
+		gameSystem->createFloor(Vector4(0.0, 1.0, 0.0, 1.0), Vector3(posX, 0.0, 0.0)); 
 
 		posX += 100.0; 
 		tiempo = 0; 
@@ -146,7 +138,6 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			break;
 		case 'X':
 			gameSystem->shootBullets(); 
-			particleSystem->generateFogSystem(gameSystem->getPlane()->getPos() + Vector3(50.0, 60.0, 0.0));
 			break; 
 	}
 }
@@ -156,7 +147,22 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 	PX_UNUSED(actor1);
 	PX_UNUSED(actor2);
 
-	//if ((actor1->getName() == "bala" && actor2->getName() == "indestructible"))
+	if (actor1->getName() == "bala")
+	{
+		if (actor2->getName() == "globo")
+		{
+			actor2->setName("Destruir");
+			puntuacion += 100;
+		}
+
+		else if (actor2->getName() == "zeppelin")
+		{
+			actor2->setName("Destruir");
+			puntuacion += 200;
+		}
+			
+		actor1->setName("Destruir"); 
+	}
 }
 
 int main(int, const char*const*)

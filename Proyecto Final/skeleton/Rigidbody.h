@@ -118,6 +118,9 @@ public:
 		DeregisterRenderItem(renderItem);
 	} 
 
+	PxRigidStatic* getEstatico() { return rigidbodyEstatico; }
+	PxRigidDynamic* getDinamico() { return rigidbodyDinamico; }
+
 	void integrate(float t) 
 	{ 
 		if (getInvMass() <= 0.0f)

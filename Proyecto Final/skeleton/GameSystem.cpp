@@ -2,37 +2,63 @@
 
 GameSystem::~GameSystem()
 {
-	for (Rigidbody* b : destructibles)
-		delete b;
-
-	for (Rigidbody* b : indestructibles)
+	for (Rigidbody* b : arboles)
 		delete b;
 
 	for (Rigidbody* b : balas)
+		delete b;
+
+	for (Zeppelin* b : naves)
 		delete b;
 
 	for (RigidBodyGenerator* g : rigidbodyGenerators)
 		delete g;
 
 	balas.clear();
-	destructibles.clear();
-	indestructibles.clear();
+	naves.clear();
+	arboles.clear();
 
 	rigidbodyGenerators.clear();
 	forceGenerators.clear();
+
+	delete particleSystem;
 }
 
 void GameSystem::update(double t)
 {
 	plane->update(t); 
 
+	particleSystem->update(t);
+	rigidbodySystem->update(t);
+
 	forceRegistry.updateRigidbodyForces(t);
+
+	for (auto it = naves.begin(); it != naves.end();)
+	{
+		(*it)->update(t); 
+
+		//if ((*it)->getRigidbody()->getEstatico()->getName() == "CasiMuerto")
+		//{
+		//	(*it)->loseLife(); 
+		//	(*it)->getRigidbody()->getEstatico()->setName("zeppelinMoribundo");
+		//}
+
+		if ((*it)->getPos().x + 50.0 < plane->getPos().x || 
+			(*it)->getRigidbody()->getEstatico()->getName() == "Destruir")
+		{
+			delete (*it);
+			it = naves.erase(it);
+		}
+
+		else
+			it++;
+	}
 
 	for (auto it = balas.begin(); it != balas.end();)
 	{
 		(*it)->integrate(t); 
 
-		if (!(*it)->isAlive())
+		if (!(*it)->isAlive() || (*it)->getDinamico()->getName() == "Destruir")
 		{
 			delete (*it);
 			it = balas.erase(it);
@@ -42,26 +68,24 @@ void GameSystem::update(double t)
 			it++;
 	}
 
-	for (auto it = indestructibles.begin(); it != indestructibles.end();)
+	for (auto it = arboles.begin(); it != arboles.end();)
 	{
-		if ((*it)->getPosition().x + (*it)->getScale().x + 50.0 < plane->getPos().x)
+		if ((*it)->getPosition().x + 50.0 < plane->getPos().x)
 		{
 			delete (*it);
-			it = indestructibles.erase(it);
+			it = arboles.erase(it);
 		}
 
 		else
 			it++;
 	}
 
-	for (auto it = destructibles.begin(); it != destructibles.end();)
+	for (auto it = floor.begin(); it != floor.end();)
 	{
-		if ((*it)->getPosition().x + 50.0 < plane->getPos().x)
+		if ((*it)->getPos().x + 70.0 < plane->getPos().x)
 		{
-			forceRegistry.deleteForceRegistry(*it);
-
 			delete (*it);
-			it = destructibles.erase(it);
+			it = floor.erase(it);
 		}
 
 		else
@@ -79,13 +103,13 @@ void GameSystem::update(double t)
 
 	for (auto it = UIBalas.begin(); it != UIBalas.end(); it++)
 	{
-		Vector3 position = {float ((*it)->getPosition().x + 0.01), 105.0, 0.0};
+		Vector3 position = {float ((*it)->getPos().x + 0.01), 105.0, 0.0};
 		(*it)->setPosition(position); 
 	}
 
 	for (auto it = UIVidas.begin(); it != UIVidas.end(); it++)
 	{
-		Vector3 position = { float((*it)->getPosition().x + 0.01), 105.0, 0.0 };
+		Vector3 position = { float((*it)->getPos().x + 0.01), 105.0, 0.0 };
 		(*it)->setPosition(position);
 	}
 }
@@ -99,29 +123,27 @@ void GameSystem::addObstacles(int obstaculo)
 
 		Rigidbody* tronco = new Rigidbody(gScene, gPhysics, { posX, (float)tam / 2, 0.0 }, { 0.0, 0.0, 0.0 },
 			{ 2.0, (float)tam, 2.0 }, 50.0, 50.0, { 1.0, 0.8, 0.8, 1.0 }, false, 1, "indestructible");
-		indestructibles.push_back(tronco);
+		arboles.push_back(tronco);
 
 		Rigidbody* copa = new Rigidbody(gScene, gPhysics, { posX, (float)(tam + tam / 2), 0.0 }, { 0.0, 0.0, 0.0 },
 			{ 10.0, 6.0, 10.0 }, 50.0, 50.0, { 0.0, 1.0, 0.0, 1.0 }, false, 1, "indestructible");
-		indestructibles.push_back(copa);
+		arboles.push_back(copa);
 	}
 
 	else if (obstaculo == 4 || obstaculo == 5)
 	{
-		Rigidbody* globo = new Rigidbody(gScene, gPhysics, { posX, 80.0, 0.0 }, { 0.0, 0.0, 0.0 },
-			{ 2.0, 2.0, 2.0 }, 5.0, 50.0, { 1.0, 0.0, 0.0, 1.0 }, false, 0, "globo");
-		destructibles.push_back(globo);
+		int alt = (rand() % 30) + 50;
+		rigidbodySystem->createMuelleAnclado(gPhysics, gScene, { posX, (float)alt, 0.0 }); 
 	}
 
 	else if (obstaculo == 6 || obstaculo == 7 ||
-			 obstaculo == 8 || obstaculo == 9)
+			 obstaculo == 8)
 	{
 		int tam = rand() % 30;
 		int alt = (rand() % 40) + 60;
 
-		Rigidbody* nube = new Rigidbody(gScene, gPhysics, { posX, (float)alt, 0.0 }, { 0.0, 0.0, 0.0 },
-			{ (float)tam, 2.0, 3.0 }, 50.0, 50.0, { 1.0, 1.0, 1.0, 1.0 }, false, 1, "indestructible");
-		indestructibles.push_back(nube);
+		Zeppelin* z = new Zeppelin(gScene, gPhysics, {posX, (float)alt, 0.0});
+		naves.push_back(z); 
 	}
 
 	posX += 60.0;
@@ -161,18 +183,15 @@ void GameSystem::createPlane(Vector3 pos)
 void GameSystem::addUIElement(Vector3 pos, bool bala)
 {
 	if (bala)
-		UIBalas.push_front(new Rigidbody(gScene, gPhysics, pos, { 0.0, 0.0, 0.0 },
-			{ 1.0, 1.0, 1.0 }, 10.0, 10.0, { 1.0, 0.5, 0.0, 1.0 }, false, 0, " "));
+		UIBalas.push_front(new Particula(BalasUI(pos)));
 
 	else
-		UIVidas.push_back(new Rigidbody(gScene, gPhysics, pos, { 0.0, 0.0, 0.0 },
-			{ 1.0, 1.0, 1.0 }, 10.0, 10.0, { 1.0, 0.0, 0.0, 1.0 }, false, 0, " "));
+		UIVidas.push_back(new Particula(VidasUI(pos)));
 }
 
-void GameSystem::createFloor(Vector3 pos)
+void GameSystem::createFloor(Vector4 colores, Vector3 pos)
 {
-	indestructibles.push_back(new Rigidbody(gScene, gPhysics, pos, { 0.0, 0.0, 0.0 },
-			{ 300.0, 0.1, 300.0 }, 10.0, 10.0, { 0.0, 0.8, 0.1, 1 }, false, 1, " "));
+	floor.push_back(new Particula(Suelo(colores, pos)));
 }
 
 void GameSystem::deleteBulletOrLive(bool bala)
@@ -198,7 +217,3 @@ void GameSystem::deleteBulletOrLive(bool bala)
 	}
 }
 
-void GameSystem::bulletCollision(Vector3 pos)
-{
-	
-}

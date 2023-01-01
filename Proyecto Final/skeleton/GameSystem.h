@@ -3,17 +3,21 @@
 #include <list>
 
 #include "Avion.h"
+#include "Zeppelin.h"
 
 #include "Particula.h"
 #include "PxPhysicsAPI.h"
 #include "ForceGenerator.h"
+#include "ParticleSystem.h"
 #include "ClasesParticulas.h"
 #include "ParticleGenerator.h"
 
 #include "Rigidbody.h"
+#include "RigidbodySystem.h"
 #include "RigidbodyGenerator.h"
 #include "ParticleForceRegistry.h"
 #include "RigidBodyForceGenerator.h"
+
 
 class GameSystem
 {
@@ -23,16 +27,21 @@ protected:
 	std::list<RigidBodyForceGenerator*> forceGenerators;
 
 	//Objetos
-	std::list<Rigidbody*> destructibles;
-	std::list<Rigidbody*> indestructibles;
+	std::list<Rigidbody*> arboles;
 	std::list<Rigidbody*> balas;
 
+	std::list<Zeppelin*> naves;
+
 	//Interfaz de usuario
-	std::list<Rigidbody*> UIVidas;
-	std::list<Rigidbody*> UIBalas;
+	std::list<Particula*> UIVidas;
+	std::list<Particula*> UIBalas;
+	std::list<Particula*> floor;
 
 	RigidbodyForceRegistry forceRegistry;
 	ParticleForceRegistry particleForceRegistry; 
+
+	ParticleSystem* particleSystem = nullptr; 
+	RigidbodySystem* rigidbodySystem = nullptr;
 
 	PxScene* gScene = nullptr; 
 	PxPhysics* gPhysics = nullptr; 
@@ -49,6 +58,9 @@ public:
 	{ 
 		gScene = scene; 
 		gPhysics = physics; 
+
+		particleSystem = new ParticleSystem({ 0, 0, 0 }); 
+		rigidbodySystem = new RigidbodySystem({ 0, 0, 0 });
 
 		cargadorBalas = 5;
 		contadorBalas = 0;
@@ -70,12 +82,10 @@ public:
 	void addObstacles(int obstaculo); 
 	void shootBullets(); 
 
-	void createFloor(Vector3 pos);
+	void createFloor(Vector4 colores, Vector3 pos);
 
 	void createPlane(Vector3 pos);
 	Avion* getPlane() { return plane; }
-
-	void bulletCollision(Vector3 pos); 
 
 	void addUIElement (Vector3 pos, bool bala);
 	void deleteBulletOrLive(bool bala);

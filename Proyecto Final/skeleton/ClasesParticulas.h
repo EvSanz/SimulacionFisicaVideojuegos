@@ -247,15 +247,15 @@ class Gas : public ClasesParticulas
 {
 public: 
 
-	Gas()
+	Gas(Vector3 pos)
 	{
-		pose = physx::PxTransform{ 0.0, 10.0, 0.0 };
+		pose = physx::PxTransform{ pos };
 		color = { 1.0f, 1.0f, 1.0f, 1 };
 		vel = { 0.0, 0.0, 0.0 };
 		acc = { 0.0f, 0.0f, 0.0f };
 		force = { 0.0, 0.0, 0.0 };
-		size = { 0.4, 0.0, 0.0 };
-		time = 200.0;
+		size = {0.5, 0.0, 0.0 };
+		time = 1.0;
 		mass = 1.0;
 		damp = 0.8;
 		disparo = 1;
@@ -286,11 +286,11 @@ class FuegoArtificial : public ClasesParticulas
 {
 public:
 
-	FuegoArtificial(int tiempo, Vector4 colores, Vector3 pos, Vector3 speed) 
+	FuegoArtificial(int tiempo, Vector4 colores) 
 	{
-		pose = physx::PxTransform{ pos };
+		pose = physx::PxTransform{ 0.0, 0.0, 0.0 };
 		color = colores; 
-		vel = speed;
+		vel = {0.0, 0.0, 0.0};
 		acc = { 0.0f, 0.0f, 0.0f };
 		force = { 0.0, 0.0, 0.0 };
 		size = { 0.8, 0.0, 0.0 };

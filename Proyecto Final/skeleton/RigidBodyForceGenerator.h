@@ -173,7 +173,7 @@ public:
 		: SpringForceRigidbodyGenerator(nullptr, k, resting) 
 	{
 		auxiliar = new Rigidbody(gScene, gPhysics, anchor_pos, { 0.0, 0.0, 0.0 },
-			{ 0.1, 0.1, 0.0 }, 0.0, 10, { 0.0, 0.0, 0.0, 1.0 }, false, 0);
+			{ 0.1, 0.1, 0.0 }, 0.0, 10, { 0.0, 0.0, 0.0, 1.0 }, false, 0, " ");
 	}
 
 	~AnchoredSpringRigidbodyGenerator() { delete auxiliar; }

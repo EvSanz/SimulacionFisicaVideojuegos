@@ -28,7 +28,7 @@ protected:
 
 	Vector3 position;
 	
-	bool sysFuerzas = true; 
+	bool sysFuerzas = false; 
 	bool fuerzasActivadas = true; 
 
 	bool gaussActivo = false;
@@ -62,7 +62,7 @@ public:
 
 	void generateFireworkSystem(); 
 	void generateWaterSystem(Vector3 pos);
-	void generateFogSystem();
+	void generateFogSystem(Vector3 pos);
 	void generateGravity();
 	void generateMuelle();
 	void generateMuelleAnclado(); 

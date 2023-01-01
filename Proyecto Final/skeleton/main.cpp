@@ -146,7 +146,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			break;
 		case 'X':
 			gameSystem->shootBullets(); 
-			particleSystem->generateFireworkSystem(gameSystem->getPlane()->getPos() + Vector3{50.0, 50.0, 0.0});
+			particleSystem->generateFogSystem(gameSystem->getPlane()->getPos() + Vector3(50.0, 60.0, 0.0));
 			break; 
 	}
 }
@@ -156,8 +156,7 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 	PX_UNUSED(actor1);
 	PX_UNUSED(actor2);
 
-	if ((actor1->getName() == "bala" && actor2->getName() == "indestructible"))
-		particleSystem->generateFireworkSystem(actor1->is<PxRigidDynamic>()->getGlobalPose().p);
+	//if ((actor1->getName() == "bala" && actor2->getName() == "indestructible"))
 }
 
 int main(int, const char*const*)

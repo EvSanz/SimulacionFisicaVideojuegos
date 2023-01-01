@@ -90,10 +90,10 @@ GaussianParticleGenerator::GaussianParticleGenerator(Particula* model, double ge
 
 	gen_prob = genProb;
 
-	pos_gauss = auxPos * 2;
+	pos_gauss = auxPos * 0.5;
 	vel_gauss = auxVel * 0.5;
 
-	nParticulas = particulas * 2;
+	nParticulas = particulas;
 
 	std::random_device r;
 	random_generator = std::mt19937(r());
@@ -104,34 +104,21 @@ std::list<Particula*> GaussianParticleGenerator::generateParticle()
 {
 	std::list<Particula*> listParticles;
 
-	if (modelo == nullptr) 
+	if (modelo == nullptr)
 		return listParticles;
 
-		auto gen = std::uniform_int_distribution<int>(0, 100);
-		auto px = std::normal_distribution<float>(pos.x, pos_gauss.x);
-		auto py = std::normal_distribution<float>(pos.y, pos_gauss.y);
-		auto pz = std::normal_distribution<float>(pos.z, pos_gauss.z);
-		auto vx = std::normal_distribution<float>(vel.x, vel_gauss.x);
-		auto vy = std::normal_distribution<float>(vel.y, vel_gauss.y);
-		auto vz = std::normal_distribution<float>(vel.z, vel_gauss.z);
+	for (int i = 0; i < nParticulas/2; i++)
+	{
+		Vector3 posicion = Vector3(pos_gauss.x * dist(gen) + pos.x, pos_gauss.y * dist(gen) + pos.y, pos_gauss.z * dist(gen) + pos.z);
+		Vector3 velocidad = Vector3(vel_gauss.x * dist(gen) + vel.x, vel_gauss.y * dist(gen) + vel.y, vel_gauss.z * dist(gen) + vel.z);
 
-		for (int i = 0; i < nParticulas; i++)
-		{
-			int cr = gen(random_generator);
+		Particula* p = new Particula(modelo->getClass());
 
-			if (cr <= gen_prob)
-			{
-				Vector3 pos = { px(random_generator), py(random_generator), pz(random_generator) };
-				Vector3 vel = { vx(random_generator), vy(random_generator), vz(random_generator) };
+		p->setVelocity(velocidad); 
+		p->setPosition(posicion);
 
-				Particula* p = new Particula(modelo->getClass());
-
-				p->setPosition(pos);
-				p->setVelocity(vel);
-
-				listParticles.push_back(p);
-			}
-		}
+		listParticles.push_back(p);
+	}
 
 	return listParticles;
 }

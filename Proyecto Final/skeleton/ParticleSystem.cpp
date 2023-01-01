@@ -4,7 +4,7 @@ void ParticleSystem::update(double t)
 {
 	if (!sysFuerzas)
 	{
-		if (gaussActivo)
+		if (gaussianGen != nullptr)
 		{
 			for (auto p : gaussianGen->generateParticle())
 				rigidbodyDinamico.push_back(p);
@@ -242,11 +242,11 @@ void ParticleSystem::generateExplosive(int n, int r)
 	}
 }
 
-void ParticleSystem::generateFogSystem()
+void ParticleSystem::generateFogSystem(Vector3 pos)
 {
-	Particula* p = new Particula(Gas()); 
+	Particula* p = new Particula(Gas(pos)); 
 
-	gaussianGen = new GaussianParticleGenerator(p, 0.7, { 5, 5, 5 }, { 0.01, 0.01, 0.01 }, 1000); 
+	gaussianGen = new GaussianParticleGenerator(p, 0.9, pos, { 0.01, 0.01, 0.01 }, 100); 
 
 	generadores.push_back(gaussianGen);
 }

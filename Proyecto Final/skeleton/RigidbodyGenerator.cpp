@@ -42,7 +42,7 @@ std::list<Rigidbody*> UniformBodyGenerator::generateBodies()
 			Vector3 velocidad = Vector3(uni_vel.x * dist(gen) + vel.x, uni_vel.y * dist(gen) + vel.y, uni_vel.z * dist(gen) + vel.z);
 
 			Rigidbody* p = new Rigidbody(scene, fisicas, /*pos*/pos, /*vel*/vel, /*size*/tam,
-				/*mass*/masa, /*time*/vida, /*color*/color, /*dinamic?*/true, /*shape*/1);
+				/*mass*/masa, /*time*/vida, /*color*/color, /*dinamic?*/true, /*shape*/1, " ");
 
 			p->setLinearVelocity(vel);
 			p->setPosition(pos);
@@ -95,7 +95,7 @@ std::list<Rigidbody*> GaussianBodyGenerator::generateBodies()
 			Vector3 velocidad = Vector3 (vel_gauss.x + dist(gen) + vel.x, vel_gauss.y + dist(gen) + vel.y, vel_gauss.z + dist(gen) + vel.z);
 
 			Rigidbody* p = new Rigidbody(scene, fisicas, /*pos*/pos, /*vel*/vel, /*size*/tam,
-				/*mass*/masa, /*time*/vida, /*color*/color, /*dinamic?*/true, /*shape*/1);
+				/*mass*/masa, /*time*/vida, /*color*/color, /*dinamic?*/true, /*shape*/1, " ");
 
 			p->setLinearVelocity(vel);
 			p->setPosition(pos);

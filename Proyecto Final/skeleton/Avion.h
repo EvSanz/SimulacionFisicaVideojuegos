@@ -19,11 +19,11 @@ public:
 	Avion(PxScene* scene, PxPhysics* physics, Vector3 pos)
 	{
 		alas = new Rigidbody(scene, physics, pos, { 0.0, 0.0, 0.0 }, { 3.0, 0.1, 7.0 },
-			5.0, 50.0, { 1.0, 0.0, 0.0, 1.0 }, false, 1); 
+			5.0, 50.0, { 1.0, 0.0, 0.0, 1.0 }, false, 1, "avion");
 		alas->notAllowedToDie();
 		 
 		capsula = new Rigidbody(scene, physics, pos, { 0.0, 0.0, 0.0 }, { 2.0, 6.0, 5.0 },
-			5.0, 50.0, { 1.0, 1.0, 1.0, 1.0 }, false, 2);
+			5.0, 50.0, { 1.0, 1.0, 1.0, 1.0 }, false, 2, "avion");
 		capsula->notAllowedToDie(); 
 	}
 

@@ -98,18 +98,18 @@ void GameSystem::addObstacles(int obstaculo)
 		int tam = (rand() % 30) + 10.0;
 
 		Rigidbody* tronco = new Rigidbody(gScene, gPhysics, { posX, (float)tam / 2, 0.0 }, { 0.0, 0.0, 0.0 },
-			{ 2.0, (float)tam, 2.0 }, 50.0, 50.0, { 1.0, 0.8, 0.8, 1.0 }, false, 1);
+			{ 2.0, (float)tam, 2.0 }, 50.0, 50.0, { 1.0, 0.8, 0.8, 1.0 }, false, 1, "indestructible");
 		indestructibles.push_back(tronco);
 
 		Rigidbody* copa = new Rigidbody(gScene, gPhysics, { posX, (float)(tam + tam / 2), 0.0 }, { 0.0, 0.0, 0.0 },
-			{ 10.0, 6.0, 10.0 }, 50.0, 50.0, { 0.0, 1.0, 0.0, 1.0 }, false, 1);
+			{ 10.0, 6.0, 10.0 }, 50.0, 50.0, { 0.0, 1.0, 0.0, 1.0 }, false, 1, "indestructible");
 		indestructibles.push_back(copa);
 	}
 
 	else if (obstaculo == 4 || obstaculo == 5)
 	{
 		Rigidbody* globo = new Rigidbody(gScene, gPhysics, { posX, 80.0, 0.0 }, { 0.0, 0.0, 0.0 },
-			{ 2.0, 2.0, 2.0 }, 5.0, 50.0, { 1.0, 0.0, 0.0, 1.0 }, false, 0);
+			{ 2.0, 2.0, 2.0 }, 5.0, 50.0, { 1.0, 0.0, 0.0, 1.0 }, false, 0, "globo");
 		destructibles.push_back(globo);
 	}
 
@@ -120,7 +120,7 @@ void GameSystem::addObstacles(int obstaculo)
 		int alt = (rand() % 40) + 60;
 
 		Rigidbody* nube = new Rigidbody(gScene, gPhysics, { posX, (float)alt, 0.0 }, { 0.0, 0.0, 0.0 },
-			{ (float)tam, 2.0, 3.0 }, 50.0, 50.0, { 1.0, 1.0, 1.0, 1.0 }, false, 1);
+			{ (float)tam, 2.0, 3.0 }, 50.0, 50.0, { 1.0, 1.0, 1.0, 1.0 }, false, 1, "indestructible");
 		indestructibles.push_back(nube);
 	}
 
@@ -134,7 +134,7 @@ void GameSystem::shootBullets()
 		Vector3 pos = plane->getPos() + Vector3(9.0f, 0.0f, 0.0f);
 
 		balas.push_back(new Rigidbody(gScene, gPhysics, pos, { 100.0, 0.0, 0.0 },
-			{ 0.5, 0.5, 0.5 }, 10.0, 10.0, { 1.0, 1.0, 0.0, 1.0 }, true, 1));
+			{ 0.5, 0.5, 0.5 }, 10.0, 10.0, { 1.0, 1.0, 0.0, 1.0 }, true, 1, "bala"));
 
 		deleteBulletOrLive(true); 
 	}
@@ -162,17 +162,17 @@ void GameSystem::addUIElement(Vector3 pos, bool bala)
 {
 	if (bala)
 		UIBalas.push_front(new Rigidbody(gScene, gPhysics, pos, { 0.0, 0.0, 0.0 },
-			{ 1.0, 1.0, 1.0 }, 10.0, 10.0, { 1.0, 0.5, 0.0, 1.0 }, false, 0));
+			{ 1.0, 1.0, 1.0 }, 10.0, 10.0, { 1.0, 0.5, 0.0, 1.0 }, false, 0, " "));
 
 	else
 		UIVidas.push_back(new Rigidbody(gScene, gPhysics, pos, { 0.0, 0.0, 0.0 },
-			{ 1.0, 1.0, 1.0 }, 10.0, 10.0, { 1.0, 0.0, 0.0, 1.0 }, false, 0));
+			{ 1.0, 1.0, 1.0 }, 10.0, 10.0, { 1.0, 0.0, 0.0, 1.0 }, false, 0, " "));
 }
 
 void GameSystem::createFloor(Vector3 pos)
 {
 	indestructibles.push_back(new Rigidbody(gScene, gPhysics, pos, { 0.0, 0.0, 0.0 },
-			{ 300.0, 0.1, 300.0 }, 10.0, 10.0, { 0.0, 0.8, 0.1, 1 }, false, 1));
+			{ 300.0, 0.1, 300.0 }, 10.0, 10.0, { 0.0, 0.8, 0.1, 1 }, false, 1, " "));
 }
 
 void GameSystem::deleteBulletOrLive(bool bala)
@@ -196,4 +196,9 @@ void GameSystem::deleteBulletOrLive(bool bala)
 
 		contadorVidas--;
 	}
+}
+
+void GameSystem::bulletCollision(Vector3 pos)
+{
+	
 }

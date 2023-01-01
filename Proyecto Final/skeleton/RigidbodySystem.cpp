@@ -55,7 +55,7 @@ void RigidbodySystem::addUniform(PxPhysics* physics, PxScene* scene, PxMaterial*
 	PxRigidDynamic* aux = nullptr;
 
 	Rigidbody* rb = new Rigidbody(scene, physics, /*pos*/{ 0.0, 50.0, 0.0 }, /*vel*/{ 0.0, 0.0, 0.0 }, /*size*/{ 0.8, 0.8, 0.8 },
-		/*mass*/2, /*time*/10, /*color*/{ 1.0, 0.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1);
+		/*mass*/2, /*time*/10, /*color*/{ 1.0, 0.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1, " ");
 	part.push_back(rb);
 
 	uniform = new UniformBodyGenerator(scene, physics, rb, { 0.0, 50.0, 0.0 }, { 0.0, 0.0, 0.0 }, 2);
@@ -65,7 +65,7 @@ void RigidbodySystem::addUniform(PxPhysics* physics, PxScene* scene, PxMaterial*
 void RigidbodySystem::addGauss(PxPhysics* physics, PxScene* scene, PxMaterial* mat)
 {
 	Rigidbody* rb = new Rigidbody(scene, physics, /*pos*/{ 0.0, 50.0, 0.0 }, /*vel*/{ 0.0, 0.0, 0.0 }, /*size*/{ 0.8, 0.8, 0.8 },
-		/*mass*/2, /*time*/10, /*color*/{ 1.0, 0.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1);
+		/*mass*/2, /*time*/10, /*color*/{ 1.0, 0.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1, " ");
 	part.push_back(rb); 
 
 	gauss = new GaussianBodyGenerator(scene, physics, rb, {0.0, 50.0, 0.0}, {0.0, 0.0, 0.0}, 2);
@@ -79,17 +79,17 @@ void RigidbodySystem::createGravity(PxPhysics* physics, PxScene* scene, PxMateri
 	gravityGen = new GravityForceRigidbodyGenerator(Vector3(0.0f, -9.8f, 0.0f));
 
 	Rigidbody* p1 = new Rigidbody(scene, physics, /*pos*/{ 0.0, 50.0, 0.0 }, /*vel*/{ 0.0, 0.0, 0.0 }, /*size*/{ 0.8, 0.8, 0.8 },
-		/*mass*/2, /*time*/10, /*color*/{ 1.0, 0.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1);
+		/*mass*/2, /*time*/10, /*color*/{ 1.0, 0.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1, " ");
 	forceRegistry.addForceRegistry(gravityGen, p1);
 	part.push_back(p1);
 
 	Rigidbody* p2 = new Rigidbody(scene, physics, /*pos*/{ 10.0, 50.0, 0.0 }, /*vel*/{ 0.0, 0.0, 0.0 }, /*size*/{ 0.8, 0.8, 0.8 },
-		/*mass*/2, /*time*/10, /*color*/{ 1.0, 0.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/0);
+		/*mass*/2, /*time*/10, /*color*/{ 1.0, 0.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/0, " ");
 	forceRegistry.addForceRegistry(gravityGen, p2);
 	part.push_back(p2);
 
 	Rigidbody* p3 = new Rigidbody(scene, physics, /*pos*/{ 20.0, 50.0, 0.0 }, /*vel*/{ 0.0, 0.0, 0.0 }, /*size*/{ 0.8, 0.8, 0.8 },
-		/*mass*/2, /*time*/10, /*color*/{ 1.0, 0.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1);
+		/*mass*/2, /*time*/10, /*color*/{ 1.0, 0.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1, " ");
 	forceRegistry.addForceRegistry(gravityGen, p3);
 	part.push_back(p3);
 
@@ -105,7 +105,7 @@ void RigidbodySystem::createWind(PxPhysics* physics, PxScene* scene, PxMaterial*
 	for (int i = 0; i < n; i++)
 	{
 		Rigidbody* p1 = new Rigidbody(scene, physics, /*pos*/{(float)(i * 2), 50.0, 0.0}, /*vel*/{0.0, 0.0, 0.0}, /*size*/{0.8, 0.8, 0.8},
-			/*mass*/2, /*time*/10, /*color*/{1.0, 0.0, 0.0, 1.0}, /*dinamic?*/true, /*shape*/1);
+			/*mass*/2, /*time*/10, /*color*/{1.0, 0.0, 0.0, 1.0}, /*dinamic?*/true, /*shape*/1, " ");
 		forceRegistry.addForceRegistry(windGen, p1);
 		part.push_back(p1);
 	}
@@ -123,7 +123,7 @@ void RigidbodySystem::createExplosive(PxPhysics* physics, PxScene* scene, PxMate
 	for (int i = 0; i < n; i++)
 	{
 		Rigidbody* p = new Rigidbody(scene, physics, /*pos*/{ (float)(15.0 + i * 2), 100.0, 0.0 }, /*vel*/{ 0.0, 0.0, 0.0 }, /*size*/{ 0.8, 0.8, 0.8 },
-			/*mass*/2, /*time*/10, /*color*/{ 1.0, 1.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1);
+			/*mass*/2, /*time*/10, /*color*/{ 1.0, 1.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1, " ");
 
 		forceRegistry.addForceRegistry(expGen, p);
 		part.push_back(p);

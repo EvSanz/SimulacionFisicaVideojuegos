@@ -3,6 +3,13 @@
 #include <list>
 
 #include "Avion.h"
+
+#include "Particula.h"
+#include "PxPhysicsAPI.h"
+#include "ForceGenerator.h"
+#include "ClasesParticulas.h"
+#include "ParticleGenerator.h"
+
 #include "Rigidbody.h"
 #include "RigidbodyGenerator.h"
 #include "ParticleForceRegistry.h"
@@ -25,6 +32,7 @@ protected:
 	std::list<Rigidbody*> UIBalas;
 
 	RigidbodyForceRegistry forceRegistry;
+	ParticleForceRegistry particleForceRegistry; 
 
 	PxScene* gScene = nullptr; 
 	PxPhysics* gPhysics = nullptr; 
@@ -66,6 +74,8 @@ public:
 
 	void createPlane(Vector3 pos);
 	Avion* getPlane() { return plane; }
+
+	void bulletCollision(Vector3 pos); 
 
 	void addUIElement (Vector3 pos, bool bala);
 	void deleteBulletOrLive(bool bala);

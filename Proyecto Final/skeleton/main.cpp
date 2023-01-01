@@ -1,6 +1,7 @@
 #include <ctype.h>
 #include <PxPhysicsAPI.h>
 
+#include "ParticleSystem.h"
 #include "RigidbodySystem.h"
 #include "GameSystem.h"
 #include "Avion.h"
@@ -31,7 +32,8 @@ PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
 
 GameSystem* gameSystem = nullptr; 
-RigidbodySystem* rgSystem = nullptr;
+ParticleSystem* particleSystem = nullptr;
+RigidbodySystem* rigidbodySystem = nullptr;
 
 RenderItem* item = nullptr; 
 
@@ -67,7 +69,8 @@ void initPhysics(bool interactive)
 	gScene = gPhysics->createScene(sceneDesc);
 
 	gameSystem = new GameSystem(gScene, gPhysics); 
-	rgSystem = new RigidbodySystem({ 0.0, 0.0, 0.0 }); 
+	rigidbodySystem = new RigidbodySystem({ 0.0, 0.0, 0.0 }); 
+	particleSystem = new ParticleSystem({ 0.0, 0.0, 0.0 });
 
 	gameSystem->createPlane(Vector3(10.0, 40.0, 0.0)); 
 	gameSystem->createFloor(Vector3(0.0, 0.0, 0.0)); 
@@ -91,8 +94,9 @@ void stepPhysics(bool interactive, double t)
 	GetCamera()->update(); 
 
 	gameSystem->update(t); 
-	rgSystem->update(t); 
-
+	particleSystem->update(t);
+	rigidbodySystem->update(t); 
+	
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 
@@ -142,6 +146,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			break;
 		case 'X':
 			gameSystem->shootBullets(); 
+			particleSystem->generateFireworkSystem(gameSystem->getPlane()->getPos() + Vector3{50.0, 50.0, 0.0});
 			break; 
 	}
 }
@@ -150,6 +155,9 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 {
 	PX_UNUSED(actor1);
 	PX_UNUSED(actor2);
+
+	if ((actor1->getName() == "bala" && actor2->getName() == "indestructible"))
+		particleSystem->generateFireworkSystem(actor1->is<PxRigidDynamic>()->getGlobalPose().p);
 }
 
 int main(int, const char*const*)

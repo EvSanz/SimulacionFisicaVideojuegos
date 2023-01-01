@@ -1,11 +1,13 @@
 #pragma once
 
 #include <PxPhysicsAPI.h>
+#include <string.h>
 
 #include "core.hpp"
 #include "RenderUtils.hpp"
 
 #include <list>
+
 
 using namespace physx;
 
@@ -30,7 +32,7 @@ protected:
 public:
 
 	Rigidbody(PxScene* scene, PxPhysics* physics, Vector3 pos, Vector3 vel, Vector3 scale,
-		double mass, double time, Vector4 color, bool dinamico, int forma)
+		double mass, double time, Vector4 color, bool dinamico, int forma, const char* name)
 	{
 		if (dinamico) 
 		{
@@ -40,6 +42,7 @@ public:
 			rigidbodyDinamico->setAngularVelocity({ 0, 0, 0 });
 			rigidbodyDinamico->setGlobalPose(PxTransform(pos));
 			rigidbodyDinamico->setMass(mass);
+			rigidbodyDinamico->setName(name); 
 
 			timeToLive = time;
 			timeLive = time;
@@ -79,6 +82,7 @@ public:
 		{
 			rigidbodyEstatico = physics->createRigidStatic(PxTransform(pos));
 			rigidbodyEstatico->setGlobalPose(PxTransform(pos));
+			rigidbodyEstatico->setName(name); 
 
 			colores = color;
 			size = scale;
@@ -141,7 +145,6 @@ public:
 		else
 			return rigidbodyEstatico->getGlobalPose().p;
 	}
-
 	void setPosition(Vector3 pos) 
 	{ 
 		if (dinamic)

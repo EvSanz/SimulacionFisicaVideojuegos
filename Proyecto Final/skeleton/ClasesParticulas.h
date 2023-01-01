@@ -286,15 +286,11 @@ class FuegoArtificial : public ClasesParticulas
 {
 public:
 
-	FuegoArtificial(int tiempo, Vector4 colores) 
+	FuegoArtificial(int tiempo, Vector4 colores, Vector3 pos, Vector3 speed) 
 	{
-		int x = aleatorio(40); 
-		int y = aleatorio(40); 
-		int z = aleatorio(40); 
-
-		pose = physx::PxTransform{ (float)x, (float)y, float(z)};
+		pose = physx::PxTransform{ pos };
 		color = colores; 
-		vel = { 0.0, 0.0, 0.0 };
+		vel = speed;
 		acc = { 0.0f, 0.0f, 0.0f };
 		force = { 0.0, 0.0, 0.0 };
 		size = { 0.8, 0.0, 0.0 };

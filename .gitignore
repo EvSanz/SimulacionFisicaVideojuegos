@@ -41,3 +41,10 @@ skeleton/debug/**
 
 # Zip files
 *.zip
+*.ipch
+*.vsidx
+*.opendb
+Proyecto Final/skeleton/.vs/game/v17/Browse.VC.db-wal
+*.db-shm
+*.db
+Proyecto Final/skeleton/.vs/game/v17/.suo

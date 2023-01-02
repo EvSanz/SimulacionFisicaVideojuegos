@@ -40,13 +40,13 @@ public:
 		if (up)
 		{
 			if (capsula->getPosition().y < 100.0)
-				movY = 0.01;
+				movY = 0.02;
 		}
 
 		else
 		{
 			if (capsula->getPosition().y > 15.0)
-				movY = -0.01; 
+				movY = -0.02; 
 		}	
 
 		alas->setPosition(alas->getPosition() + Vector3(0.01, movY, 0.0));

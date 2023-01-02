@@ -44,38 +44,78 @@ public:
 	}
 };
 
-class AvionCapsula : public ClasesParticulas
+class Globo : public ClasesParticulas
 {
 public:
 
-	AvionCapsula(Vector3 pos)
+	Globo(Vector3 pos)
 	{
 		pose = physx::PxTransform{ pos.x, pos.y, pos.z };
-		color = { 1, 1, 1, 1 };
+		color = { 1.0, 0.0, 0.0, 1.0 };
 		vel = { 0.0, 0.0, 0.0 };
 		acc = { 0.0, 0.0, 0.0 };
 		force = { 0.0, 0.0, 0.0 };
-		size = { 5.0, 2.0, 1.0 };
+		size = { 3.0, 1.0, 1.0 };
 		time = 50.0;
 		mass = 5.0;
 		damp = 0.98;
-		disparo = 3;
+		disparo = 1;
+		immortal = true;
+	}
+}; 
+
+class BalasUI : public ClasesParticulas
+{
+public:
+
+	BalasUI(Vector3 pos)
+	{
+		pose = physx::PxTransform{ pos.x, pos.y, pos.z };
+		color = { 1.0, 0.5, 0.0, 1.0 };
+		vel = { 0.0, 0.0, 0.0 };
+		acc = { 0.0, 0.0, 0.0 };
+		force = { 0.0, 0.0, 0.0 };
+		size = { 1.0, 1.0, 1.0 };
+		time = 50.0;
+		mass = 5.0;
+		damp = 0.98;
+		disparo = 1;
 		immortal = true;
 	}
 };
 
-class AvionAlas : public ClasesParticulas
+class VidasUI : public ClasesParticulas
 {
 public:
 
-	AvionAlas(Vector3 pos)
+	VidasUI(Vector3 pos)
 	{
 		pose = physx::PxTransform{ pos.x, pos.y, pos.z };
-		color = { 1, 0, 0, 1 };
+		color = { 1.0, 0.0, 0.0, 1.0 };
 		vel = { 0.0, 0.0, 0.0 };
 		acc = { 0.0, 0.0, 0.0 };
 		force = { 0.0, 0.0, 0.0 };
-		size = { 5.0, 0.2, 7.0 };
+		size = { 1.0, 1.0, 1.0 };
+		time = 50.0;
+		mass = 5.0;
+		damp = 0.98;
+		disparo = 1;
+		immortal = true;
+	}
+};
+
+class Suelo : public ClasesParticulas
+{
+public:
+
+	Suelo(Vector4 colores, Vector3 pos)
+	{
+		pose = physx::PxTransform{ pos.x, pos.y, pos.z };
+		color = colores;
+		vel = { 0.0, 0.0, 0.0 };
+		acc = { 0.0, 0.0, 0.0 };
+		force = { 0.0, 0.0, 0.0 };
+		size = { 100.0, 0.1, 100.0 };
 		time = 50.0;
 		mass = 5.0;
 		damp = 0.98;
@@ -83,6 +123,8 @@ public:
 		immortal = true;
 	}
 };
+
+//////////////////////////////////////////////////////////////////////////////////////
 
 class PruebaMuelle : public ClasesParticulas
 {
@@ -286,9 +328,9 @@ class FuegoArtificial : public ClasesParticulas
 {
 public:
 
-	FuegoArtificial(int tiempo, Vector4 colores) 
+	FuegoArtificial(int tiempo, Vector3 pos, Vector4 colores) 
 	{
-		pose = physx::PxTransform{ 0.0, 0.0, 0.0 };
+		pose = physx::PxTransform{ pos };
 		color = colores; 
 		vel = {0.0, 0.0, 0.0};
 		acc = { 0.0f, 0.0f, 0.0f };

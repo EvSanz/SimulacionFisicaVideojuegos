@@ -28,19 +28,18 @@ protected:
 
 	Vector3 position;
 	
-	bool sysFuerzas = false; 
+	/*bool sysFuerzas = false; 
 	bool fuerzasActivadas = true; 
 
 	bool gaussActivo = false;
 	bool uniformActivo = false; 
-	bool fireActivo = false;
+	bool fireActivo = false;*/
 
 	float timer = 0; 
 
 	GaussianParticleGenerator* gaussianGen = nullptr; 
 	UniformParticleGenerator* uniformGen = nullptr;
 	SphereParticleGenerator* fireGen = nullptr;
-
 	GravityForceGenerator* gravityGen = nullptr;
 	WindForceGenerator* windGen = nullptr; 
 	TornadeForceGenerator* tornadeGen = nullptr; 
@@ -58,14 +57,19 @@ public:
 	void update(double t); 
 
 	ParticleGenerator* getParticleGenerator(string name); 
-	ForceGenerator* getForceGenerator(string name); 
 
-	void generateFireworkSystem(Vector3 pos);
-	void generateWaterSystem(Vector3 pos);
+	void generateFireworkSystem(Vector3 pos, Vector4 colores);
+	void generateMuelleAnclado(Vector3 pos);
 	void generateFogSystem(Vector3 pos);
+
+	///////////////////////////////////////////////////////////////////////
+
+	//NO USADOS EN EL PROYECTO
+
+	//ForceGenerator* getForceGenerator(string name);
 	void generateGravity();
 	void generateMuelle();
-	void generateMuelleAnclado(Vector3 pos); 
+	void generateWaterSystem(Vector3 pos);
 	void generateBungee(); 
 	void generateBounyancy(); 
 	void generateElasticBand(); 
@@ -75,7 +79,7 @@ public:
 	void moreK() { muelleAnclado->setK(5.0); }
 	void lessK() { muelleAnclado->setK(-5.0); }
 
-	void setForceActive() { fuerzasActivadas = !fuerzasActivadas; }
+	/*void setForceActive() { fuerzasActivadas = !fuerzasActivadas; }
 
 	void setFogActive() { gaussActivo = !gaussActivo;}
 	bool isFogActive() { return gaussActivo; }
@@ -84,7 +88,7 @@ public:
 	bool isWaterActive() { return uniformActivo; }
 
 	void setFireActive() { fireActivo = !fireActivo; }
-	bool isFireActive() { return fireActivo; }
+	bool isFireActive() { return fireActivo; }*/
 };
 
 #endif

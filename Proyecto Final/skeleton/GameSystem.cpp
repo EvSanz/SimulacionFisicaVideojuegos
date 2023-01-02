@@ -26,30 +26,71 @@ GameSystem::~GameSystem()
 
 void GameSystem::update(double t)
 {
-	plane->update(t); 
-
 	particleSystem->update(t);
 	rigidbodySystem->update(t);
 
 	forceRegistry.updateRigidbodyForces(t);
 
+	if (!noPlane)
+	{
+		tiempo += t;
+		if (tiempoCooldown < tiempo && contadorBalas < cargadorBalas)
+		{
+			addUIElement({ float((plane->getPos().x + 85.0) - 5.0 * contadorBalas), 105.0, 0.0 }, true);
+
+			contadorBalas++;
+			tiempo = 0.0;
+		}
+
+		for (auto it = UIBalas.begin(); it != UIBalas.end(); it++)
+		{
+			Vector3 position = { float((*it)->getPos().x + 0.01), 105.0, 0.0 };
+			(*it)->setPosition(position);
+		}
+
+		for (auto it = UIVidas.begin(); it != UIVidas.end(); it++)
+		{
+			Vector3 position = { float((*it)->getPos().x + 0.01), 105.0, 0.0 };
+			(*it)->setPosition(position);
+		}
+
+		plane->update(t);
+	}
+
 	for (auto it = naves.begin(); it != naves.end();)
 	{
-		(*it)->update(t); 
+		(*it)->update(t);
 
-		if ((*it)->getPos().x + 50.0 < plane->getPos().x || (*it)->getLives() <= 0)
+		if (!noPlane)
 		{
-			delete (*it);
-			it = naves.erase(it);
+			if ((*it)->getPos().x + 50.0 < plane->getPos().x 
+			|| !(*it)->getRigidbody()->isAlive())
+			{
+				delete (*it);
+				it = naves.erase(it);
+			}
+
+			else
+				it++;
 		}
 
 		else
-			it++;
+		{
+			if ((*it)->getPos().x + 50.0 < posAvion
+			|| !(*it)->getRigidbody()->isAlive())
+			{
+				delete (*it);
+				it = naves.erase(it);
+			}
+
+			else
+				it++;
+		}
 	}
 
 	for (auto it = balas.begin(); it != balas.end();)
 	{
-		(*it)->integrate(t); 
+		(*it)->integrate(t);
 
 		if (!(*it)->isAlive())
 		{
@@ -63,47 +104,56 @@ void GameSystem::update(double t)
 
 	for (auto it = arboles.begin(); it != arboles.end();)
 	{
-		if ((*it)->getPosition().x + 50.0 < plane->getPos().x)
+		if (!noPlane)
 		{
-			delete (*it);
-			it = arboles.erase(it);
+			if ((*it)->getPosition().x + 50.0 < plane->getPos().x)
+			{
+				delete (*it);
+				it = arboles.erase(it);
+			}
+
+			else
+				it++;
 		}
 
 		else
-			it++;
+		{
+			if ((*it)->getPosition().x + 50.0 < posAvion)
+			{
+				delete (*it);
+				it = arboles.erase(it);
+			}
+
+			else
+				it++;
+		}
 	}
 
 	for (auto it = floor.begin(); it != floor.end();)
 	{
-		if ((*it)->getPos().x + 70.0 < plane->getPos().x)
+		if (!noPlane)
 		{
-			delete (*it);
-			it = floor.erase(it);
+			if ((*it)->getPos().x + 100.0 < plane->getPos().x)
+			{
+				delete (*it);
+				it = floor.erase(it);
+			}
+
+			else
+				it++;
 		}
 
 		else
-			it++;
-	}
+		{
+			if ((*it)->getPos().x + 50.0 < posAvion)
+			{
+				delete (*it);
+				it = floor.erase(it);
+			}
 
-	tiempo += t;
-	if (tiempoCooldown < tiempo && contadorBalas < cargadorBalas)
-	{
-		addUIElement({ float((plane->getPos().x + 85.0) - 5.0 * contadorBalas), 105.0, 0.0 }, true);
-
-		contadorBalas++;
-		tiempo = 0.0; 
-	}
-
-	for (auto it = UIBalas.begin(); it != UIBalas.end(); it++)
-	{
-		Vector3 position = {float ((*it)->getPos().x + 0.01), 105.0, 0.0};
-		(*it)->setPosition(position); 
-	}
-
-	for (auto it = UIVidas.begin(); it != UIVidas.end(); it++)
-	{
-		Vector3 position = { float((*it)->getPos().x + 0.01), 105.0, 0.0 };
-		(*it)->setPosition(position);
+			else
+				it++;
+		}
 	}
 }
 
@@ -163,7 +213,9 @@ void GameSystem::shootBullets()
 
 void GameSystem::createPlane(Vector3 pos)
 {
-	plane = new Avion(gScene, gPhysics, pos); 
+	plane = new Avion(gScene, gPhysics, pos);
+
+	noPlane = false; 
 	
 	pos.x -= 5.0; 
 
@@ -216,11 +268,6 @@ void GameSystem::deleteBulletOrLive(bool bala)
 	}
 }
 
-void GameSystem::explosion(Vector3 pos)
-{
-	particleSystem->generateFireworkSystem(pos); 
-}
-
 //////////////////////////////////////////////////////////////////////
 
 //COLISIONES
@@ -268,12 +315,9 @@ void GameSystem::balasVSzeppelin(PxActor* bala, PxActor* zeppelin)
 
 		if (zeppelin == act)
 		{
-			if ((*i)->getLives() > 0)
-				(*i)->loseLife();
-			else
-				(*i)->destroy(); 
-
 			p1 = (*i)->getRigidbody();
+			particleSystem->generateFireworkSystem((*i)->getPos(), {1.0, 0.5, 0.0, 1.0});
+			(*i)->destroy(); 	
 		}
 
 		else
@@ -285,6 +329,17 @@ void GameSystem::avionVSglobo(PxActor* globo)
 {
 	rigidbodySystem->destruirGlobo(globo);
 
-	if (contadorVidas > 0)
-		deleteBulletOrLive(false); 
+	if (contadorVidas > 0 && !noPlane)
+	{
+		particleSystem->generateFireworkSystem(plane->getPos(), {1.0, 0.0, 0.0, 1.0});
+
+		deleteBulletOrLive(false);
+
+		posAvion = plane->getPos().x;
+
+		plane->destroy();
+		delete plane;
+
+		noPlane = true;
+	}		
 }

@@ -24,6 +24,10 @@ public:
 	bool immortal; 
 };
 
+//////////////////////////////////////////////////////////////////////////////////////
+
+//USADAS PROYECTO FINAL
+
 class Prueba : public ClasesParticulas
 {
 public:
@@ -124,7 +128,29 @@ public:
 	}
 };
 
+class FuegoArtificial : public ClasesParticulas
+{
+public:
+
+	FuegoArtificial(double tiempo, Vector3 pos, Vector4 colores)
+	{
+		pose = physx::PxTransform{ pos };
+		color = colores;
+		vel = { 0.0, 0.0, 0.0 };
+		acc = { 0.0f, 0.0f, 0.0f };
+		force = { 0.0, 0.0, 0.0 };
+		size = { 0.5, 0.0, 0.0 };
+		time = tiempo;
+		mass = 1.0;
+		damp = 0.85;
+		disparo = 1;
+		immortal = false;
+	}
+};
+
 //////////////////////////////////////////////////////////////////////////////////////
+
+//NO USADAS PROYECTO FINAL
 
 class PruebaMuelle : public ClasesParticulas
 {
@@ -319,26 +345,6 @@ public:
 		time = 100.0;
 		mass = 0.5;
 		damp = 0.95;
-		disparo = 1;
-		immortal = false;
-	}
-};
-
-class FuegoArtificial : public ClasesParticulas
-{
-public:
-
-	FuegoArtificial(int tiempo, Vector3 pos, Vector4 colores) 
-	{
-		pose = physx::PxTransform{ pos };
-		color = colores; 
-		vel = {0.0, 0.0, 0.0};
-		acc = { 0.0f, 0.0f, 0.0f };
-		force = { 0.0, 0.0, 0.0 };
-		size = { 0.8, 0.0, 0.0 };
-		time = tiempo;
-		mass = 1.0;
-		damp = 0.85;
 		disparo = 1;
 		immortal = false;
 	}

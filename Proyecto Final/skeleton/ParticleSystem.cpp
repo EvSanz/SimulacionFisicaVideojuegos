@@ -1,39 +1,60 @@
 #include "ParticleSystem.h"
 
+///////////////////////////////////////////////////////////////
+
+//USADOS EN EL PROYECTO FINAL
+
+ParticleSystem::~ParticleSystem()
+{
+	for (auto p : rigidbodyDinamico)
+	{
+		delete p;
+		p = nullptr;
+	}
+
+	for (auto f : generadores) {
+		delete f;
+		f = nullptr;
+	}
+
+	generadores.clear();
+	rigidbodyDinamico.clear();
+	force.clear();
+}
+
 void ParticleSystem::update(double t)
 {
-	if (fuerzasActivadas)
-		force.updateForces(t);
+	force.updateForces(t);
 
-		if (gaussianGen != nullptr)
+	if (gaussianGen != nullptr)
+	{
+		for (auto p : gaussianGen->generateParticle())
+			rigidbodyDinamico.push_back(p);
+	}
+
+	for (std::list<Particula*>::iterator it = rigidbodyDinamico.begin(); it != rigidbodyDinamico.end();)
+	{
+		(*it)->integrate(t);
+
+		if (!(*it)->isAlive())
 		{
-			for (auto p : gaussianGen->generateParticle())
-				rigidbodyDinamico.push_back(p);
-		}
-
-		for (std::list<Particula*>::iterator it = rigidbodyDinamico.begin(); it != rigidbodyDinamico.end();)
-		{
-			(*it)->integrate(t);
-
-			if (!(*it)->isAlive())
+			Firework* f = dynamic_cast<Firework*>(*it);
+			if (f != nullptr)
 			{
-				Firework* f = dynamic_cast<Firework*>(*it);
-				if (f != nullptr)
-				{
-					for (auto i : f->explode())
-						rigidbodyDinamico.push_back(i);
+				for (auto i : f->explode())
+					rigidbodyDinamico.push_back(i);
 
-				}
-
-				if(fuerzasActivadas)
-					force.deleteParticleRegistry(*it);
-				if ((*it) != nullptr) delete (*it);
-				rigidbodyDinamico.erase(it);
 			}
 
-			else
-				it++;
+			force.deleteParticleRegistry(*it);
+
+			delete (*it);
+			it = rigidbodyDinamico.erase(it);
 		}
+
+		else
+			it++;
+	}
 }
 
 ParticleGenerator* ParticleSystem::getParticleGenerator(string t)
@@ -44,6 +65,31 @@ ParticleGenerator* ParticleSystem::getParticleGenerator(string t)
 			return g;
 	}
 }
+
+void ParticleSystem::generateFogSystem(Vector3 pos)
+{
+	Particula* p = new Particula(Gas(pos));
+
+	gaussianGen = new GaussianParticleGenerator(p, 0.5, pos, { 0.01, 0.01, 0.01 }, 5);
+
+	generadores.push_back(gaussianGen);
+}
+
+void ParticleSystem::generateFireworkSystem(Vector3 pos, Vector4 colores)
+{
+	Particula* i = new Particula(FuegoArtificial(0.8, pos, colores));
+
+	std::shared_ptr<SphereParticleGenerator> p;
+	p.reset(new SphereParticleGenerator(pos, i, 10, 30));
+
+	Firework* f = new Firework(FuegoArtificial(0.8, pos, colores), { p });
+	rigidbodyDinamico.push_back(f);
+}
+
+
+///////////////////////////////////////////////////////////////
+
+//NO USADOS EN EL PROYECTO FINAL
 
 void ParticleSystem::generateMuelle()
 {
@@ -126,17 +172,6 @@ void ParticleSystem::generateMuelleAnclado(Vector3 pos)
 	rigidbodyDinamico.push_back(p3);
 }
 
-void ParticleSystem::generateFireworkSystem(Vector3 pos)
-{
-	Particula* i = new Particula(FuegoArtificial(1, pos, { 1.0, 0.0, 0.0, 1.0 }));
-
-	std::shared_ptr<SphereParticleGenerator> p;
-	p.reset(new SphereParticleGenerator(pos, i, 10, 50));
-
-	Firework* f = new Firework(FuegoArtificial(1, pos, {1.0, 0.0, 0.0, 1.0}), {p});
-	rigidbodyDinamico.push_back(f);
-}
-
 void ParticleSystem::generateGravity()
 {
 	gravityGen = new GravityForceGenerator(Vector3(0.0f, -9.8f, 0.0f));
@@ -200,15 +235,6 @@ void ParticleSystem::generateExplosive(int n, int r)
 	}
 }
 
-void ParticleSystem::generateFogSystem(Vector3 pos)
-{
-	Particula* p = new Particula(Gas(pos)); 
-
-	gaussianGen = new GaussianParticleGenerator(p, 0.9, pos, { 0.01, 0.01, 0.01 }, 5); 
-
-	generadores.push_back(gaussianGen);
-}
-
 void ParticleSystem::generateWaterSystem(Vector3 pos)
 {
 	Particula* p = new Particula(Agua());
@@ -218,20 +244,4 @@ void ParticleSystem::generateWaterSystem(Vector3 pos)
 	generadores.push_back(uniformGen);
 }
 
-ParticleSystem::~ParticleSystem()
-{
-	for (auto p : rigidbodyDinamico)
-	{
-		delete p;
-		p = nullptr;
-	}
 
-	for (auto f : generadores) {
-		delete f;
-		f = nullptr;
-	}
-
-	generadores.clear();
-	rigidbodyDinamico.clear();
-	force.clear(); 
-}

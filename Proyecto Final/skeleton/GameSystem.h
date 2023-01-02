@@ -3,7 +3,6 @@
 #include <list>
 
 #include "Avion.h"
-#include "Zeppelin.h"
 
 #include "Particula.h"
 #include "PxPhysicsAPI.h"
@@ -49,8 +48,12 @@ protected:
 	Avion* plane = nullptr;
 
 	int contadorBalas, cargadorBalas, contadorVidas; 
+
 	double tiempoCooldown, tiempo; 
-	float posX; 
+
+	float posX, posAvion = 10.0; 
+
+	bool noPlane; 
 
 public:
 
@@ -71,6 +74,8 @@ public:
 		tiempo = 0.0; 
 
 		posX = 100.0f; 
+
+		noPlane = true; 
 	}
 
 	~GameSystem();
@@ -90,9 +95,7 @@ public:
 	void addUIElement (Vector3 pos, bool bala);
 	void deleteBulletOrLive(bool bala);
 
-	void explosion(Vector3 pos);
-
-	float getPosX() { return posX; }
+	float getPosAvion() { return posAvion; }
 
 	////////////////////////////////////////////////////////////
 

@@ -37,7 +37,9 @@ int puntuacion;
 
 float posX; 
 
-double timeMax, tiempo; 
+double timeMax, tiempo, tiempoParado, tiempoMaxParado; 
+
+bool noPlane; 
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -66,14 +68,17 @@ void initPhysics(bool interactive)
 
 	gameSystem = new GameSystem(gScene, gPhysics); 
 
-	gameSystem->createPlane(Vector3(10.0, 40.0, 0.0)); 
 	gameSystem->createFloor(Vector4(0.0, 1.0, 0.0, 1.0), Vector3(0.0, 0.0, 0.0)); 
 
 	timeMax = 2.0; 
 	tiempo = timeMax; 
+	tiempoMaxParado = 3.0; 
+	tiempoParado = tiempoMaxParado; 
 
 	posX = 100.0; 
 	puntuacion = 0; 
+
+	noPlane = true; 
 }
 
 
@@ -85,30 +90,36 @@ void stepPhysics(bool interactive, double t)
 {
 	PX_UNUSED(interactive);
 
-	GetCamera()->update(); 
+	if (!noPlane)
+	{
+		GetCamera()->update();
+
+		tiempo += t;
+
+		if (tiempo > timeMax)
+		{
+			int obs = rand() % 10;
+			int zeppelin = rand() % 9;
+
+			if (zeppelin < 5)
+				gameSystem->addObstacles(obs, true);
+			else
+				gameSystem->addObstacles(obs, false);
+
+			if (gameSystem->getPlane()->getPos().x + 200 > posX)
+			{
+				gameSystem->createFloor(Vector4(0.0, 1.0, 0.0, 1.0), Vector3(posX, 0.0, 0.0));
+				posX += 100.0;
+			}
+
+			tiempo = 0;
+		}
+	}
 
 	gameSystem->update(t); 
 	
 	gScene->simulate(t);
 	gScene->fetchResults(true);
-
-	tiempo += t; 
-
-	if (tiempo > timeMax)
-	{
-		int obs = rand() % 10; 
-		int zeppelin = rand() % 9; 
-
-		if (zeppelin < 5)
-			gameSystem->addObstacles(obs, true);
-		else
-			gameSystem->addObstacles(obs, false);
-
-		gameSystem->createFloor(Vector4(0.0, 1.0, 0.0, 1.0), Vector3(posX, 0.0, 0.0)); 
-
-		posX += 100.0; 
-		tiempo = 0; 
-	}
 }
 
 // Function to clean data
@@ -143,6 +154,10 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			break;
 		case 'X':
 			gameSystem->shootBullets(); 
+			break; 
+		case 'A':
+			gameSystem->createPlane({gameSystem->getPosAvion(), 40.0, 0.0});
+			noPlane = false; 
 			break; 
 	}
 }
@@ -191,13 +206,19 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 	if (actor1->getName() == "avion")
 	{
 		if (actor2->getName() == "globo")
+		{
 			gameSystem->avionVSglobo(actor2);
+			noPlane = true; 
+		}	
 	}
 
 	else if (actor2->getName() == "avion")
 	{
 		if (actor1->getName() == "globo")
+		{
 			gameSystem->avionVSglobo(actor1);
+			noPlane = true; 
+		}
 	}
 }
 

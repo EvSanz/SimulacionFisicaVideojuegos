@@ -90,7 +90,7 @@ GaussianParticleGenerator::GaussianParticleGenerator(Particula* model, double ge
 
 	gen_prob = genProb;
 
-	pos_gauss = auxPos * 0.5;
+	pos_gauss = auxPos * 0.2;
 	vel_gauss = auxVel * 0.5;
 
 	nParticulas = particulas;

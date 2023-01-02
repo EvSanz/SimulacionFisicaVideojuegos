@@ -12,6 +12,8 @@ class RigidbodySystem
 protected:
 
 	std::list<Rigidbody*> part;
+	std::list<Rigidbody*> globos;
+
 	std::list<RigidBodyGenerator*> rigidbodyGenerators;
 	std::list<RigidBodyForceGenerator*> forceGenerators;
 
@@ -26,7 +28,7 @@ protected:
 
 	Vector3 position = {0.0, 0.0, 0.0};
 
-	bool uniformBodyActive = false, gaussBodyActive = false, sysFuerzas = true; 
+	//bool uniformBodyActive = false, gaussBodyActive = false, sysFuerzas = true; 
 
 public:
 

@@ -150,14 +150,19 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	switch(toupper(key))
 	{
 		case 'Z':
-			gameSystem->getPlane()->changeDirection(); 
+			if(!noPlane)
+				gameSystem->getPlane()->changeDirection(); 
 			break;
 		case 'X':
-			gameSystem->shootBullets(); 
+			if (!noPlane)
+				gameSystem->shootBullets(); 
 			break; 
 		case 'A':
-			gameSystem->createPlane({gameSystem->getPosAvion(), 40.0, 0.0});
-			noPlane = false; 
+			if (noPlane && gameSystem->getVidas() > 0)
+			{
+				gameSystem->createPlane({ gameSystem->getPosAvion(), 40.0, 0.0 });
+				noPlane = false;
+			}
 			break; 
 	}
 }
@@ -167,57 +172,60 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 	PX_UNUSED(actor1);
 	PX_UNUSED(actor2);
 
-	if (actor1->getName() == "bala")
+	if (!noPlane)
 	{
-		if (actor2->getName() == "globo")
+		if (actor1->getName() == "bala")
 		{
-			gameSystem->balasVSglobo(actor1, actor2);
-			puntuacion += 100;
+			if (actor2->getName() == "globo")
+			{
+				gameSystem->balasVSglobo(actor1, actor2);
+				puntuacion += 100;
+			}
+
+			else if (actor2->getName() == "zeppelin")
+			{
+				gameSystem->balasVSzeppelin(actor1, actor2);
+				puntuacion += 200;
+			}
+
+			else
+				gameSystem->balasVSindestructible(actor1);
 		}
 
-		else if (actor2->getName() == "zeppelin")
+		else if (actor2->getName() == "bala")
 		{
-			gameSystem->balasVSzeppelin(actor1, actor2); 
-			puntuacion += 200;
+			if (actor1->getName() == "globo")
+			{
+				gameSystem->balasVSglobo(actor2, actor1);
+				puntuacion += 100;
+			}
+
+			else if (actor1->getName() == "zeppelin")
+			{
+				gameSystem->balasVSzeppelin(actor2, actor1);
+				puntuacion += 200;
+			}
+
+			else
+				gameSystem->balasVSindestructible(actor2);
 		}
 
-		else
-			gameSystem->balasVSindestructible(actor1);
-	}
-
-	else if (actor2->getName() == "bala")
-	{
-		if (actor1->getName() == "globo")
+		if (actor1->getName() == "avion")
 		{
-			gameSystem->balasVSglobo(actor2, actor1); 
-			puntuacion += 100;
+			if (actor2->getName() == "globo")
+			{
+				gameSystem->avionVSglobo(actor2);
+				noPlane = true;
+			}
 		}
 
-		else if (actor1->getName() == "zeppelin")
+		else if (actor2->getName() == "avion")
 		{
-			gameSystem->balasVSzeppelin(actor2, actor1);
-			puntuacion += 200;
-		}
-
-		else
-			gameSystem->balasVSindestructible(actor2);
-	}
-
-	if (actor1->getName() == "avion")
-	{
-		if (actor2->getName() == "globo")
-		{
-			gameSystem->avionVSglobo(actor2);
-			noPlane = true; 
-		}	
-	}
-
-	else if (actor2->getName() == "avion")
-	{
-		if (actor1->getName() == "globo")
-		{
-			gameSystem->avionVSglobo(actor1);
-			noPlane = true; 
+			if (actor1->getName() == "globo")
+			{
+				gameSystem->avionVSglobo(actor1);
+				noPlane = true;
+			}
 		}
 	}
 }

@@ -17,7 +17,7 @@ protected:
 
 	double timeToLive, timeLive;
 
-	bool alive, dinamic, cantDie = false, colisiono = false; 
+	bool alive, dinamic, cantDie = false; 
 
 	int form; 
 
@@ -44,6 +44,7 @@ public:
 
 			rigidbodyDinamico->setLinearVelocity(vel);
 			rigidbodyDinamico->setAngularVelocity({ 0, 0, 0 });
+			rigidbodyDinamico->setLinearDamping(0.0); 
 			rigidbodyDinamico->setGlobalPose(PxTransform(pos));
 			rigidbodyDinamico->setMass(mass);
 			rigidbodyDinamico->setName(name); 

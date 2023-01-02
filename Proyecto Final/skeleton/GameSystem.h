@@ -47,11 +47,11 @@ protected:
 
 	Avion* plane = nullptr;
 
-	int contadorBalas, cargadorBalas, contadorVidas; 
+	int contadorBalas = 5, cargadorBalas = 5, contadorVidas = 3; 
 
-	double tiempoCooldown, tiempo; 
+	double tiempoCooldown = 5.0, tiempo = 0.0; 
 
-	float posX, posAvion = 10.0; 
+	float posX = 100.0, posAvion = 10.0; 
 
 	bool noPlane; 
 
@@ -64,16 +64,6 @@ public:
 
 		particleSystem = new ParticleSystem({ 0, 0, 0 }); 
 		rigidbodySystem = new RigidbodySystem({ 0, 0, 0 });
-
-		cargadorBalas = 5;
-		contadorBalas = 0;
-
-		contadorVidas = 3;
-
-		tiempoCooldown = 5.0;
-		tiempo = 0.0; 
-
-		posX = 100.0f; 
 
 		noPlane = true; 
 	}
@@ -96,6 +86,7 @@ public:
 	void deleteBulletOrLive(bool bala);
 
 	float getPosAvion() { return posAvion; }
+	int getVidas() { return contadorVidas; }
 
 	////////////////////////////////////////////////////////////
 

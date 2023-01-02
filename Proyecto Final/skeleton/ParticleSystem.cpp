@@ -82,7 +82,7 @@ void ParticleSystem::generateFireworkSystem(Vector3 pos, Vector4 colores)
 	std::shared_ptr<SphereParticleGenerator> p;
 	p.reset(new SphereParticleGenerator(pos, i, 10, 30));
 
-	Firework* f = new Firework(FuegoArtificial(0.8, pos, colores), { p });
+	Firework* f = new Firework(FuegoArtificial(0.1, pos, colores), { p });
 	rigidbodyDinamico.push_back(f);
 }
 

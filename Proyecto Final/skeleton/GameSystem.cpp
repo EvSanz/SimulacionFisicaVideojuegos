@@ -31,32 +31,6 @@ void GameSystem::update(double t)
 
 	forceRegistry.updateRigidbodyForces(t);
 
-	if (!noPlane)
-	{
-		tiempo += t;
-		if (tiempoCooldown < tiempo && contadorBalas < cargadorBalas)
-		{
-			addUIElement({ float((plane->getPos().x + 85.0) - 5.0 * contadorBalas), 105.0, 0.0 }, true);
-
-			contadorBalas++;
-			tiempo = 0.0;
-		}
-
-		for (auto it = UIBalas.begin(); it != UIBalas.end(); it++)
-		{
-			Vector3 position = { float((*it)->getPos().x + 0.01), 105.0, 0.0 };
-			(*it)->setPosition(position);
-		}
-
-		for (auto it = UIVidas.begin(); it != UIVidas.end(); it++)
-		{
-			Vector3 position = { float((*it)->getPos().x + 0.01), 105.0, 0.0 };
-			(*it)->setPosition(position);
-		}
-
-		plane->update(t);
-	}
-
 	for (auto it = naves.begin(); it != naves.end();)
 	{
 		(*it)->update(t);
@@ -155,6 +129,30 @@ void GameSystem::update(double t)
 				it++;
 		}
 	}
+
+	if (!noPlane)
+	{
+		tiempo += t;
+		if (tiempoCooldown < tiempo && UIBalas.size() < cargadorBalas)
+		{
+			addUIElement({ float((plane->getPos().x + 85.0) - 5.0 * UIBalas.size()), 105.0, 0.0 }, true);
+			tiempo = 0.0;
+		}
+
+		for (auto it = UIBalas.begin(); it != UIBalas.end(); it++)
+		{
+			Vector3 position = { float((*it)->getPos().x + 0.01), 105.0, 0.0 };
+			(*it)->setPosition(position);
+		}
+
+		for (auto it = UIVidas.begin(); it != UIVidas.end(); it++)
+		{
+			Vector3 position = { float((*it)->getPos().x + 0.01), 105.0, 0.0 };
+			(*it)->setPosition(position);
+		}
+
+		plane->update(t);
+	}
 }
 
 void GameSystem::addObstacles(int obstaculo, bool zep)
@@ -200,7 +198,7 @@ void GameSystem::addObstacles(int obstaculo, bool zep)
 
 void GameSystem::shootBullets()
 {
-	if (contadorBalas > 0)
+	if (UIBalas.size() > 0 && !noPlane)
 	{
 		Vector3 pos = plane->getPos() + Vector3(9.0f, 0.0f, 0.0f);
 
@@ -216,18 +214,18 @@ void GameSystem::createPlane(Vector3 pos)
 	plane = new Avion(gScene, gPhysics, pos);
 
 	noPlane = false; 
-	
-	pos.x -= 5.0; 
 
-	for (int i = 0; i < contadorVidas; i++)
-		addUIElement({ float (pos.x + 5.0 * i), 105.0, 0.0 }, false);
-
-	pos.x += 90.0; 
-
-	for (int i = 0; i < cargadorBalas; i++)
+	if (contadorVidas == 3)
 	{
-		addUIElement({ float(pos.x - 5.0 * i), 105.0, 0.0 }, true);
-		contadorBalas++; 
+		pos.x -= 5.0; 
+
+		for (int i = 0; i < contadorVidas; i++)
+			addUIElement({ float(pos.x + 5.0 * i), 105.0, 0.0 }, false);
+
+		pos.x += 90.0;
+
+		for (int i = 0; i < cargadorBalas; i++)
+			addUIElement({ float(pos.x - 5.0 * i), 105.0, 0.0 }, true);
 	}
 }
 
@@ -237,7 +235,7 @@ void GameSystem::addUIElement(Vector3 pos, bool bala)
 		UIBalas.push_front(new Particula(BalasUI(pos)));
 
 	else
-		UIVidas.push_back(new Particula(VidasUI(pos)));
+		UIVidas.push_front(new Particula(VidasUI(pos)));
 }
 
 void GameSystem::createFloor(Vector4 colores, Vector3 pos)
@@ -249,22 +247,26 @@ void GameSystem::deleteBulletOrLive(bool bala)
 {
 	if (bala)
 	{
-		auto it = UIBalas.begin(); 
+		if (UIBalas.size() > 0)
+		{
+			auto it = UIBalas.begin();
 
-		delete (*it);
-		it = UIBalas.erase(it);
-
-		contadorBalas--; 
+			delete (*it);
+			it = UIBalas.erase(it);
+		}
 	}
 
 	else
 	{
-		auto it = UIVidas.begin();
+		if (contadorVidas > 0)
+		{
+			auto it = UIVidas.begin();
 
-		delete (*it);
-		it = UIVidas.erase(it);
+			delete (*it);
+			it = UIVidas.erase(it);
 
-		contadorVidas--;
+			contadorVidas--;
+		}
 	}
 }
 
@@ -296,7 +298,27 @@ void GameSystem::balasVSindestructible(PxActor* bullet)
 
 void GameSystem::balasVSglobo(PxActor* bala, PxActor* globo)
 {
-	balasVSindestructible(bala); 
+	PxActor* act;
+	Rigidbody* p1 = nullptr;
+
+	auto i = balas.begin();
+
+	while (p1 == nullptr && i != balas.end())
+	{
+		act = (*i)->getDinamico();
+
+		if (bala == act)
+		{
+			particleSystem->generateFireworkSystem((*i)->getPosition(), { 1.0, 1.0, 1.0, 1.0 });
+
+			p1 = (*i);
+			(*i)->killRigidbody();
+		}
+
+		else
+			++i;
+	}
+
 	rigidbodySystem->destruirGlobo(globo); 
 }
 
@@ -329,7 +351,7 @@ void GameSystem::avionVSglobo(PxActor* globo)
 {
 	rigidbodySystem->destruirGlobo(globo);
 
-	if (contadorVidas > 0 && !noPlane)
+	if (!noPlane)
 	{
 		particleSystem->generateFireworkSystem(plane->getPos(), {1.0, 0.0, 0.0, 1.0});
 

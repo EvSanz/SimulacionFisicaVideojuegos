@@ -79,7 +79,7 @@ public:
 
 	void addGenerator(RigidBodyGenerator* rg) { rigidbodyGenerators.push_back(rg); }
 
-	void addObstacles(int obstaculo); 
+	void addObstacles(int obstaculo, bool zeppelin); 
 	void shootBullets(); 
 
 	void createFloor(Vector4 colores, Vector3 pos);
@@ -90,5 +90,14 @@ public:
 	void addUIElement (Vector3 pos, bool bala);
 	void deleteBulletOrLive(bool bala);
 
+	void explosion(Vector3 pos);
+
 	float getPosX() { return posX; }
+
+	////////////////////////////////////////////////////////////
+
+	void balasVSindestructible(PxActor* bala);
+	void balasVSglobo(PxActor* bala, PxActor* globo);
+	void balasVSzeppelin(PxActor* bala, PxActor* zeppelin); 
+	void avionVSglobo(PxActor* globo); 
 };

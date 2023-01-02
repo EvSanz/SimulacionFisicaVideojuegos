@@ -60,7 +60,7 @@ public:
 	ParticleGenerator* getParticleGenerator(string name); 
 	ForceGenerator* getForceGenerator(string name); 
 
-	void generateFireworkSystem(); 
+	void generateFireworkSystem(Vector3 pos);
 	void generateWaterSystem(Vector3 pos);
 	void generateFogSystem(Vector3 pos);
 	void generateGravity();

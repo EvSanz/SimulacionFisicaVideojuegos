@@ -97,8 +97,13 @@ void stepPhysics(bool interactive, double t)
 	if (tiempo > timeMax)
 	{
 		int obs = rand() % 10; 
+		int zeppelin = rand() % 9; 
 
-		gameSystem->addObstacles(obs);
+		if (zeppelin < 5)
+			gameSystem->addObstacles(obs, true);
+		else
+			gameSystem->addObstacles(obs, false);
+
 		gameSystem->createFloor(Vector4(0.0, 1.0, 0.0, 1.0), Vector3(posX, 0.0, 0.0)); 
 
 		posX += 100.0; 
@@ -151,17 +156,48 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 	{
 		if (actor2->getName() == "globo")
 		{
-			actor2->setName("Destruir");
+			gameSystem->balasVSglobo(actor1, actor2);
 			puntuacion += 100;
 		}
 
 		else if (actor2->getName() == "zeppelin")
 		{
-			actor2->setName("Destruir");
+			gameSystem->balasVSzeppelin(actor1, actor2); 
 			puntuacion += 200;
 		}
-			
-		actor1->setName("Destruir"); 
+
+		else
+			gameSystem->balasVSindestructible(actor1);
+	}
+
+	else if (actor2->getName() == "bala")
+	{
+		if (actor1->getName() == "globo")
+		{
+			gameSystem->balasVSglobo(actor2, actor1); 
+			puntuacion += 100;
+		}
+
+		else if (actor1->getName() == "zeppelin")
+		{
+			gameSystem->balasVSzeppelin(actor2, actor1);
+			puntuacion += 200;
+		}
+
+		else
+			gameSystem->balasVSindestructible(actor2);
+	}
+
+	if (actor1->getName() == "avion")
+	{
+		if (actor2->getName() == "globo")
+			gameSystem->avionVSglobo(actor2);
+	}
+
+	else if (actor2->getName() == "avion")
+	{
+		if (actor1->getName() == "globo")
+			gameSystem->avionVSglobo(actor1);
 	}
 }
 

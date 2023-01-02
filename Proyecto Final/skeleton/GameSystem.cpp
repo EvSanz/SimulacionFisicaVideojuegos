@@ -37,14 +37,7 @@ void GameSystem::update(double t)
 	{
 		(*it)->update(t); 
 
-		//if ((*it)->getRigidbody()->getEstatico()->getName() == "CasiMuerto")
-		//{
-		//	(*it)->loseLife(); 
-		//	(*it)->getRigidbody()->getEstatico()->setName("zeppelinMoribundo");
-		//}
-
-		if ((*it)->getPos().x + 50.0 < plane->getPos().x || 
-			(*it)->getRigidbody()->getEstatico()->getName() == "Destruir")
+		if ((*it)->getPos().x + 50.0 < plane->getPos().x || (*it)->getLives() <= 0)
 		{
 			delete (*it);
 			it = naves.erase(it);
@@ -58,7 +51,7 @@ void GameSystem::update(double t)
 	{
 		(*it)->integrate(t); 
 
-		if (!(*it)->isAlive() || (*it)->getDinamico()->getName() == "Destruir")
+		if (!(*it)->isAlive())
 		{
 			delete (*it);
 			it = balas.erase(it);
@@ -114,30 +107,36 @@ void GameSystem::update(double t)
 	}
 }
 
-void GameSystem::addObstacles(int obstaculo)
+void GameSystem::addObstacles(int obstaculo, bool zep)
 {
 	if (obstaculo == 0 || obstaculo == 1 ||
-		obstaculo == 2 || obstaculo == 3)
+		obstaculo == 2 || obstaculo == 3 ||
+		obstaculo == 4 || obstaculo == 5)
 	{
-		int tam = (rand() % 30) + 10.0;
+		int tam = (rand() % 30) + 20.0;
 
 		Rigidbody* tronco = new Rigidbody(gScene, gPhysics, { posX, (float)tam / 2, 0.0 }, { 0.0, 0.0, 0.0 },
 			{ 2.0, (float)tam, 2.0 }, 50.0, 50.0, { 1.0, 0.8, 0.8, 1.0 }, false, 1, "indestructible");
 		arboles.push_back(tronco);
 
-		Rigidbody* copa = new Rigidbody(gScene, gPhysics, { posX, (float)(tam + tam / 2), 0.0 }, { 0.0, 0.0, 0.0 },
-			{ 10.0, 6.0, 10.0 }, 50.0, 50.0, { 0.0, 1.0, 0.0, 1.0 }, false, 1, "indestructible");
-		arboles.push_back(copa);
+		int nCopas = (rand() % 3) + 1; 
+
+		for (int i = 0; i < nCopas; i++)
+		{
+			Rigidbody* copa = new Rigidbody(gScene, gPhysics, { posX, (float)(tam + tam / 2 + 6.0 * i), 0.0 }, { 0.0, 0.0, 0.0 },
+				{ (float)(10.0 - 2.0 * i), 6.0, 10.0 }, 50.0, 50.0, { 0.0, 1.0, 0.0, 1.0 }, false, 1, "indestructible");
+			arboles.push_back(copa);
+		}
 	}
 
-	else if (obstaculo == 4 || obstaculo == 5)
+	else if (obstaculo == 6 || obstaculo == 7 ||
+		obstaculo == 8)
 	{
 		int alt = (rand() % 30) + 50;
 		rigidbodySystem->createMuelleAnclado(gPhysics, gScene, { posX, (float)alt, 0.0 }); 
 	}
 
-	else if (obstaculo == 6 || obstaculo == 7 ||
-			 obstaculo == 8)
+	if (zep)
 	{
 		int tam = rand() % 30;
 		int alt = (rand() % 40) + 60;
@@ -217,3 +216,75 @@ void GameSystem::deleteBulletOrLive(bool bala)
 	}
 }
 
+void GameSystem::explosion(Vector3 pos)
+{
+	particleSystem->generateFireworkSystem(pos); 
+}
+
+//////////////////////////////////////////////////////////////////////
+
+//COLISIONES
+
+void GameSystem::balasVSindestructible(PxActor* bullet)
+{
+	PxActor* act;
+	Rigidbody* p1 = nullptr;
+
+	auto i = balas.begin();
+
+	while (p1 == nullptr && i != balas.end()) 
+	{
+		act = (*i)->getDinamico();
+
+		if (bullet == act)
+		{
+			p1 = (*i);
+			(*i)->killRigidbody();
+		}
+			
+		else
+			++i;
+	}
+}
+
+void GameSystem::balasVSglobo(PxActor* bala, PxActor* globo)
+{
+	balasVSindestructible(bala); 
+	rigidbodySystem->destruirGlobo(globo); 
+}
+
+void GameSystem::balasVSzeppelin(PxActor* bala, PxActor* zeppelin)
+{
+	balasVSindestructible(bala); 
+
+	PxActor* act;
+	Rigidbody* p1 = nullptr;
+
+	auto i = naves.begin();
+
+	while (p1 == nullptr && i != naves.end())
+	{
+		act = (*i)->getRigidbody()->getEstatico(); 
+
+		if (zeppelin == act)
+		{
+			if ((*i)->getLives() > 0)
+				(*i)->loseLife();
+			else
+				(*i)->destroy(); 
+
+			p1 = (*i)->getRigidbody();
+		}
+
+		else
+			++i;
+	}
+}
+
+void GameSystem::avionVSglobo(PxActor* globo)
+{
+	rigidbodySystem->destruirGlobo(globo);
+
+	if (contadorVidas > 0)
+		deleteBulletOrLive(false); 
+}

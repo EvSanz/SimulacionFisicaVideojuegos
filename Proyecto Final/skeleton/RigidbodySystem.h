@@ -37,7 +37,7 @@ public:
 
 	void addGenerator(RigidBodyGenerator* rg) { rigidbodyGenerators.push_back(rg); }
 
-	void addUniform(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
+	//void addUniform(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
 	void addGauss(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
 
 	void createGravity(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
@@ -45,11 +45,7 @@ public:
 	void createExplosive(PxPhysics* physics, PxScene* scene, PxMaterial* mat, int n, int r); 
 	void createMuelleAnclado(PxPhysics* physics, PxScene* scene, Vector3 pos); 
 
-	bool isUniformBodyActive() { return uniformBodyActive; }
-	void changeUniformBodyState() { uniformBodyActive = !uniformBodyActive; }
+	//////////////////////////////////////////////////////////////////////////////////////////
 
-	bool isGaussBodyActive() { return gaussBodyActive; }
-	void changeGaussBodyState() { gaussBodyActive = !gaussBodyActive; }
-
-	void setForceActive() { sysFuerzas = !sysFuerzas; }
+	void destruirGlobo(PxActor* globo); 
 };

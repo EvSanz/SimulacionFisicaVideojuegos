@@ -15,7 +15,7 @@ RigidbodySystem::~RigidbodySystem()
 
 void RigidbodySystem::update(double t)
 {
-		if (uniformBodyActive)
+		/*if (uniformBodyActive)
 		{
 			for (auto p : uniform->generateBodies())
 				part.push_back(p);
@@ -27,8 +27,9 @@ void RigidbodySystem::update(double t)
 				part.push_back(p);
 		}
 
-		if (sysFuerzas)
-			forceRegistry.updateRigidbodyForces(t);
+		if (sysFuerzas)*/
+
+		forceRegistry.updateRigidbodyForces(t);
 
 		for (auto it = part.begin(); it != part.end();)
 		{
@@ -36,10 +37,10 @@ void RigidbodySystem::update(double t)
 			{
 				(*it)->integrate(t);
 
-				if (!(*it)->isAlive() || (*it)->getDinamico()->getName() == "Destruir")
+				if (!(*it)->isAlive()) 
 				{
-					if (sysFuerzas)
-						forceRegistry.deleteForceRegistry(*it);
+					//if (sysFuerzas)
+					forceRegistry.deleteForceRegistry(*it);
 
 					delete (*it);
 					it = part.erase(it);
@@ -50,17 +51,17 @@ void RigidbodySystem::update(double t)
 		}
 }
 
-void RigidbodySystem::addUniform(PxPhysics* physics, PxScene* scene, PxMaterial* mat)
-{
-	PxRigidDynamic* aux = nullptr;
-
-	Rigidbody* rb = new Rigidbody(scene, physics, /*pos*/{ 0.0, 50.0, 0.0 }, /*vel*/{ 0.0, 0.0, 0.0 }, /*size*/{ 0.8, 0.8, 0.8 },
-		/*mass*/2, /*time*/10, /*color*/{ 1.0, 0.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1, " ");
-	part.push_back(rb);
-
-	uniform = new UniformBodyGenerator(scene, physics, rb, { 0.0, 50.0, 0.0 }, { 0.0, 0.0, 0.0 }, 2);
-	addGenerator(uniform);
-}
+//void RigidbodySystem::addUniform(PxPhysics* physics, PxScene* scene, PxMaterial* mat)
+//{
+//	PxRigidDynamic* aux = nullptr;
+//
+//	Rigidbody* rb = new Rigidbody(scene, physics, /*pos*/{ 0.0, 50.0, 0.0 }, /*vel*/{ 0.0, 0.0, 0.0 }, /*size*/{ 0.8, 0.8, 0.8 },
+//		/*mass*/2, /*time*/10, /*color*/{ 1.0, 0.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1, " ");
+//	part.push_back(rb);
+//
+//	uniform = new UniformBodyGenerator(scene, physics, rb, { 0.0, 50.0, 0.0 }, { 0.0, 0.0, 0.0 }, 2);
+//	addGenerator(uniform);
+//}
 
 void RigidbodySystem::addGauss(PxPhysics* physics, PxScene* scene, PxMaterial* mat)
 {
@@ -134,8 +135,33 @@ void RigidbodySystem::createMuelleAnclado(PxPhysics* physics, PxScene* scene, Ve
 {
 	Rigidbody* p = new Rigidbody(scene, physics, /*pos*/pos, /*vel*/{ 0.0, 0.0, 0.0 }, /*size*/{ 3.0, 0.8, 0.8 },
 		/*mass*/2, /*time*/10, /*color*/{ 1.0, 0.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1, "globo");
+	p->notAllowedToDie(); 
 	AnchoredSpringRigidbodyGenerator* muelle = new AnchoredSpringRigidbodyGenerator(scene, physics, 50, 10, { pos.x, 90.0, 0.0 });
 
 	forceRegistry.addForceRegistry(muelle, p);
 	part.push_back(p);
+}
+
+//////////////////////////////////////////////////////////////////////////////////////
+
+void RigidbodySystem::destruirGlobo(PxActor* globo)
+{
+	PxActor* act;
+	Rigidbody* p1 = nullptr;
+
+	auto i = part.begin();
+
+	while (p1 == nullptr && i != part.end())
+	{
+		act = (*i)->getDinamico();
+
+		if (globo == act)
+		{
+			p1 = (*i);
+			(*i)->killRigidbody();
+		}
+
+		else
+			++i;
+	}
 }

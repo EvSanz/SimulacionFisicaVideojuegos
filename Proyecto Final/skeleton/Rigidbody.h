@@ -17,7 +17,7 @@ protected:
 
 	double timeToLive, timeLive;
 
-	bool alive, dinamic, cantDie = false; 
+	bool alive, dinamic, cantDie = false, colisiono = false; 
 
 	int form; 
 
@@ -34,6 +34,10 @@ public:
 	Rigidbody(PxScene* scene, PxPhysics* physics, Vector3 pos, Vector3 vel, Vector3 scale,
 		double mass, double time, Vector4 color, bool dinamico, int forma, const char* name)
 	{
+		colores = color;
+		size = scale;
+		alive = true;
+
 		if (dinamico) 
 		{
 			rigidbodyDinamico = physics->createRigidDynamic(PxTransform(pos));
@@ -47,10 +51,6 @@ public:
 			timeToLive = time;
 			timeLive = time;
 
-			colores = color;
-			size = scale; 
-
-			alive = true; 
 			dinamic = true; 
 
 			PxShape* shape; 
@@ -114,7 +114,6 @@ public:
 
 	~Rigidbody()
 	{
-		//rigidbodyDinamico->release();
 		DeregisterRenderItem(renderItem);
 	} 
 
@@ -136,7 +135,7 @@ public:
 	void killRigidbody() { alive = false; }
 	
 	bool canDie() { return cantDie; }
-	void notAllowedToDie() { cantDie != cantDie; }
+	void notAllowedToDie() { cantDie = true; }
 
 	void addForce(Vector3 f) { rigidbodyDinamico->addForce(f); }
 	void addTorque(Vector3 f) { rigidbodyDinamico->addTorque(f); }

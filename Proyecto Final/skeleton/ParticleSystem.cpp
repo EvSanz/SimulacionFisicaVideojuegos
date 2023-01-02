@@ -126,29 +126,14 @@ void ParticleSystem::generateMuelleAnclado(Vector3 pos)
 	rigidbodyDinamico.push_back(p3);
 }
 
-void ParticleSystem::generateFireworkSystem()
+void ParticleSystem::generateFireworkSystem(Vector3 pos)
 {
-	int n = rand() % 3;
-
-	Vector4 colores; 
-
-	if (n == 0)
-		colores = { 1.0, 0.0, 0.0, 1.0 }; 
-	else if (n == 1)
-		colores = { 0.0, 1.0, 0.0, 1.0 };
-	else
-		colores = { 0.0, 0.0, 1.0, 1.0 };
-
-	int x = rand() % 50; 
-	int y = rand() % 50; 
-	int z = rand() % 50;
-	 
-	Particula* i = new Particula(FuegoArtificial(2, colores));
+	Particula* i = new Particula(FuegoArtificial(1, pos, { 1.0, 0.0, 0.0, 1.0 }));
 
 	std::shared_ptr<SphereParticleGenerator> p;
-	p.reset(new SphereParticleGenerator({ (float)x, (float)y, (float)z }, i, 40, 200));
+	p.reset(new SphereParticleGenerator(pos, i, 10, 50));
 
-	Firework* f = new Firework(FuegoArtificial(4, {0.0, 0.0, 0.0, 1.0}), {p});
+	Firework* f = new Firework(FuegoArtificial(1, pos, {1.0, 0.0, 0.0, 1.0}), {p});
 	rigidbodyDinamico.push_back(f);
 }
 

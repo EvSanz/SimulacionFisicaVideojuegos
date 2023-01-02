@@ -13,14 +13,14 @@ protected:
 
 	std::list<Particula*> UIVidas;
 
-	int vidas = 2; 
+	int vidas = 3; 
 
 public:
 
 	Zeppelin(PxScene* scene, PxPhysics* physics, Vector3 pos)
 	{
 		for (int i = 0; i < vidas; i++)
-			UIVidas.push_back(new Particula(VidasUI({(float)(pos.x + 2.0 * i), (float)(pos.y + 5.0), pos.z})));
+			UIVidas.push_back(new Particula(VidasUI({(float)(pos.x + 3.0 * i), (float)(pos.y + 5.0), pos.z})));
 
 		alas = new Rigidbody(scene, physics, pos, { 0.0, 0.0, 0.0 }, { 3.0, 0.1, 7.0 },
 			5.0, 50.0, { 0.0, 1.0, 1.0, 1.0 }, false, 1, "zeppelin");
@@ -33,8 +33,8 @@ public:
 
 	~Zeppelin()
 	{
-		alas = nullptr;
-		capsula = nullptr;
+		delete alas; 
+		delete capsula; 
 	}
 
 	Rigidbody* getRigidbody() { return capsula; }
@@ -56,6 +56,12 @@ public:
 		it = UIVidas.erase(it);
 
 		vidas--; 
+	}
+
+	void destroy()
+	{
+		capsula->killRigidbody();
+		alas->killRigidbody(); 
 	}
 
 	int getLives() { return vidas; }

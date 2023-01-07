@@ -23,17 +23,10 @@ class ParticleSystem
 {
 protected:
 
-	std::list<Particula*> rigidbodyDinamico; 
+	std::list<Particula*> part; 
 	std::list<ParticleGenerator*> generadores;
 
 	Vector3 position;
-	
-	/*bool sysFuerzas = false; 
-	bool fuerzasActivadas = true; 
-
-	bool gaussActivo = false;
-	bool uniformActivo = false; 
-	bool fireActivo = false;*/
 
 	float timer = 0; 
 
@@ -58,9 +51,13 @@ public:
 
 	ParticleGenerator* getParticleGenerator(string name); 
 
-	void generateFireworkSystem(Vector3 pos, Vector4 colores);
+	void crearSuelo(Vector4 colores, Vector3 pos);
+
+	void generateFireworkSystem(Vector3 pos, Vector4 colores, double masa);
 	void generateMuelleAnclado(Vector3 pos);
 	void generateFogSystem(Vector3 pos);
+
+	void getPosAvion(Vector3 pos) { position = pos; }
 
 	///////////////////////////////////////////////////////////////////////
 
@@ -69,7 +66,7 @@ public:
 	//ForceGenerator* getForceGenerator(string name);
 	void generateGravity();
 	void generateMuelle();
-	void generateWaterSystem(Vector3 pos);
+	void generateEstela(Vector3 pos);
 	void generateBungee(); 
 	void generateBounyancy(); 
 	void generateElasticBand(); 

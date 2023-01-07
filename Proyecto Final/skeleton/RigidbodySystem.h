@@ -12,7 +12,7 @@ class RigidbodySystem
 protected:
 
 	std::list<Rigidbody*> part;
-	std::list<Rigidbody*> globos;
+	std::list<Rigidbody*> partEstaticos;
 
 	std::list<RigidBodyGenerator*> rigidbodyGenerators;
 	std::list<RigidBodyForceGenerator*> forceGenerators;
@@ -26,7 +26,7 @@ protected:
 	WindForceRigidbodyGenerator* windGen;
 	ExplosionForceRigidbodyGenerator* expGen; 
 
-	Vector3 position = {0.0, 0.0, 0.0};
+	Vector3 position;
 
 	//bool uniformBodyActive = false, gaussBodyActive = false, sysFuerzas = true; 
 
@@ -39,6 +39,11 @@ public:
 
 	void addGenerator(RigidBodyGenerator* rg) { rigidbodyGenerators.push_back(rg); }
 
+	void getPosAvion(Vector3 pos) { position = pos; }
+
+	void createTree(PxPhysics* gPhysics, PxScene* gScene, float posX);
+	void createBullet(PxPhysics* gPhysics, PxScene* gScene, Vector3 pos);
+
 	//void addUniform(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
 	void addGauss(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
 
@@ -49,5 +54,5 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 
-	void destruirGlobo(PxActor* globo); 
+	void destruirRigido(PxActor* globo);
 };

@@ -68,8 +68,6 @@ void initPhysics(bool interactive)
 
 	gameSystem = new GameSystem(gScene, gPhysics); 
 
-	gameSystem->createFloor(Vector4(0.0, 1.0, 0.0, 1.0), Vector3(0.0, 0.0, 0.0)); 
-
 	timeMax = 2.0; 
 	tiempo = timeMax; 
 	tiempoMaxParado = 3.0; 
@@ -79,6 +77,8 @@ void initPhysics(bool interactive)
 	puntuacion = 0; 
 
 	noPlane = true; 
+
+	gameSystem->createFloor(Vector4(0.0, 1.0, 0.0, 1.0), Vector3(40.0, 0.0, 0.0));
 }
 
 
@@ -158,10 +158,16 @@ void keyPress(unsigned char key, const PxTransform& camera)
 				gameSystem->shootBullets(); 
 			break; 
 		case 'A':
-			if (noPlane && gameSystem->getVidas() > 0)
+			if (noPlane)
 			{
-				gameSystem->createPlane({ gameSystem->getPosAvion(), 40.0, 0.0 });
-				noPlane = false;
+				if (gameSystem->getVidas() > 0)
+				{
+					gameSystem->createPlane({ gameSystem->getPosAvion(), 40.0, 0.0 });
+					noPlane = false;
+				}
+
+				else
+					std::cout << "FIN DEL JUEGO\nPUNTUACION OBTENIDA: " << puntuacion << "\n";
 			}
 			break; 
 	}

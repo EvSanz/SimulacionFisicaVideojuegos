@@ -6,7 +6,7 @@
 
 ParticleSystem::~ParticleSystem()
 {
-	for (auto p : rigidbodyDinamico)
+	for (auto p : part)
 	{
 		delete p;
 		p = nullptr;
@@ -17,39 +17,39 @@ ParticleSystem::~ParticleSystem()
 		f = nullptr;
 	}
 
-	generadores.clear();
-	rigidbodyDinamico.clear();
+	part.clear();
 	force.clear();
+	generadores.clear();
 }
 
 void ParticleSystem::update(double t)
 {
 	force.updateForces(t);
 
-	if (gaussianGen != nullptr)
+	if (uniformGen != nullptr && uniformGen->getPos().x + 10.0 > position.x)
 	{
-		for (auto p : gaussianGen->generateParticle())
-			rigidbodyDinamico.push_back(p);
+		for (auto p : uniformGen->generateParticle())
+			part.push_back(p);
 	}
 
-	for (std::list<Particula*>::iterator it = rigidbodyDinamico.begin(); it != rigidbodyDinamico.end();)
+	for (std::list<Particula*>::iterator it = part.begin(); it != part.end();)
 	{
 		(*it)->integrate(t);
 
-		if (!(*it)->isAlive())
+		if (!(*it)->isAlive() || (*it)->getPos().x + 100.0 < position.x)
 		{
 			Firework* f = dynamic_cast<Firework*>(*it);
 			if (f != nullptr)
 			{
 				for (auto i : f->explode())
-					rigidbodyDinamico.push_back(i);
+					part.push_back(i);
 
 			}
 
 			force.deleteParticleRegistry(*it);
 
 			delete (*it);
-			it = rigidbodyDinamico.erase(it);
+			it = part.erase(it);
 		}
 
 		else
@@ -66,6 +66,36 @@ ParticleGenerator* ParticleSystem::getParticleGenerator(string t)
 	}
 }
 
+void ParticleSystem::generateFireworkSystem(Vector3 pos, Vector4 colores, double masa)
+{
+	Particula* i = new Particula(FuegoArtificial(0.8, pos, colores, masa));
+
+	std::shared_ptr<SphereParticleGenerator> p;
+	p.reset(new SphereParticleGenerator(pos, i, 10, 30));
+
+	Firework* f = new Firework(FuegoArtificial(0.1, pos, colores, masa), { p });
+	part.push_back(f);
+}
+
+void ParticleSystem::crearSuelo(Vector4 colores, Vector3 pos)
+{
+	part.push_back(new Particula(Suelo(colores, pos)));
+}
+
+void ParticleSystem::generateEstela(Vector3 pos)
+{
+	Particula* p = new Particula(Gas(pos));
+
+	uniformGen = new UniformParticleGenerator(p, 0.8, pos, { 0.0, 0, 0.01 }, 15);
+
+	part.push_back(p);
+	generadores.push_back(uniformGen);
+}
+
+///////////////////////////////////////////////////////////////
+
+//NO USADOS EN EL PROYECTO FINAL
+
 void ParticleSystem::generateFogSystem(Vector3 pos)
 {
 	Particula* p = new Particula(Gas(pos));
@@ -74,22 +104,6 @@ void ParticleSystem::generateFogSystem(Vector3 pos)
 
 	generadores.push_back(gaussianGen);
 }
-
-void ParticleSystem::generateFireworkSystem(Vector3 pos, Vector4 colores)
-{
-	Particula* i = new Particula(FuegoArtificial(0.8, pos, colores));
-
-	std::shared_ptr<SphereParticleGenerator> p;
-	p.reset(new SphereParticleGenerator(pos, i, 10, 30));
-
-	Firework* f = new Firework(FuegoArtificial(0.1, pos, colores), { p });
-	rigidbodyDinamico.push_back(f);
-}
-
-
-///////////////////////////////////////////////////////////////
-
-//NO USADOS EN EL PROYECTO FINAL
 
 void ParticleSystem::generateMuelle()
 {
@@ -101,8 +115,8 @@ void ParticleSystem::generateMuelle()
 	SpringForceGenerator* muelleGen2 = new SpringForceGenerator(p1, 10, 10);
 	force.addRegistry(muelleGen2, p2);
 
-	rigidbodyDinamico.push_back(p1);
-	rigidbodyDinamico.push_back(p2); 
+	part.push_back(p1);
+	part.push_back(p2); 
 }
 
 void ParticleSystem::generateBounyancy()
@@ -110,7 +124,7 @@ void ParticleSystem::generateBounyancy()
 	Particula* p1 = new Particula(PruebaMuelle({ 1.0, 0.0, 0.0, 1.0 }, { 0.0, 0.0, 0.0 }, 30));
 	bungee = new BungeeForceGenerator(40.0, 0.05, 1000); 
 	force.addRegistry(bungee, p1); 
-	rigidbodyDinamico.push_back(p1); 
+	part.push_back(p1); 
 }
 
 void ParticleSystem::generateElasticBand()
@@ -123,8 +137,8 @@ void ParticleSystem::generateElasticBand()
 	ElasticForce* muelleGen2 = new ElasticForce(3, 20, p1);
 	force.addRegistry(muelleGen2, p2);
 
-	rigidbodyDinamico.push_back(p1);
-	rigidbodyDinamico.push_back(p2);
+	part.push_back(p1);
+	part.push_back(p2);
 }
 
 void ParticleSystem::generateBungee()
@@ -155,12 +169,12 @@ void ParticleSystem::generateBungee()
 	SpringForceGenerator* muelleGen9 = new SpringForceGenerator(p6, 20, 15); //6 con 5
 	force.addRegistry(muelleGen9, p5);
 
-	rigidbodyDinamico.push_back(p1);
-	rigidbodyDinamico.push_back(p2);
-	rigidbodyDinamico.push_back(p3);
-	rigidbodyDinamico.push_back(p4);
-	rigidbodyDinamico.push_back(p5);
-	rigidbodyDinamico.push_back(p6);
+	part.push_back(p1);
+	part.push_back(p2);
+	part.push_back(p3);
+	part.push_back(p4);
+	part.push_back(p5);
+	part.push_back(p6);
 }
 
 void ParticleSystem::generateMuelleAnclado(Vector3 pos)
@@ -169,7 +183,7 @@ void ParticleSystem::generateMuelleAnclado(Vector3 pos)
 	muelleAnclado = new AnchoredSpringFG(20, 20, { pos.x, 90.0, 0.0 }); 
 
 	force.addRegistry(muelleAnclado, p3);
-	rigidbodyDinamico.push_back(p3);
+	part.push_back(p3);
 }
 
 void ParticleSystem::generateGravity()
@@ -178,15 +192,15 @@ void ParticleSystem::generateGravity()
 
 	Particula* p1 = new Particula(Prueba({ 0.0, 50.0, 20.0 }, 1000.0, 0.99));
 	force.addRegistry(gravityGen, p1);
-	rigidbodyDinamico.push_back(p1);
+	part.push_back(p1);
 
 	Particula* p3 = new Particula(Prueba({ 0.0, 50.0, 0.0 }, 500.0, 0.99));
 	force.addRegistry(gravityGen, p3);
-	rigidbodyDinamico.push_back(p3);
+	part.push_back(p3);
 
 	Particula* p2 = new Particula(Prueba({ 0.0, 50.0, -20.0 }, 100.0, 0.99));
 	force.addRegistry(gravityGen, p2);
-	rigidbodyDinamico.push_back(p2);
+	part.push_back(p2);
 }
 
 void ParticleSystem::generateStorm(int n, int r)
@@ -194,7 +208,7 @@ void ParticleSystem::generateStorm(int n, int r)
 	tornadeGen = new TornadeForceGenerator(Vector3(0.0, 0.0, 0.0), r, 5.0);
 
 	Particula* guiaGen = new Particula(PruebaLineas({ (float)r/2, (float)r /2, (float)r /2}, (float)r));
-	rigidbodyDinamico.push_back(guiaGen);
+	part.push_back(guiaGen);
 
 	for (int i = 0; i < n; i++)
 	{
@@ -204,7 +218,7 @@ void ParticleSystem::generateStorm(int n, int r)
 
 		Particula* p = new Particula(Prueba({ (float)x, (float)y, (float)z}, 1.0, 0.99));
 		force.addRegistry(tornadeGen, p);
-		rigidbodyDinamico.push_back(p);
+		part.push_back(p);
 	}
 }
 
@@ -231,17 +245,9 @@ void ParticleSystem::generateExplosive(int n, int r)
 			p = new Particula(PruebaExp({ (float)x, (float)y, (float)z }, { 1, 0, 0, 1 }));
 
 		force.addRegistry(explodeGen, p);
-		rigidbodyDinamico.push_back(p);
+		part.push_back(p);
 	}
 }
 
-void ParticleSystem::generateWaterSystem(Vector3 pos)
-{
-	Particula* p = new Particula(Agua());
-
-	uniformGen = new UniformParticleGenerator(p, 0.9, pos, { 5, 0, 0.01 }, 200);
-
-	generadores.push_back(uniformGen);
-}
 
 

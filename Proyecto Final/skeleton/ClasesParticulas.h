@@ -121,7 +121,7 @@ public:
 		force = { 0.0, 0.0, 0.0 };
 		size = { 150.0, 0.1, 100.0 };
 		time = 50.0;
-		mass = 5.0;
+		mass = 20.0;
 		damp = 0.98;
 		disparo = 2;
 		immortal = true;
@@ -132,7 +132,7 @@ class FuegoArtificial : public ClasesParticulas
 {
 public:
 
-	FuegoArtificial(double tiempo, Vector3 pos, Vector4 colores)
+	FuegoArtificial(double tiempo, Vector3 pos, Vector4 colores, double masa)
 	{
 		pose = physx::PxTransform{ pos };
 		color = colores;
@@ -141,10 +141,70 @@ public:
 		force = { 0.0, 0.0, 0.0 };
 		size = { 0.5, 0.0, 0.0 };
 		time = tiempo;
-		mass = 1.0;
+		mass = masa;
 		damp = 0.85;
 		disparo = 1;
 		immortal = false;
+	}
+};
+
+class Gas : public ClasesParticulas
+{
+public:
+
+	Gas(Vector3 pos)
+	{
+		pose = physx::PxTransform{ pos };
+		color = { 1.0f, 1.0f, 1.0f, 1 };
+		vel = { 0.0, 0.0, 0.0 };
+		acc = { -0.8f, 0.0f, 0.0f };
+		force = { 0.0, 0.0, 0.0 };
+		size = { 1.0, 0.0, 0.0 };
+		time = 1.0;
+		mass = 0.25;
+		damp = 0.8;
+		disparo = 1;
+		immortal = false;
+	}
+};
+
+class Tronco : public ClasesParticulas
+{
+public:
+
+	Tronco(Vector3 pos, Vector3 tam)
+	{
+		pose = physx::PxTransform{ pos };
+		color = { 1.0, 0.8, 0.8, 1.0 };
+		vel = { 0.0, 0.0, 0.0 };
+		acc = { 0.0f, 0.0f, 0.0f };
+		force = { 0.0, 0.0, 0.0 };
+		size = tam;
+		time = 1.0;
+		mass = 30;
+		damp = 0.8;
+		disparo = 2;
+		immortal = true;
+	}
+};
+
+class Copa : public ClasesParticulas
+{
+public:
+
+	Copa(Vector3 pos, Vector3 tam)
+	{
+		pose = physx::PxTransform{ pos };
+		color = { 0.0, 1.0, 0.0, 1.0 };
+		vel = { 0.0, 0.0, 0.0 };
+		acc = { 0.0f, 0.0f, 0.0f };
+		force = { 0.0, 0.0, 0.0 };
+		size = tam;
+		time = 1.0;
+		mass = 30;
+		damp = 0.8;
+		disparo = 2;
+		immortal = true;
 	}
 };
 
@@ -311,38 +371,18 @@ public:
 	}
 };
 
-class Gas : public ClasesParticulas
-{
-public: 
-
-	Gas(Vector3 pos)
-	{
-		pose = physx::PxTransform{ pos };
-		color = { 1.0f, 1.0f, 1.0f, 1 };
-		vel = { 0.0, 0.0, 0.0 };
-		acc = { 0.0f, 0.0f, 0.0f };
-		force = { 0.0, 0.0, 0.0 };
-		size = {0.5, 0.0, 0.0 };
-		time = 1.0;
-		mass = 1.0;
-		damp = 0.8;
-		disparo = 1;
-		immortal = false;
-	}
-};
-
 class Agua : public ClasesParticulas
 {
 public: 
-	Agua()
+	Agua(Vector3 pos)
 	{
-		pose = physx::PxTransform{ 0.0, 3.0, 0.0 };
+		pose = physx::PxTransform{ pos };
 		color = { 0.0f, 0.0f, 0.95, 1 };
 		vel = { 2.0, 5.0, 2.0 };
-		acc = { 0.0f, -0.08f, 0.0f };
+		acc = { -0.08, -0.02f, 0.0f };
 		force = { 0.0, 0.0, 0.0 };
-		size = {2.0, 0.0, 0.0 };
-		time = 100.0;
+		size = {1, 0.0, 0.0 };
+		time = 5.0;
 		mass = 0.5;
 		damp = 0.95;
 		disparo = 1;

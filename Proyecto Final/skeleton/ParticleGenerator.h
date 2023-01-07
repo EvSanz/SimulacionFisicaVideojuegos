@@ -30,7 +30,7 @@ protected:
 
 	std::string name; 
 
-	Particula* modelo; 
+	Particula* modelo = nullptr; 
 
 public: 
 
@@ -42,6 +42,8 @@ public:
 
 	void setAlive() { alive = !alive; };
 	bool isAlive() { return alive; };
+
+	Vector3 getPos() { return pos; }
 
 	std::string getName() const { return name; }
 	void setName(std::string nombre) { name = nombre; }

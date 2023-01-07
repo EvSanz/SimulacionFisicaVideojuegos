@@ -7,8 +7,8 @@ ParticleGenerator::~ParticleGenerator()
 {
 	if (modelo != nullptr)
 	{
-		delete modelo;
 		modelo = nullptr;
+		delete modelo;
 	}
 }
 
@@ -28,7 +28,7 @@ UniformParticleGenerator::UniformParticleGenerator(Particula* model, double genP
 
 	gen_prob = genProb; 
 
-	uni_pos = auxPos / 3;
+	uni_pos = auxPos / 4;
 	uni_vel = auxVel / 3;
 
 	nParticulas = particulas;
@@ -90,8 +90,8 @@ GaussianParticleGenerator::GaussianParticleGenerator(Particula* model, double ge
 
 	gen_prob = genProb;
 
-	pos_gauss = auxPos * 0.2;
-	vel_gauss = auxVel * 0.5;
+	pos_gauss = auxPos;
+	vel_gauss = auxVel;
 
 	nParticulas = particulas;
 

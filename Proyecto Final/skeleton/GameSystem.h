@@ -22,19 +22,12 @@ class GameSystem
 {
 protected:
 
-	std::list<RigidBodyGenerator*> rigidbodyGenerators;
-	std::list<RigidBodyForceGenerator*> forceGenerators;
-
 	//Objetos
-	std::list<Rigidbody*> arboles;
-	std::list<Rigidbody*> balas;
-
 	std::list<Zeppelin*> naves;
 
 	//Interfaz de usuario
 	std::list<Particula*> UIVidas;
 	std::list<Particula*> UIBalas;
-	std::list<Particula*> floor;
 
 	RigidbodyForceRegistry forceRegistry;
 	ParticleForceRegistry particleForceRegistry; 
@@ -51,7 +44,7 @@ protected:
 
 	double tiempoCooldown = 5.0, tiempo = 0.0; 
 
-	float posX = 100.0, posAvion = 10.0; 
+	float posX = 100.0, posAvion = 30.0; 
 
 	bool noPlane; 
 
@@ -71,8 +64,6 @@ public:
 	~GameSystem();
 
 	virtual void update(double t);
-
-	void addGenerator(RigidBodyGenerator* rg) { rigidbodyGenerators.push_back(rg); }
 
 	void addObstacles(int obstaculo, bool zeppelin); 
 	void shootBullets(); 

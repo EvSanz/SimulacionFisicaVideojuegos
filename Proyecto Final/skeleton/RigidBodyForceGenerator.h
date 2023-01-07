@@ -15,6 +15,7 @@ protected:
 public:
 
 	virtual void updateForceRB(Rigidbody* p, double duration) = 0;
+	virtual Vector3 getPos() = 0; 
 };
 
 ///////////////////////////////////////////////////////////////////////////
@@ -39,6 +40,8 @@ public:
 
 		p->addForce(gravity * p->getMass());
 	}
+
+	Vector3 getPos() { return { 0.0, 0.0, 0.0 }; }
 };
 
 ///////////////////////////////////////////////////////////////////////////
@@ -101,6 +104,8 @@ public:
 
 		WindForceRigidbodyGenerator::updateForceRB(p, t);
 	}
+
+	Vector3 getPos() { return centro; }
 };
 
 ///////////////////////////////////////////////////////////////////////////
@@ -131,6 +136,8 @@ public:
 
 		p->addForce((8000 / pow(rExplosion, 2)) * (p->getPosition() - expPos) * pow(2.7, -((t / 1000.0))));
 	}
+
+	Vector3 getPos() { return expPos; }
 };
 
 ///////////////////////////////////////////////////////////////////////////
@@ -162,6 +169,8 @@ public:
 
 		p->addForce(force);
 	}
+
+	Vector3 getPos() { return auxiliar->getPosition(); }
 };
 
 
@@ -177,6 +186,8 @@ public:
 	}
 
 	~AnchoredSpringRigidbodyGenerator() { delete auxiliar; }
+
+	Vector3 getPos() { return auxiliar->getPosition(); }
 };
 
 ///////////////////////////////////////////////////////////////////////////
@@ -199,6 +210,8 @@ public:
 
 		particulaLiquido = new Particula(CajaMuelle({ 0.0, 0.0, 0.0, 1.0 }, { 0.0, h, 0.0 }, 30));
 	}
+
+	Vector3 getPos() { return particulaLiquido->getPos(); }
 
 	void updateForceRB(Rigidbody* p, double t)
 	{

@@ -82,7 +82,7 @@ void GameSystem::update(double t)
 		plane->update(t);
 
 		if (particleSystem->hayEstela())
-			particleSystem->generateEstela(plane->getPos() - Vector3(8.0, 0.0, 0.0));
+			particleSystem->generateEstela(plane->getPos() - Vector3(9.0, 0.0, 0.0));
 	}
 }
 
@@ -272,29 +272,29 @@ void GameSystem::avionVSzeppelin(PxActor* zeppelin)
 	{
 		act = (*i)->getRigidbody()->getDinamico();
 
-		if (zeppelin == act && !(*i)->getColisionDetectada())
+		if (zeppelin == act)
 		{
 			p1 = (*i)->getRigidbody();
 			particleSystem->generateFireworkSystem((*i)->getPos(), { 1.0, 0.5, 0.0, 1.0 }, 5.0);
-
-			if (!noPlane && !(*i)->getColisionDetectada())
-			{
-				particleSystem->generateFireworkSystem(plane->getPos(), { 1.0, 0.0, 0.0, 1.0 }, 2.0);
-
-				deleteBulletOrLive(false);
-
-				posAvion = plane->getPos().x;
-
-				plane->destroy();
-				delete plane;
-
-				noPlane = true;
-			}
-
 			(*i)->destroy();
 		}
 
 		else
 			++i;
+	}
+
+	if (!noPlane)
+	{
+		particleSystem->generateFireworkSystem(plane->getPos(), { 1.0, 0.0, 0.0, 1.0 }, 2.0);
+
+		deleteBulletOrLive(false);
+
+		posAvion = plane->getPos().x;
+
+		plane->destroy();
+
+		delete plane;
+
+		noPlane = true;
 	}
 }

@@ -26,10 +26,38 @@ void ParticleSystem::update(double t)
 {
 	force.updateForces(t);
 
-	if (uniformGen != nullptr && estela && uniformGen->getPos().x + 10.0 > position.x)
+	for (std::list<ParticleGenerator*>::iterator it = generadores.begin(); it != generadores.end();)
 	{
-		for (auto p : uniformGen->generateParticle())
-			part.push_back(p);
+		if ((*it) == uniformGen)
+		{
+			if (estela && uniformGen->getPos().x + 10.0 > position.x)
+			{
+				windGen = new WindForceGenerator({ -15.0, 10.0, 0.0 }, uniformGen->getPos(), 20);
+
+				for (auto p : (*it)->generateParticle())
+				{
+					force.addRegistry(windGen, p);
+					part.push_back(p);
+				}
+
+			}
+		}
+		
+		else
+		{
+			for (auto p : (*it)->generateParticle())
+				part.push_back(p);
+		}
+		
+		
+		if ((*it)->getPos().x + 20.0 < position.x || !(*it)->isAlive())
+		{		
+			delete (*it);
+			it = generadores.erase(it);
+		}
+
+		else
+			it++;
 	}
 
 	for (std::list<Particula*>::iterator it = part.begin(); it != part.end();)
@@ -86,8 +114,10 @@ void ParticleSystem::crearSuelo(Vector4 colores, Vector3 pos)
 void ParticleSystem::generateEstela(Vector3 pos)
 {
 	Particula* p = new Particula(Gas(pos));
+	uniformGen = new UniformParticleGenerator(p, 0.8, pos, { 0.8, 0, 0.0 }, 15);
 
-	uniformGen = new UniformParticleGenerator(p, 0.8, pos, { 0.0, 0, 0.01 }, 15);
+	windGen = new WindForceGenerator({ -15.0, 10.0, 0.0 }, pos, 30);
+	force.addRegistry(windGen, p); 
 
 	part.push_back(p);
 	generadores.push_back(uniformGen);

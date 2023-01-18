@@ -166,7 +166,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			{
 				if (gameSystem->getVidas() > 0)
 				{
-					gameSystem->createPlane({ gameSystem->getPosAvion(), 40.0, 0.0 });
+					gameSystem->createPlane({ gameSystem->getPosAvion(), 60.0, 0.0 });
 					noPlane = false;
 				}
 

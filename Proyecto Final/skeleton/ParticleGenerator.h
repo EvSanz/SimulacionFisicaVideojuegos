@@ -44,6 +44,7 @@ public:
 	bool isAlive() { return alive; };
 
 	Vector3 getPos() { return pos; }
+	void changePos(Vector3 position) { pos = position; }
 
 	std::string getName() const { return name; }
 	void setName(std::string nombre) { name = nombre; }
@@ -83,6 +84,9 @@ public:
 
 	UniformParticleGenerator(Particula* model, double genProb, Vector3 auxPos, Vector3 auxVel, int particulas);
 	std::list<Particula*> generateParticle() override;
+
+	Vector3 getAuxPos() { return uni_pos; }
+	void changeAuxPos(Vector3 position) { uni_pos = position; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////

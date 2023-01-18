@@ -76,7 +76,7 @@ public:
 		int size = rand() % 6; 
 
 		capsula = new Rigidbody(scene, physics, pos, { 100.0, 0.0, 0.0 }, { 2.0, (float)(4.0 + size), 5.0 },
-			0.0, 50.0, { 1.0, 1.0, 1.0, 1.0 }, true, 2, "zeppelin");
+			0.0, 50.0, { 1.0, 0.0, 1.0, 1.0 }, true, 2, "zeppelin");
 		capsula->notAllowedToDie();
 
 		colisionDetectada = false; 

@@ -68,6 +68,12 @@ public:
 	void changeEstela() { estela = !estela; }
 	bool hayEstela() { return estela; }
 
+	void moveEstela(Vector3 pos) 
+	{ 
+		if (uniformGen != nullptr)
+			uniformGen->changePos(pos); 
+	}
+
 	///////////////////////////////////////////////////////////////////////
 
 	//NO USADOS EN EL PROYECTO

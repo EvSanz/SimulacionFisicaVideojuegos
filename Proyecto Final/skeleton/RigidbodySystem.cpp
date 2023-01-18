@@ -40,7 +40,7 @@ void RigidbodySystem::update(double t)
 
 	for (auto it = partEstaticos.begin(); it != partEstaticos.end();)
 	{
-		if ((*it)->getPosition().x + 100.0 < position.x)
+		if (!(*it)->isAlive() || (*it)->getPosition().x + 100.0 < position.x)
 		{
 			delete (*it);
 			it = partEstaticos.erase(it);
@@ -58,10 +58,10 @@ void RigidbodySystem::createMuelleAnclado(PxPhysics* physics, PxScene* scene, Ve
 		/*mass*/2, /*time*/10, /*color*/{ 1.0, 0.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1, "globo");
 	p->notAllowedToDie(); 
 
-	int resting = rand() % 10 + 10; 
-	int k = rand() % 30 + 50; 
+	int resting = rand() % 10 + 20; 
+	int k = rand() % 30 + 60; 
 
-	AnchoredSpringRigidbodyGenerator* muelle = new AnchoredSpringRigidbodyGenerator(scene, physics, k, resting, { pos.x, 90.0, 0.0 });
+	AnchoredSpringRigidbodyGenerator* muelle = new AnchoredSpringRigidbodyGenerator(scene, physics, k, resting, { pos.x, 110.0, 0.0 });
 
 	forceRegistry.addForceRegistry(muelle, p);
 	forceRegistry.addForceRegistry(gravityGen, p);
@@ -81,6 +81,28 @@ void RigidbodySystem::destruirRigido(PxActor* obj)
 	while (p1 == nullptr && i != part.end())
 	{
 		act = (*i)->getDinamico();
+
+		if (obj == act)
+		{
+			p1 = (*i);
+			(*i)->killRigidbody();
+		}
+
+		else
+			++i;
+	}
+}
+
+void RigidbodySystem::destruirRigidoEstatico(PxActor* obj)
+{
+	PxActor* act;
+	Rigidbody* p1 = nullptr;
+
+	auto i = partEstaticos.begin();
+
+	while (p1 == nullptr && i != partEstaticos.end())
+	{
+		act = (*i)->getEstatico();
 
 		if (obj == act)
 		{

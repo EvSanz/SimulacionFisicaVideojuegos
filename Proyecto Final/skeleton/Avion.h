@@ -7,7 +7,6 @@ class Avion
 {
 protected:
 
-	Rigidbody* alas; 
 	Rigidbody* capsula; 
 
 	bool up = false; 
@@ -16,45 +15,42 @@ public:
 	
 	Avion(PxScene* scene, PxPhysics* physics, Vector3 pos)
 	{
-		alas = new Rigidbody(scene, physics, pos, { 0.0, 0.0, 0.0 }, { 3.0, 0.1, 7.0 },
-			0.0, 50.0, { 1.0, 0.0, 0.0, 1.0 }, false, 1, "avion");
-		alas->notAllowedToDie();
-		 
 		capsula = new Rigidbody(scene, physics, pos, { 0.0, 0.0, 0.0 }, { 2.0, 6.0, 5.0 },
-			0.0, 50.0, { 1.0, 1.0, 1.0, 1.0 }, false, 2, "avion");
+			0.0, 50.0, { 1.0, 1.0, 1.0, 1.0 }, true, 2, "avion");
 		capsula->notAllowedToDie(); 
 	}
 
 	~Avion()
 	{
-		delete alas;
+		//capsula->getDinamico()->release();
 		delete capsula;
 	}
 
 	void update(double t)
 	{
-		float movY = 0.0; 
-
 		if (up)
 		{
 			if (capsula->getPosition().y < 100.0)
-				movY = 0.02;
+				capsula->setLinearVelocity({ 0.0, 0.03, 0.0 });
+			else
+				capsula->setLinearVelocity({ 0.0, 0.0, 0.0 });
 		}
-
+			
 		else
-		{
-			if (capsula->getPosition().y > 15.0)
-				movY = -0.02; 
-		}	
+			if (capsula->getPosition().y > 10.0)
+				capsula->setLinearVelocity({ 0.0, -0.03, 0.0 });
+			else
+				capsula->setLinearVelocity({ 0.0, 0.0, 0.0 });
 
-		alas->setPosition(alas->getPosition() + Vector3(0.01, movY, 0.0));
-		capsula->setPosition(capsula->getPosition() + Vector3(0.01, movY, 0.0));
+		Vector3 pos = capsula->getPosition() + Vector3(0.01, 0.0, 0.0) + capsula->getLinearVelocity();
+
+		capsula->setPosition(pos); 
+		capsula->integrate(t); 
 	}
 
 	void destroy()
 	{
 		capsula->killRigidbody();
-		alas->killRigidbody();
 	}
 
 	void changeDirection() { up = !up; }
@@ -69,45 +65,45 @@ class Zeppelin
 {
 protected:
 
-	Rigidbody* alas;
 	Rigidbody* capsula;
+
+	bool colisionDetectada; 
 
 public:
 
 	Zeppelin(PxScene* scene, PxPhysics* physics, Vector3 pos) 
 	{
-		alas = new Rigidbody(scene, physics, pos, { 0.0, 0.0, 0.0 }, { 3.0, 0.1, 7.0 },
-			5.0, 50.0, { 0.0, 1.0, 1.0, 1.0 }, false, 1, "zeppelin");
-		alas->notAllowedToDie();
-
 		int size = rand() % 6; 
 
-		capsula = new Rigidbody(scene, physics, pos, { 0.0, 0.0, 0.0 }, { 2.0, (float)(4.0 + size), 5.0 },
-			5.0, 50.0, { 1.0, 1.0, 1.0, 1.0 }, false, 2, "zeppelin");
+		capsula = new Rigidbody(scene, physics, pos, { 100.0, 0.0, 0.0 }, { 2.0, (float)(4.0 + size), 5.0 },
+			0.0, 50.0, { 1.0, 1.0, 1.0, 1.0 }, true, 2, "zeppelin");
 		capsula->notAllowedToDie();
+
+		colisionDetectada = false; 
 	}
 
 	~Zeppelin()
 	{
-		delete alas; 
 		delete capsula; 
 	}
 
 	void update(double t)
 	{
-		alas->setPosition(alas->getPosition() + Vector3(-0.03, 0.0, 0.0));
-		capsula->setPosition(capsula->getPosition() + Vector3(-0.03, 0.0, 0.0));
-	}
+		capsula->setLinearVelocity({ 0.0, 0.0, 0.0 });
+		Vector3 pos = capsula->getPosition() + Vector3(-0.05, 0.0, 0.0) + capsula->getLinearVelocity();
+		capsula->setPosition(pos); 	}
 
 	void destroy()
 	{
+		colisionDetectada = true; 
 		capsula->killRigidbody(); 
-		alas->killRigidbody(); 
 	}
 
 	Rigidbody* getRigidbody() { return capsula; }
 
 	Vector3 getPos() { return capsula->getPosition(); }
 	Vector3 getDir() { return capsula->getPosition().getNormalized(); }
+
+	bool getColisionDetectada() { return colisionDetectada; }
 };
 

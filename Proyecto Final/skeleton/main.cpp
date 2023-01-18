@@ -157,6 +157,10 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			if (!noPlane)
 				gameSystem->shootBullets(); 
 			break; 
+		case 'S':
+			if (!noPlane)
+				gameSystem->controlEstela();
+			break;
 		case 'A':
 			if (noPlane)
 			{
@@ -220,7 +224,19 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 		{
 			if (actor2->getName() == "globo")
 			{
-				gameSystem->avionVSglobo(actor2);
+				gameSystem->avionVSobstaculo(actor2);
+				noPlane = true;
+			}
+
+			else if (actor2->getName() == "indestructible")
+			{
+				gameSystem->avionVSobstaculoEstatico(actor2);
+				noPlane = true;
+			}
+
+			else if (actor2->getName() == "zeppelin")
+			{
+				gameSystem->avionVSzeppelin(actor2);
 				noPlane = true;
 			}
 		}
@@ -229,7 +245,19 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 		{
 			if (actor1->getName() == "globo")
 			{
-				gameSystem->avionVSglobo(actor1);
+				gameSystem->avionVSobstaculo(actor1);
+				noPlane = true;
+			}
+
+			else if (actor1->getName() == "indestructible")
+			{
+				gameSystem->avionVSobstaculoEstatico(actor1);
+				noPlane = true;
+			}
+
+			else if (actor1->getName() == "zeppelin")
+			{
+				gameSystem->avionVSzeppelin(actor1);
 				noPlane = true;
 			}
 		}

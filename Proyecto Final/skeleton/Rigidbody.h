@@ -17,7 +17,8 @@ protected:
 
 	double timeToLive, timeLive;
 
-	bool alive, dinamic, cantDie = false; 
+	bool alive, dinamic, cantDie = false;
+	bool borrarFuerza; 
 
 	int form; 
 
@@ -48,6 +49,11 @@ public:
 			rigidbodyDinamico->setGlobalPose(PxTransform(pos));
 			rigidbodyDinamico->setMass(mass);
 			rigidbodyDinamico->setName(name); 
+
+			if (name == "avion")
+				borrarFuerza = true;
+			else
+				borrarFuerza = false; 
 
 			timeToLive = time;
 			timeLive = time;
@@ -116,20 +122,32 @@ public:
 	~Rigidbody()
 	{
 		DeregisterRenderItem(renderItem);
+
+		//if (dinamic)
+		//	rigidbodyDinamico->release();
+		//else
+		//	rigidbodyEstatico->release();
+
 	} 
 
 	PxRigidStatic* getEstatico() { return rigidbodyEstatico; }
 	PxRigidDynamic* getDinamico() { return rigidbodyDinamico; }
 
 	void integrate(float t) 
-	{ 
-		if (getInvMass() <= 0.0f)
-			return;
+	{ 	
+		if (dinamic)
+		{
+			if (getInvMass() <= 0.0f)
+				return;
 
-		timeToLive -= t;
+			timeToLive -= t;
 
-		if (timeToLive < 0 && !cantDie)
-			killRigidbody();
+			if (timeToLive < 0 && !cantDie)
+				killRigidbody();
+
+			if (borrarFuerza)
+				rigidbodyDinamico->clearForce();
+		}
 	};
 
 	bool isAlive() { return alive; }

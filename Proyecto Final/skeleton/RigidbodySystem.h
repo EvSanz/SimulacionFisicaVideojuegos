@@ -54,5 +54,6 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 
-	void destruirRigido(PxActor* globo);
+	void destruirRigido(PxActor* obj);
+	void destruirRigidoEstatico(PxActor* obj); 
 };

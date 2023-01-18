@@ -26,7 +26,7 @@ void ParticleSystem::update(double t)
 {
 	force.updateForces(t);
 
-	if (uniformGen != nullptr && uniformGen->getPos().x + 10.0 > position.x)
+	if (uniformGen != nullptr && estela && uniformGen->getPos().x + 10.0 > position.x)
 	{
 		for (auto p : uniformGen->generateParticle())
 			part.push_back(p);
@@ -69,6 +69,7 @@ ParticleGenerator* ParticleSystem::getParticleGenerator(string t)
 void ParticleSystem::generateFireworkSystem(Vector3 pos, Vector4 colores, double masa)
 {
 	Particula* i = new Particula(FuegoArtificial(0.8, pos, colores, masa));
+	part.push_back(i);
 
 	std::shared_ptr<SphereParticleGenerator> p;
 	p.reset(new SphereParticleGenerator(pos, i, 10, 30));

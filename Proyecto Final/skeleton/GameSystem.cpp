@@ -80,7 +80,9 @@ void GameSystem::update(double t)
 		}
 
 		plane->update(t);
-		particleSystem->generateEstela(plane->getPos() - Vector3(8.0, 0.0, 0.0));
+
+		if (particleSystem->hayEstela())
+			particleSystem->generateEstela(plane->getPos() - Vector3(8.0, 0.0, 0.0));
 	}
 }
 
@@ -207,7 +209,7 @@ void GameSystem::balasVSzeppelin(PxActor* bala, PxActor* zeppelin)
 
 	while (p1 == nullptr && i != naves.end())
 	{
-		act = (*i)->getRigidbody()->getEstatico(); 
+		act = (*i)->getRigidbody()->getDinamico(); 
 
 		if (zeppelin == act)
 		{
@@ -221,9 +223,9 @@ void GameSystem::balasVSzeppelin(PxActor* bala, PxActor* zeppelin)
 	}
 }
 
-void GameSystem::avionVSglobo(PxActor* globo)
+void GameSystem::avionVSobstaculo(PxActor* obs)
 {
-	rigidbodySystem->destruirRigido(globo);
+	rigidbodySystem->destruirRigido(obs);
 
 	if (!noPlane)
 	{
@@ -238,4 +240,61 @@ void GameSystem::avionVSglobo(PxActor* globo)
 
 		noPlane = true;
 	}		
+}
+
+void GameSystem::avionVSobstaculoEstatico(PxActor* obs)
+{
+	rigidbodySystem->destruirRigidoEstatico(obs);
+
+	if (!noPlane)
+	{
+		particleSystem->generateFireworkSystem(plane->getPos(), {1.0, 0.0, 0.0, 1.0}, 2.0);
+
+		deleteBulletOrLive(false);
+
+		posAvion = plane->getPos().x;
+
+		plane->destroy();
+		delete plane;
+
+		noPlane = true;
+	}		
+}
+
+void GameSystem::avionVSzeppelin(PxActor* zeppelin)
+{
+	PxActor* act;
+	Rigidbody* p1 = nullptr;
+
+	auto i = naves.begin();
+
+	while (p1 == nullptr && i != naves.end())
+	{
+		act = (*i)->getRigidbody()->getDinamico();
+
+		if (zeppelin == act && !(*i)->getColisionDetectada())
+		{
+			p1 = (*i)->getRigidbody();
+			particleSystem->generateFireworkSystem((*i)->getPos(), { 1.0, 0.5, 0.0, 1.0 }, 5.0);
+
+			if (!noPlane && !(*i)->getColisionDetectada())
+			{
+				particleSystem->generateFireworkSystem(plane->getPos(), { 1.0, 0.0, 0.0, 1.0 }, 2.0);
+
+				deleteBulletOrLive(false);
+
+				posAvion = plane->getPos().x;
+
+				plane->destroy();
+				delete plane;
+
+				noPlane = true;
+			}
+
+			(*i)->destroy();
+		}
+
+		else
+			++i;
+	}
 }

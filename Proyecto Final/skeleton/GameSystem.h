@@ -44,7 +44,7 @@ protected:
 
 	double tiempoCooldown = 5.0, tiempo = 0.0; 
 
-	float posX = 100.0, posAvion = 30.0; 
+	float posX = 100.0, posAvion = 10.0; 
 
 	bool noPlane; 
 
@@ -79,10 +79,14 @@ public:
 	float getPosAvion() { return posAvion; }
 	int getVidas() { return contadorVidas; }
 
+	void controlEstela() { particleSystem->changeEstela(); }
+
 	////////////////////////////////////////////////////////////
 
 	void balasVSindestructible(PxActor* bala);
 	void balasVSglobo(PxActor* bala, PxActor* globo);
 	void balasVSzeppelin(PxActor* bala, PxActor* zeppelin); 
-	void avionVSglobo(PxActor* globo); 
+	void avionVSobstaculo(PxActor* globo); 
+	void avionVSobstaculoEstatico(PxActor* globo);
+	void avionVSzeppelin(PxActor* zeppelin);
 };

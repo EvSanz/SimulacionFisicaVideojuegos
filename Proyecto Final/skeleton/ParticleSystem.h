@@ -30,6 +30,8 @@ protected:
 
 	float timer = 0; 
 
+	bool estela; 
+
 	GaussianParticleGenerator* gaussianGen = nullptr; 
 	UniformParticleGenerator* uniformGen = nullptr;
 	SphereParticleGenerator* fireGen = nullptr;
@@ -44,7 +46,11 @@ protected:
 
 public:
 
-	ParticleSystem(Vector3 pos) { position = pos; }
+	ParticleSystem(Vector3 pos) 
+	{ 
+		position = pos; 
+		estela = true; 
+	}
 	~ParticleSystem();
 
 	void update(double t); 
@@ -58,6 +64,9 @@ public:
 	void generateFogSystem(Vector3 pos);
 
 	void getPosAvion(Vector3 pos) { position = pos; }
+
+	void changeEstela() { estela = !estela; }
+	bool hayEstela() { return estela; }
 
 	///////////////////////////////////////////////////////////////////////
 

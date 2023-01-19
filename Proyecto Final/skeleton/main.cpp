@@ -157,6 +157,10 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			if (!noPlane)
 				gameSystem->shootBullets(); 
 			break; 
+		case 'C':
+			if (!noPlane)
+				gameSystem->changeBullet();
+			break;
 		case 'S':
 			if (!noPlane)
 				gameSystem->controlEstela();

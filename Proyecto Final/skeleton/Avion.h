@@ -91,7 +91,8 @@ public:
 	{
 		capsula->setLinearVelocity({ 0.0, 0.0, 0.0 });
 		Vector3 pos = capsula->getPosition() + Vector3(-0.05, 0.0, 0.0) + capsula->getLinearVelocity();
-		capsula->setPosition(pos); 	}
+		capsula->setPosition(pos); 	
+	}
 
 	void destroy()
 	{

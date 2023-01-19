@@ -40,11 +40,15 @@ protected:
 
 	Avion* plane = nullptr;
 
-	int contadorBalas = 5, cargadorBalas = 5, contadorVidas = 3; 
+	int contadorBalas = 5;
+	int cargadorBalas = 5; 
+	int contadorVidas = 3;
 
-	double tiempoCooldown = 5.0, tiempo = 0.0; 
+	double tiempoCooldown = 5.0;
+	double tiempo = 0.0; 
 
-	float posX = 100.0, posAvion = 10.0; 
+	float posX = 100.0; 
+	float posAvion = 10.0;
 
 	bool noPlane; 
 
@@ -66,7 +70,12 @@ public:
 	virtual void update(double t);
 
 	void addObstacles(int obstaculo, bool zeppelin); 
-	void shootBullets(); 
+
+	void shootBullets();
+	void changeBullet()
+	{
+		rigidbodySystem->changeBullet(); 
+	}
 
 	void createFloor(Vector4 colores, Vector3 pos);
 

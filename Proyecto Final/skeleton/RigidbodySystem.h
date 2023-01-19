@@ -19,20 +19,28 @@ protected:
 
 	RigidbodyForceRegistry forceRegistry;
 
-	UniformBodyGenerator* uniform = nullptr; 
-	GaussianBodyGenerator* gauss = nullptr;
-
 	GravityForceRigidbodyGenerator* gravityGen;
 	WindForceRigidbodyGenerator* windGen;
-	ExplosionForceRigidbodyGenerator* expGen; 
 
 	Vector3 position;
 
-	//bool uniformBodyActive = false, gaussBodyActive = false, sysFuerzas = true; 
+	int bulletType;
+
+	//ExplosionForceRigidbodyGenerator* expGen; 
+	//UniformBodyGenerator* uniform = nullptr; 
+	//GaussianBodyGenerator* gauss = nullptr;
+	//bool uniformBodyActive = false;
+	//bool gaussBodyActive = false; 
+	//bool sysFuerzas = true; 
 
 public:
 
-	RigidbodySystem(Vector3 pos) { position = pos; }
+	RigidbodySystem(Vector3 pos) 
+	{ 
+		position = pos; 
+		bulletType = 0; 
+	}
+
 	~RigidbodySystem(); 
 
 	virtual void update(double t);
@@ -42,18 +50,27 @@ public:
 	void getPosAvion(Vector3 pos) { position = pos; }
 
 	void createTree(PxPhysics* gPhysics, PxScene* gScene, float posX);
+
+	void changeBullet() 
+	{ 
+		bulletType++; 
+
+		if (bulletType > 2)
+			bulletType = 0; 
+	}
+
 	void createBullet(PxPhysics* gPhysics, PxScene* gScene, Vector3 pos);
 
-	//void addUniform(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
-	void addGauss(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
-
 	void createGravity(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
-	void createWind(PxPhysics* physics, PxScene* scene, PxMaterial* mat, double r, int n);
-	void createExplosive(PxPhysics* physics, PxScene* scene, PxMaterial* mat, int n, int r); 
 	void createMuelleAnclado(PxPhysics* physics, PxScene* scene, Vector3 pos); 
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 
 	void destruirRigido(PxActor* obj);
 	void destruirRigidoEstatico(PxActor* obj); 
+
+	//void createWind(PxPhysics* physics, PxScene* scene, PxMaterial* mat, double r, int n);
+	//void createExplosive(PxPhysics* physics, PxScene* scene, PxMaterial* mat, int n, int r); 
+	//void addUniform(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
+	//void addGauss(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
 };

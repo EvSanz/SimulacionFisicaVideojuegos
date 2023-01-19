@@ -32,17 +32,18 @@ protected:
 
 	bool estela; 
 
-	GaussianParticleGenerator* gaussianGen = nullptr; 
+	ParticleForceRegistry force;
+
 	UniformParticleGenerator* uniformGen = nullptr;
 	SphereParticleGenerator* fireGen = nullptr;
 	GravityForceGenerator* gravityGen = nullptr;
 	WindForceGenerator* windGen = nullptr; 
-	TornadeForceGenerator* tornadeGen = nullptr; 
-	ExplosionForceGenerator* explodeGen = nullptr; 
-	BungeeForceGenerator* bungee = nullptr; 
-	AnchoredSpringFG* muelleAnclado = nullptr; 
 
-	ParticleForceRegistry force;
+	//TornadeForceGenerator* tornadeGen = nullptr; 
+	//ExplosionForceGenerator* explodeGen = nullptr; 
+	//BungeeForceGenerator* bungee = nullptr; 
+	//AnchoredSpringFG* muelleAnclado = nullptr; 
+	//GaussianParticleGenerator* gaussianGen = nullptr;
 
 public:
 
@@ -59,37 +60,33 @@ public:
 
 	void crearSuelo(Vector4 colores, Vector3 pos);
 
+	void generateEstela(Vector3 pos);
 	void generateFireworkSystem(Vector3 pos, Vector4 colores, double masa);
-	void generateMuelleAnclado(Vector3 pos);
-	void generateFogSystem(Vector3 pos);
 
 	void getPosAvion(Vector3 pos) { position = pos; }
 
 	void changeEstela() { estela = !estela; }
 	bool hayEstela() { return estela; }
 
-	void moveEstela(Vector3 pos) 
-	{ 
-		if (uniformGen != nullptr)
-			uniformGen->changePos(pos); 
-	}
-
 	///////////////////////////////////////////////////////////////////////
 
 	//NO USADOS EN EL PROYECTO
 
 	//ForceGenerator* getForceGenerator(string name);
-	void generateGravity();
+	//void generateMuelleAnclado(Vector3 pos);
+	//void generateFogSystem(Vector3 pos);
+
+	/*void generateGravity();
 	void generateMuelle();
-	void generateEstela(Vector3 pos);
+
 	void generateBungee(); 
 	void generateBounyancy(); 
 	void generateElasticBand(); 
 	void generateExplosive(int n, int r); 
-	void generateStorm(int n, int r); 
+	void generateStorm(int n, int r); */
 
-	void moreK() { muelleAnclado->setK(5.0); }
-	void lessK() { muelleAnclado->setK(-5.0); }
+	/*void moreK() { muelleAnclado->setK(5.0); }
+	void lessK() { muelleAnclado->setK(-5.0); }*/
 
 	/*void setForceActive() { fuerzasActivadas = !fuerzasActivadas; }
 

@@ -35,7 +35,7 @@ RenderItem* item = nullptr;
 
 int puntuacion; 
 
-float posX; 
+float posX, posInitial; 
 
 double timeMax, tiempo, tiempoParado, tiempoMaxParado; 
 
@@ -75,6 +75,8 @@ void initPhysics(bool interactive)
 
 	posX = 100.0; 
 	puntuacion = 0; 
+
+	posInitial = 0.0; 
 
 	noPlane = true; 
 
@@ -171,7 +173,11 @@ void keyPress(unsigned char key, const PxTransform& camera)
 				if (gameSystem->getVidas() == 0)
 				{
 					gameSystem->resetLives(); 
-					std::cout << "FIN DEL JUEGO\nPUNTUACION OBTENIDA: " << puntuacion << "\n";
+					puntuacion += (gameSystem->getPosAvion() - posInitial) * 10;
+
+					std::cout << "FIN DEL JUEGO\nPUNTUACION OBTENIDA: " << puntuacion << "\nDISTANCIA: " << (gameSystem->getPosAvion() - posInitial) << "\n";
+
+					posInitial = gameSystem->getPosAvion(); 
 					puntuacion = 0; 
 				}
 
@@ -195,13 +201,13 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 			if (actor2->getName() == "globo")
 			{
 				gameSystem->balasVSglobo(actor1, actor2);
-				puntuacion += 100;
+				puntuacion += 10;
 			}
 
 			else if (actor2->getName() == "zeppelin")
 			{
 				gameSystem->balasVSzeppelin(actor1, actor2);
-				puntuacion += 200;
+				puntuacion += 20;
 			}
 
 			else
@@ -213,13 +219,13 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 			if (actor1->getName() == "globo")
 			{
 				gameSystem->balasVSglobo(actor2, actor1);
-				puntuacion += 100;
+				puntuacion += 10;
 			}
 
 			else if (actor1->getName() == "zeppelin")
 			{
 				gameSystem->balasVSzeppelin(actor2, actor1);
-				puntuacion += 200;
+				puntuacion += 20;
 			}
 
 			else

@@ -8,7 +8,6 @@ RigidbodySystem::~RigidbodySystem()
 	for (Rigidbody* b : partEstaticos)
 		delete b;
 
-
 	for (RigidBodyGenerator* g : rigidbodyGenerators) 
 		delete g;
 
@@ -54,12 +53,10 @@ void RigidbodySystem::createMuelleAnclado(PxPhysics* physics, PxScene* scene, Ve
 {
 	gravityGen = new GravityForceRigidbodyGenerator(Vector3(0.0f, -6.0f, 0.0f));
 
-	Rigidbody* p = new Rigidbody(scene, physics, /*pos*/pos, /*vel*/{ 0.0, 0.0, 0.0 }, /*size*/{ 3.0, 0.8, 0.8 },
+	Rigidbody* p = new Rigidbody(scene, physics, /*inertia*/{0.0, 0.0, 0.0}, /*pos*/pos, /*vel*/{0.0, 0.0, 0.0}, /*size*/{3.0, 0.8, 0.8},
 		/*mass*/2, /*time*/10, /*color*/{ 1.0, 0.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1, "globo");
 	p->notAllowedToDie(); 
 
-	int resting = rand() % 10 + 20; 
-	int k = rand() % 30 + 60; 
 
 	AnchoredSpringRigidbodyGenerator* muelle = new AnchoredSpringRigidbodyGenerator(scene, physics, k, resting, { pos.x, 110.0, 0.0 });
 
@@ -119,7 +116,7 @@ void RigidbodySystem::createTree(PxPhysics* gPhysics, PxScene* gScene, float pos
 {
 	int tam = (rand() % 30) + 20.0;
 
-	Rigidbody* tronco = new Rigidbody(gScene, gPhysics, { posX, (float)tam / 2, 0.0 }, { 0.0, 0.0, 0.0 },
+	Rigidbody* tronco = new Rigidbody(gScene, gPhysics, { 0.0, 0.0, 0.0 }, { posX, (float)tam / 2, 0.0 }, { 0.0, 0.0, 0.0 },
 		{ 2.0, (float)tam, 2.0 }, 50.0, 50.0, { 1.0, 0.8, 0.8, 1.0 }, false, 1, "indestructible");
 	partEstaticos.push_back(tronco);
 
@@ -127,7 +124,7 @@ void RigidbodySystem::createTree(PxPhysics* gPhysics, PxScene* gScene, float pos
 
 	for (int i = 0; i < nCopas; i++)
 	{
-		Rigidbody* copa = new Rigidbody(gScene, gPhysics, { posX, (float)(tam + tam / 2 * i), 0.0 }, { 0.0, 0.0, 0.0 },
+		Rigidbody* copa = new Rigidbody(gScene, gPhysics, { 0.0, 0.0, 0.0 }, { posX, (float)(tam + tam / 2 * i), 0.0 }, { 0.0, 0.0, 0.0 },
 			{ (float)(10.0 - 2.0 * i), 6.0, 10.0 }, 50.0, 50.0, { 0.0, 1.0, 0.0, 1.0 }, false, 1, "indestructible");
 		partEstaticos.push_back(copa);
 	}
@@ -136,13 +133,13 @@ void RigidbodySystem::createTree(PxPhysics* gPhysics, PxScene* gScene, float pos
 void RigidbodySystem::createBullet(PxPhysics* gPhysics, PxScene* gScene, Vector3 pos)
 {	
 	if (bulletType == 0)
-		part.push_back(new Rigidbody(gScene, gPhysics, pos, { 100.0, 0.0, 0.0 },
+		part.push_back(new Rigidbody(gScene, gPhysics, { 0.5, 0.0, 0.0 }, pos, { 100.0, 0.0, 0.0 },
 		{ 0.8, 0.8, 0.8 }, 10.0, 10.0, { 1.0, 1.0, 0.0, 1.0 }, true, 1, "bala"));
 	else if (bulletType == 1)
-		part.push_back(new Rigidbody(gScene, gPhysics, pos + Vector3(0.5, 0.0, 0.0), {70.0, 0.0, 0.0},
+		part.push_back(new Rigidbody(gScene, gPhysics, { 0.1, 0.0, 0.0 }, pos + Vector3(0.5, 0.0, 0.0), {70.0, 0.0, 0.0},
 		{ 1.0, 1.0, 1.0 }, 20.0, 20.0, { 0.0, 0.0, 0.0, 1.0 }, true, 1, "bala"));
 	else
-		part.push_back(new Rigidbody(gScene, gPhysics, pos, { 150.0, 0.0, 0.0 },
+		part.push_back(new Rigidbody(gScene, gPhysics, { 0.3, 0.0, 0.0 }, pos, { 150.0, 0.0, 0.0 },
 		{ 0.5, 0.5, 0.5 }, 5.0, 10.0, { 0.0, 1.0, 0.0, 1.0 }, true, 1, "bala"));
 }
 

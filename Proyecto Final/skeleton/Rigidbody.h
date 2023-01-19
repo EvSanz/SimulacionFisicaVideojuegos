@@ -18,7 +18,6 @@ protected:
 	double timeToLive, timeLive;
 
 	bool alive, dinamic, cantDie = false;
-	bool borrarFuerza; 
 
 	int form; 
 
@@ -32,7 +31,7 @@ protected:
 
 public:
 
-	Rigidbody(PxScene* scene, PxPhysics* physics, Vector3 pos, Vector3 vel, Vector3 scale,
+	Rigidbody(PxScene* scene, PxPhysics* physics, Vector3 inertia, Vector3 pos, Vector3 vel, Vector3 scale, 
 		double mass, double time, Vector4 color, bool dinamico, int forma, const char* name)
 	{
 		colores = color;
@@ -46,14 +45,10 @@ public:
 			rigidbodyDinamico->setLinearVelocity(vel);
 			rigidbodyDinamico->setAngularVelocity({ 0, 0, 0 });
 			rigidbodyDinamico->setLinearDamping(0.0); 
+			rigidbodyDinamico->setMassSpaceInertiaTensor(inertia);
 			rigidbodyDinamico->setGlobalPose(PxTransform(pos));
 			rigidbodyDinamico->setMass(mass);
 			rigidbodyDinamico->setName(name); 
-
-			if (name == "avion")
-				borrarFuerza = true;
-			else
-				borrarFuerza = false; 
 
 			timeToLive = time;
 			timeLive = time;
@@ -122,12 +117,6 @@ public:
 	~Rigidbody()
 	{
 		DeregisterRenderItem(renderItem);
-
-		//if (dinamic)
-		//	rigidbodyDinamico->release();
-		//else
-		//	rigidbodyEstatico->release();
-
 	} 
 
 	PxRigidStatic* getEstatico() { return rigidbodyEstatico; }
@@ -144,9 +133,6 @@ public:
 
 			if (timeToLive < 0 && !cantDie)
 				killRigidbody();
-
-			if (borrarFuerza)
-				rigidbodyDinamico->clearForce();
 		}
 	};
 

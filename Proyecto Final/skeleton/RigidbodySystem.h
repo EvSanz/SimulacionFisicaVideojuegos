@@ -20,7 +20,6 @@ protected:
 	RigidbodyForceRegistry forceRegistry;
 
 	GravityForceRigidbodyGenerator* gravityGen;
-	WindForceRigidbodyGenerator* windGen;
 
 	Vector3 position;
 
@@ -32,6 +31,7 @@ protected:
 	//bool uniformBodyActive = false;
 	//bool gaussBodyActive = false; 
 	//bool sysFuerzas = true; 
+	//WindForceRigidbodyGenerator* windGen;
 
 public:
 
@@ -61,7 +61,6 @@ public:
 
 	void createBullet(PxPhysics* gPhysics, PxScene* gScene, Vector3 pos);
 
-	void createGravity(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
 	void createMuelleAnclado(PxPhysics* physics, PxScene* scene, Vector3 pos); 
 
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -73,4 +72,5 @@ public:
 	//void createExplosive(PxPhysics* physics, PxScene* scene, PxMaterial* mat, int n, int r); 
 	//void addUniform(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
 	//void addGauss(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
+	//void createGravity(PxPhysics* physics, PxScene* scene, PxMaterial* mat);
 };

@@ -36,9 +36,9 @@ protected:
 
 	UniformParticleGenerator* uniformGen = nullptr;
 	SphereParticleGenerator* fireGen = nullptr;
-	GravityForceGenerator* gravityGen = nullptr;
 	WindForceGenerator* windGen = nullptr; 
 
+	GravityForceGenerator* gravityGen = nullptr;
 	//TornadeForceGenerator* tornadeGen = nullptr; 
 	//ExplosionForceGenerator* explodeGen = nullptr; 
 	//BungeeForceGenerator* bungee = nullptr; 

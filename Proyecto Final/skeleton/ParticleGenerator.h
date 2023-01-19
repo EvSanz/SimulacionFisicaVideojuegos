@@ -84,9 +84,6 @@ public:
 
 	UniformParticleGenerator(Particula* model, double genProb, Vector3 auxPos, Vector3 auxVel, int particulas);
 	std::list<Particula*> generateParticle() override;
-
-	Vector3 getAuxPos() { return uni_pos; }
-	void changeAuxPos(Vector3 position) { uni_pos = position; }
 };
 
 ////////////////////////////////////////////////////////////////////////////////

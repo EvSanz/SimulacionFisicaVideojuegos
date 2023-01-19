@@ -40,7 +40,6 @@ protected:
 
 	Avion* plane = nullptr;
 
-	int contadorBalas = 5;
 	int cargadorBalas = 5; 
 	int contadorVidas = 3;
 

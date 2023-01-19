@@ -181,7 +181,7 @@ public:
 	AnchoredSpringRigidbodyGenerator(PxScene* gScene, PxPhysics* gPhysics, double k, double resting, const Vector3& anchor_pos)
 		: SpringForceRigidbodyGenerator(nullptr, k, resting) 
 	{
-		auxiliar = new Rigidbody(gScene, gPhysics, anchor_pos, { 0.0, 0.0, 0.0 },
+		auxiliar = new Rigidbody(gScene, gPhysics, { 0.0, 0.0, 0.0 }, anchor_pos, { 0.0, 0.0, 0.0 },
 			{ 0.1, 0.1, 0.0 }, 0.0, 10, { 0.0, 0.0, 0.0, 1.0 }, false, 0, " ");
 	}
 

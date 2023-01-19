@@ -1,8 +1,10 @@
-# SimulacionFisicaVideojuegos
-Repositorio de las prácticas de la asignatura de Simulación Física de Videojuegos
+# Tiny Zeppelin
 
-En la carpeta skeleton estará vuestro código fuente
+## Controles
 
-Necesitaréis además descomprimir el archivo que se indica a continuación en la raíz del repositorio:
+* **A** : Inicio de partida y seguir jugando después de perder una vida.
+* **Z** : Cambio de dirección en el eje vertical.
+* **X** : Disparo.
+* **C** : Cambio de proyectil (existen tres tipos diferentes de proyectiles, aunque realizan la misma acción)
+* **S** : Desactivar o activar estela de humo.
 
-Carpetas bin y common https://ucomplutense-my.sharepoint.com/:u:/g/personal/davalejo_ucm_es/EZcsdyIoqTFOrF4hdfkVYk0BJZ9IycJ3QqXQFwaXVrlSKg?e=pfs6IO

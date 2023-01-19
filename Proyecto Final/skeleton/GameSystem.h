@@ -86,6 +86,8 @@ public:
 	void deleteBulletOrLive(bool bala);
 
 	float getPosAvion() { return posAvion; }
+
+	void resetLives() { contadorVidas = 3; }
 	int getVidas() { return contadorVidas; }
 
 	void controlEstela() { particleSystem->changeEstela(); }

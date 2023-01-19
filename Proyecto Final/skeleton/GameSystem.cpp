@@ -178,6 +178,12 @@ void GameSystem::deleteBulletOrLive(bool bala)
 			it = UIVidas.erase(it);
 
 			contadorVidas--;
+
+			if (contadorVidas == 0)
+			{
+				while (UIBalas.size() > 0)
+					deleteBulletOrLive(true); 
+			}
 		}
 	}
 }

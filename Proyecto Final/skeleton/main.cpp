@@ -168,15 +168,17 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		case 'A':
 			if (noPlane)
 			{
-				if (gameSystem->getVidas() > 0)
+				if (gameSystem->getVidas() == 0)
 				{
-					gameSystem->createPlane({ gameSystem->getPosAvion(), 60.0, 0.0 });
-					noPlane = false;
+					gameSystem->resetLives(); 
+					std::cout << "FIN DEL JUEGO\nPUNTUACION OBTENIDA: " << puntuacion << "\n";
+					puntuacion = 0; 
 				}
 
-				else
-					std::cout << "FIN DEL JUEGO\nPUNTUACION OBTENIDA: " << puntuacion << "\n";
+				gameSystem->createPlane({ gameSystem->getPosAvion(), 60.0, 0.0 });
+				noPlane = false;
 			}
+
 			break; 
 	}
 }

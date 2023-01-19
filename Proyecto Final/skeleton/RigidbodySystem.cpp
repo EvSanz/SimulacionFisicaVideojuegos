@@ -57,6 +57,8 @@ void RigidbodySystem::createMuelleAnclado(PxPhysics* physics, PxScene* scene, Ve
 		/*mass*/2, /*time*/10, /*color*/{ 1.0, 0.0, 0.0, 1.0 }, /*dinamic?*/true, /*shape*/1, "globo");
 	p->notAllowedToDie(); 
 
+	int resting = rand() % 10 + 30; 
+	int k = rand() % 40 + 60; 
 
 	AnchoredSpringRigidbodyGenerator* muelle = new AnchoredSpringRigidbodyGenerator(scene, physics, k, resting, { pos.x, 110.0, 0.0 });
 

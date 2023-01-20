@@ -19,7 +19,7 @@ protected:
 	std::string name;
 
 	Vector4 color; 
-	Vector3 auxPos, auxVel, pos, vel, tam;
+	Vector3 auxPos, auxVel, pos, vel, tam, inertia;
 	double masa, vida;
 	int nParticulas, forma;
 

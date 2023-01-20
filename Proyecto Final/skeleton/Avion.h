@@ -31,14 +31,14 @@ public:
 		if (up)
 		{
 			if (capsula->getPosition().y < 100.0)
-				capsula->setLinearVelocity({ 0.01, 0.03, 0.0 });
+				capsula->setLinearVelocity({ 0.01, 0.02, 0.0 });
 			else
 				capsula->setLinearVelocity({ 0.01, 0.0, 0.0 });
 		}
 			
 		else
 			if (capsula->getPosition().y > 10.0)
-				capsula->setLinearVelocity({ 0.01, -0.03, 0.0 });
+				capsula->setLinearVelocity({ 0.01, -0.02, 0.0 });
 			else
 				capsula->setLinearVelocity({ 0.01, 0.0, 0.0 });
 
